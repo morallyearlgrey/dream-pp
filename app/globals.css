@@ -1,0 +1,315 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Bodoni:wght@400;500;600;700&family=Oxygen:wght@300;400;700&display=swap");
+@import "tailwindcss";
+
+:root {
+  --background: #f2e5c6;
+  --foreground: #211b18;
+  --maroon: #5e1c23;
+  --bark: #605246;
+  --linen-shadow: #a1947f;
+  --blue: #849aad;
+  --cream: #f2e5c6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Oxygen", Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+html {
+  background: var(--background);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, rgba(94, 28, 35, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(96, 82, 70, 0.06) 1px, transparent 1px),
+    var(--background);
+  background-size: 42px 42px;
+  color: var(--foreground);
+  font-family: "Oxygen", Arial, Helvetica, sans-serif;
+  font-weight: 300;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+::selection {
+  background: var(--maroon);
+  color: var(--cream);
+}
+
+.font-display {
+  font-family: "Libre Bodoni", Georgia, "Times New Roman", serif;
+}
+
+.font-headline {
+  font-family: "Libre Bodoni", Georgia, "Times New Roman", serif;
+}
+
+.font-subheading {
+  font-family: "Bebas Neue", Impact, "Arial Narrow", sans-serif;
+}
+
+.font-body {
+  font-family: "Oxygen", Arial, Helvetica, sans-serif;
+  font-weight: 300;
+}
+
+.reference-phone {
+  background: white;
+  border: 2px solid #111;
+  border-radius: 28px;
+  box-shadow:
+    18px 18px 0 rgba(96, 82, 70, 0.16),
+    0 28px 70px rgba(94, 28, 35, 0.16);
+  overflow: hidden;
+}
+
+.portrait-abstract {
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 49% 42%, rgba(242, 229, 198, 0.98) 0 21%, rgba(190, 182, 170, 0.9) 30%, transparent 43%),
+    radial-gradient(ellipse at 36% 36%, rgba(3, 3, 3, 0.94) 0 3.5%, rgba(242, 229, 198, 0.44) 3.8% 4.7%, transparent 7%),
+    radial-gradient(ellipse at 60% 36%, rgba(3, 3, 3, 0.9) 0 3.2%, rgba(242, 229, 198, 0.38) 3.5% 4.5%, transparent 6.7%),
+    radial-gradient(ellipse at 49% 47%, rgba(82, 70, 64, 0.5) 0 4.2%, transparent 9%),
+    radial-gradient(ellipse at 52% 58%, rgba(68, 45, 43, 0.72) 0 4.4%, transparent 9%),
+    radial-gradient(ellipse at 22% 34%, rgba(7, 7, 7, 0.92) 0 22%, transparent 38%),
+    radial-gradient(ellipse at 78% 33%, rgba(7, 7, 7, 0.9) 0 21%, transparent 38%),
+    radial-gradient(ellipse at 51% 13%, rgba(4, 4, 4, 0.96) 0 24%, transparent 42%),
+    radial-gradient(ellipse at 52% 82%, rgba(32, 32, 32, 0.72) 0 16%, transparent 31%),
+    linear-gradient(180deg, #f0eee8 0%, #f6f3ec 46%, #b6b0a8 100%);
+  filter: contrast(1.18);
+}
+
+.portrait-abstract::before {
+  background:
+    radial-gradient(ellipse at 31% 30%, rgba(0, 0, 0, 0.72) 0 9%, transparent 18%),
+    radial-gradient(ellipse at 67% 29%, rgba(0, 0, 0, 0.68) 0 8%, transparent 18%),
+    radial-gradient(ellipse at 37% 36%, rgba(242, 229, 198, 0.86) 0 0.8%, transparent 1.6%),
+    radial-gradient(ellipse at 61% 36%, rgba(242, 229, 198, 0.82) 0 0.8%, transparent 1.6%),
+    radial-gradient(ellipse at 51% 59%, rgba(255, 255, 255, 0.28) 0 2.4%, transparent 5%),
+    linear-gradient(180deg, transparent 0 57%, rgba(30, 24, 23, 0.38) 57.5% 58.5%, transparent 59%);
+  content: "";
+  inset: 0;
+  opacity: 0.9;
+  position: absolute;
+}
+
+.portrait-abstract::after {
+  background:
+    radial-gradient(ellipse at 15% 58%, rgba(0, 0, 0, 0.58) 0 22%, transparent 36%),
+    radial-gradient(ellipse at 85% 57%, rgba(0, 0, 0, 0.55) 0 22%, transparent 37%),
+    radial-gradient(ellipse at 50% 82%, rgba(245, 240, 230, 0.68) 0 10%, transparent 22%);
+  content: "";
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.48;
+  pointer-events: none;
+  position: absolute;
+}
+
+.portrait-abstract-color {
+  background:
+    radial-gradient(ellipse at 49% 42%, rgba(242, 229, 198, 0.98) 0 21%, rgba(210, 176, 146, 0.9) 30%, transparent 43%),
+    radial-gradient(ellipse at 36% 36%, rgba(94, 28, 35, 0.95) 0 3.5%, rgba(242, 229, 198, 0.5) 3.8% 4.7%, transparent 7%),
+    radial-gradient(ellipse at 60% 36%, rgba(94, 28, 35, 0.92) 0 3.2%, rgba(242, 229, 198, 0.42) 3.5% 4.5%, transparent 6.7%),
+    radial-gradient(ellipse at 49% 47%, rgba(96, 82, 70, 0.48) 0 4.2%, transparent 9%),
+    radial-gradient(ellipse at 52% 58%, rgba(94, 28, 35, 0.68) 0 4.4%, transparent 9%),
+    radial-gradient(ellipse at 22% 34%, rgba(31, 22, 21, 0.96) 0 22%, transparent 38%),
+    radial-gradient(ellipse at 78% 33%, rgba(33, 23, 22, 0.92) 0 21%, transparent 38%),
+    radial-gradient(ellipse at 51% 13%, rgba(26, 20, 20, 0.96) 0 24%, transparent 42%),
+    radial-gradient(ellipse at 52% 82%, rgba(96, 82, 70, 0.72) 0 16%, transparent 31%),
+    linear-gradient(180deg, #f2e5c6 0%, #e7d2b4 46%, #849aad 100%);
+}
+
+.abstract-photo {
+  background:
+    radial-gradient(ellipse at 52% 34%, rgba(242, 229, 198, 0.96) 0 12%, transparent 19%),
+    radial-gradient(ellipse at 38% 31%, rgba(12, 12, 12, 0.62) 0 3%, transparent 6%),
+    radial-gradient(ellipse at 62% 31%, rgba(12, 12, 12, 0.62) 0 3%, transparent 6%),
+    radial-gradient(ellipse at 50% 45%, rgba(94, 28, 35, 0.45) 0 5%, transparent 9%),
+    radial-gradient(ellipse at 50% 18%, rgba(11, 11, 11, 0.9) 0 16%, transparent 31%),
+    linear-gradient(135deg, var(--photo-a, #849aad), var(--photo-b, #f2e5c6));
+  background-size: cover;
+  overflow: hidden;
+  position: relative;
+}
+
+.abstract-photo::after {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 18px),
+    radial-gradient(rgba(0, 0, 0, 0.28) 0.8px, transparent 0.8px);
+  background-size:
+    18px 100%,
+    8px 8px;
+  content: "";
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+  pointer-events: none;
+  position: absolute;
+}
+
+.halftone {
+  background:
+    radial-gradient(rgba(0, 0, 0, 0.54) 1.1px, transparent 1.1px),
+    linear-gradient(135deg, rgba(132, 154, 173, 0.8), rgba(94, 28, 35, 0.45));
+  background-size:
+    8px 8px,
+    100% 100%;
+}
+
+.about-hero-colorwash {
+  background:
+    radial-gradient(circle at 38% 42%, rgba(242, 210, 64, 0.34), transparent 20%),
+    radial-gradient(circle at 58% 46%, rgba(192, 65, 58, 0.28), transparent 18%),
+    linear-gradient(90deg, rgba(231, 181, 144, 0.7), rgba(91, 153, 207, 0.26));
+  mix-blend-mode: color;
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+.figure-cutout {
+  background:
+    radial-gradient(ellipse at 52% 11%, #151515 0 10%, transparent 11%),
+    radial-gradient(ellipse at 52% 19%, #d2b8a0 0 10%, transparent 11%),
+    linear-gradient(172deg, transparent 0 20%, #111 21% 59%, transparent 60%),
+    linear-gradient(95deg, transparent 0 28%, #f2e5c6 29% 45%, transparent 46%),
+    linear-gradient(180deg, transparent 0 59%, #e7d6b5 60% 100%);
+  filter: drop-shadow(-8px 14px 0 rgba(94, 28, 35, 0.16));
+}
+
+.poster-sketch {
+  background:
+    radial-gradient(ellipse at 45% 38%, rgba(20, 20, 20, 0.12) 0 18%, transparent 28%),
+    radial-gradient(ellipse at 55% 48%, rgba(20, 20, 20, 0.13) 0 16%, transparent 28%),
+    linear-gradient(104deg, transparent 0 18%, rgba(20, 20, 20, 0.22) 19% 23%, transparent 24%),
+    linear-gradient(78deg, transparent 0 44%, rgba(20, 20, 20, 0.2) 45% 48%, transparent 49%);
+  filter: blur(1px);
+}
+
+.noise {
+  position: relative;
+}
+
+.noise::after {
+  background-image:
+    radial-gradient(rgba(33, 27, 24, 0.18) 0.6px, transparent 0.6px),
+    radial-gradient(rgba(242, 229, 198, 0.18) 0.6px, transparent 0.6px);
+  background-position:
+    0 0,
+    8px 8px;
+  background-size: 16px 16px;
+  content: "";
+  inset: 0;
+  mix-blend-mode: multiply;
+  opacity: 0.18;
+  pointer-events: none;
+  position: absolute;
+}
+
+.film-motion {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.18) 0 10px,
+      transparent 10px 22px
+    ),
+    linear-gradient(135deg, #5e1c23, #849aad 46%, #605246);
+  background-size:
+    92px 100%,
+    200% 200%;
+  animation: filmSweep 6s linear infinite, colorDrift 11s ease-in-out infinite;
+}
+
+.media-loop {
+  background:
+    linear-gradient(135deg, rgba(94, 28, 35, 0.16), rgba(132, 154, 173, 0.12)),
+    var(--loop-image, linear-gradient(135deg, #5e1c23, #849aad));
+  background-position: center;
+  background-size: cover;
+  animation: slowPan 9s ease-in-out infinite alternate;
+}
+
+.media-loop.is-paused {
+  animation-play-state: paused;
+}
+
+.captcha-flash {
+  animation: flashRed 1s ease;
+}
+
+@keyframes filmSweep {
+  from {
+    background-position:
+      0 0,
+      0 50%;
+  }
+  to {
+    background-position:
+      92px 0,
+      100% 50%;
+  }
+}
+
+@keyframes colorDrift {
+  0%,
+  100% {
+    filter: saturate(0.9) contrast(1);
+  }
+  50% {
+    filter: saturate(1.25) contrast(1.08);
+  }
+}
+
+@keyframes slowPan {
+  from {
+    background-position: center top;
+  }
+  to {
+    background-position: center bottom;
+  }
+}
+
+@keyframes flashRed {
+  0%,
+  100% {
+    border-color: rgba(94, 28, 35, 0.28);
+  }
+  35%,
+  70% {
+    border-color: #c5162e;
+    box-shadow: 0 0 0 5px rgba(197, 22, 46, 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
