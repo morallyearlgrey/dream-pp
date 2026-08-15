@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   date,
+  index,
   jsonb,
   pgEnum,
   pgTable,
@@ -82,16 +83,23 @@ export const skills = pgTable("skills", {
   category: skillCategory("category").notNull(),
 });
 
-export const endorsements = pgTable("endorsements", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  experienceId: uuid("experience_id")
-    .notNull()
-    .references(() => experiences.id, { onDelete: "cascade" }),
-  authorName: text("author_name").notNull(),
-  note: text("note").notNull(),
-  approved: boolean("approved").notNull().default(false),
-  featured: boolean("featured").notNull().default(false),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const endorsements = pgTable(
+  "endorsements",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    experienceId: text("experience_id").notNull(),
+    authorName: text("author_name").notNull(),
+    note: text("note").notNull(),
+    approved: boolean("approved").notNull().default(false),
+    featured: boolean("featured").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("endorsements_experience_id_idx").on(table.experienceId),
+    index("endorsements_approved_idx").on(table.approved),
+    index("endorsements_featured_idx").on(table.featured),
+    index("endorsements_created_at_idx").on(table.createdAt),
+  ],
+);

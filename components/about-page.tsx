@@ -2,8 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, RotateCcw, ShieldCheck, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { GripVertical, RotateCcw, ShieldCheck, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { NowPlayingModule } from "@/components/audio-player";
 import { aboutCards, captchaTiles } from "@/lib/portfolio-data";
 
 const titles = [
@@ -14,8 +15,101 @@ const titles = [
   "Artist",
 ];
 
-const heroPhoto = "/references/goal.png";
-const revealSize = { width: 46, height: 31 };
+const heroPhoto = "/about/hero-hq.jpeg";
+type RevealBox = { x: number; y: number; width: number; height: number };
+type FocusRegionLabel = "EYES" | "FACE" | "HAIR" | "SHOULDER" | "SKY" | "BACKGROUND";
+type FocusZone = {
+  label: Exclude<FocusRegionLabel, "BACKGROUND">;
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+};
+
+const desktopRevealBox: RevealBox = { x: 35, y: 18, width: 44, height: 24 };
+const mobileRevealBox: RevealBox = { x: 7, y: 27, width: 86, height: 11 };
+const focusZones: FocusZone[] = [
+  { label: "EYES", xMin: 49, xMax: 69, yMin: 27, yMax: 38 },
+  { label: "FACE", xMin: 43, xMax: 72, yMin: 20, yMax: 55 },
+  { label: "HAIR", xMin: 39, xMax: 86, yMin: 3, yMax: 24 },
+  { label: "HAIR", xMin: 37, xMax: 54, yMin: 21, yMax: 60 },
+  { label: "HAIR", xMin: 68, xMax: 93, yMin: 18, yMax: 92 },
+  { label: "SHOULDER", xMin: 40, xMax: 78, yMin: 55, yMax: 100 },
+  { label: "SKY", xMin: 0, xMax: 100, yMin: 0, yMax: 54 },
+];
+const sideCardMotion = {
+  progress: 0,
+  distance: 0,
+  scale: 1,
+  opacity: 0.42,
+  rotate: 0,
+  y: 0,
+};
+const centerCardMotion = {
+  progress: 1,
+  distance: 0,
+  scale: 1.08,
+  opacity: 1,
+  rotate: 0,
+  y: 0,
+};
+const carouselCopyCount = 9;
+const carouselMiddleCopy = Math.floor(carouselCopyCount / 2);
+const carouselAutoScrollPixelsPerMs = 0.085;
+const carouselManualPauseMs = 1300;
+const aboutEditorialCards = [
+  {
+    issue: "Archive 01",
+    date: "Profile Index",
+    category: "Systems",
+    spine: "Builder / Systems / Interfaces",
+    kicker: "I design. I code. I ship.",
+    quote: "Ideas should leave the notebook.",
+    focus: "Product + systems",
+    currently: "Building in public",
+    location: "Orlando, FL",
+    crop: "center bottom",
+    accent: "#5E1C23",
+    backing: "#d7b82d",
+  },
+  {
+    issue: "Archive 02",
+    date: "People Index",
+    category: "Care",
+    spine: "Friend / People / Trust",
+    kicker: "I value people, always.",
+    quote: "The best work keeps people close.",
+    focus: "Teams + care",
+    currently: "Listening first",
+    location: "Wherever the table is",
+    crop: "center bottom",
+    accent: "#605246",
+    backing: "#d7b82d",
+  },
+  {
+    issue: "Archive 03",
+    date: "Field Index",
+    category: "Motion",
+    spine: "Explorer / Questions / Motion",
+    kicker: "I seek new places and perspectives.",
+    quote: "New places reset perspective.",
+    focus: "Research + range",
+    currently: "Following questions",
+    location: "In transit",
+    crop: "center bottom",
+    accent: "#d7b82d",
+    backing: "#d7b82d",
+  },
+];
+const carouselCards = Array.from({ length: carouselCopyCount }, (_, copyIndex) =>
+  aboutCards.map((card, cardIndex) => ({
+    ...card,
+    ...aboutEditorialCards[cardIndex],
+    cardIndex,
+    copyIndex,
+    renderKey: `${copyIndex}-${card.title}`,
+  })),
+).flat();
 const captchaPositions = [
   "center top",
   "center 23%",
@@ -28,9 +122,13 @@ const captchaPositions = [
   "center bottom",
 ];
 
+function getIsMobileViewport() {
+  return typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches;
+}
+
 export function AboutPage() {
   return (
-    <main className="-mt-[72px] overflow-hidden bg-[#f7f7f7] text-[#111]">
+    <main className="-mt-[72px] overflow-hidden bg-[#0b0b0a] text-[#f2e5c6]">
       <HeroSection />
       <WhoAmI />
       <ImageCarousel />
@@ -39,18 +137,34 @@ export function AboutPage() {
   );
 }
 
+function getInitialRevealBox() {
+  if (getIsMobileViewport()) {
+    return mobileRevealBox;
+  }
+
+  return desktopRevealBox;
+}
+
+function getFocusRegionLabel(box: RevealBox): FocusRegionLabel {
+  const centerX = box.x + box.width / 2;
+  const centerY = box.y + box.height / 2;
+  const zone = focusZones.find(
+    ({ xMin, xMax, yMin, yMax }) =>
+      centerX >= xMin && centerX <= xMax && centerY >= yMin && centerY <= yMax,
+  );
+
+  return zone?.label ?? "BACKGROUND";
+}
+
 function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
-  const copyRef = useRef<HTMLDivElement>(null);
-  const dragOffsetRef = useRef({ x: revealSize.width / 2, y: revealSize.height / 2 });
+  const dragOffsetRef = useRef({
+    x: desktopRevealBox.width / 2,
+    y: desktopRevealBox.height / 2,
+  });
   const [titleIndex, setTitleIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [box, setBox] = useState({
-    x: 44,
-    y: 40,
-    width: revealSize.width,
-    height: revealSize.height,
-  });
+  const [box, setBox] = useState(getInitialRevealBox);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -58,6 +172,25 @@ function HeroSection() {
     }, 1900);
 
     return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 639px)");
+
+    function syncRevealBox() {
+      const nextBox = query.matches ? mobileRevealBox : desktopRevealBox;
+
+      dragOffsetRef.current = {
+        x: nextBox.width / 2,
+        y: nextBox.height / 2,
+      };
+      setBox(nextBox);
+    }
+
+    syncRevealBox();
+    query.addEventListener("change", syncRevealBox);
+
+    return () => query.removeEventListener("change", syncRevealBox);
   }, []);
 
   function moveBox(clientX: number, clientY: number) {
@@ -81,76 +214,17 @@ function HeroSection() {
     });
   }
 
-  function getTitleBarrier() {
-    const heroRect = heroRef.current?.getBoundingClientRect();
-    const copyRect = copyRef.current?.getBoundingClientRect();
-
-    if (!heroRect || !copyRect) {
-      return null;
-    }
-
-    const padding = Math.min(heroRect.width, heroRect.height) * 0.035;
-    const x = ((copyRect.left - heroRect.left - padding) / heroRect.width) * 100;
-    const y = ((copyRect.top - heroRect.top - padding) / heroRect.height) * 100;
-    const width = ((copyRect.width + padding * 2) / heroRect.width) * 100;
-    const height = ((copyRect.height + padding * 2) / heroRect.height) * 100;
-
-    return {
-      x: Math.max(0, x),
-      y: Math.max(0, y),
-      width: Math.min(100, width),
-      height: Math.min(100, height),
-    };
-  }
-
-  function overlaps(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    barrier: { x: number; y: number; width: number; height: number },
-  ) {
-    return (
-      x < barrier.x + barrier.width &&
-      x + width > barrier.x &&
-      y < barrier.y + barrier.height &&
-      y + height > barrier.y
-    );
-  }
-
   function constrainRevealBox(x: number, y: number, width: number, height: number) {
-    const clamped = {
+    return {
       x: Math.min(100 - width, Math.max(0, x)),
       y: Math.min(100 - height, Math.max(0, y)),
     };
-    const barrier = getTitleBarrier();
-
-    if (!barrier || !overlaps(clamped.x, clamped.y, width, height, barrier)) {
-      return clamped;
-    }
-
-    const candidates = [
-      { x: clamped.x, y: barrier.y - height },
-      { x: clamped.x, y: barrier.y + barrier.height },
-      { x: barrier.x - width, y: clamped.y },
-      { x: barrier.x + barrier.width, y: clamped.y },
-    ]
-      .map((candidate) => ({
-        x: Math.min(100 - width, Math.max(0, candidate.x)),
-        y: Math.min(100 - height, Math.max(0, candidate.y)),
-      }))
-      .filter((candidate) => !overlaps(candidate.x, candidate.y, width, height, barrier))
-      .sort(
-        (first, second) =>
-          Math.hypot(first.x - x, first.y - y) - Math.hypot(second.x - x, second.y - y),
-      );
-
-    return candidates[0] ?? clamped;
   }
 
   const clipPath = `inset(${box.y}% ${100 - box.x - box.width}% ${
     100 - box.y - box.height
   }% ${box.x}%)`;
+  const focusRegionLabel = getFocusRegionLabel(box);
 
   return (
     <section
@@ -165,13 +239,13 @@ function HeroSection() {
     >
       <img
         alt="Black-and-white portrait of Kai Sprunger"
-        className="absolute inset-0 h-full w-full object-cover grayscale"
+        className="absolute inset-0 h-full w-full scale-[1.02] object-cover object-[center_45%] opacity-90 blur-[1.5px] brightness-[0.92] contrast-[1.08] grayscale"
         src={heroPhoto}
       />
       <img
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover object-[center_45%] contrast-[1.04] saturate-[1.16]"
         src={heroPhoto}
         style={{ clipPath }}
       />
@@ -180,21 +254,35 @@ function HeroSection() {
         className="about-hero-colorwash absolute inset-0"
         style={{ clipPath }}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.2)_32%,rgba(0,0,0,0.08)_64%,rgba(0,0,0,0.58)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#f7f7f7] to-transparent" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.84)_0%,rgba(242,229,198,0.24)_34%,rgba(8,8,7,0.08)_60%,rgba(8,8,7,0.5)_100%)]" />
+      <div aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
+      <div className="absolute left-4 right-4 top-24 z-10 flex items-center gap-2 text-[8px] font-bold uppercase leading-none text-[#5E1C23]/84 sm:gap-4 sm:text-[10px] lg:left-14 lg:right-14">
+        <span>Issue I</span>
+        <span className="h-px flex-1 bg-[#5E1C23]/26" />
+        <span>About / Profile</span>
+        <span className="h-px w-14 bg-[#5E1C23]/26" />
+        <span className="hidden sm:inline">July 2026</span>
+        <span>01</span>
+      </div>
+      <p className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/64 [writing-mode:vertical-rl] sm:block lg:right-14">
+        Move the lens. Reveal the next detail.
+      </p>
+      <div className="absolute bottom-4 right-4 z-30 w-[136px] border-t border-[#f2e5c6]/24 bg-[#080807]/54 px-2 py-2 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/66 backdrop-blur-sm sm:bottom-[21%] sm:w-[160px] sm:bg-transparent sm:px-0 sm:py-0 sm:pt-3 sm:text-[10px] lg:right-14">
+        <NowPlayingModule />
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#0b0b0a] to-transparent" />
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="absolute left-4 top-[14%] z-10 flex max-w-[min(82vw,880px)] flex-col gap-4 text-white sm:left-8 lg:left-14"
+        className="absolute bottom-[8%] left-4 z-10 flex max-w-[min(82vw,880px)] flex-col gap-4 text-[#5E1C23] sm:left-8 lg:left-14"
         initial={{ opacity: 0, y: 18 }}
-        ref={copyRef}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        <h1 className="font-headline flex flex-col text-[58px] font-bold uppercase leading-[0.78] text-white sm:text-[96px] lg:text-[156px]">
+        <h1 className="font-headline flex flex-col gap-3 text-[58px] font-bold uppercase leading-[0.78] text-[#5E1C23] sm:gap-5 sm:text-[96px] lg:gap-6 lg:text-[96px] xl:gap-7 xl:text-[132px] 2xl:text-[156px]">
           <span>Kai</span>
           <span>Sprunger</span>
         </h1>
-        <div className="font-subheading h-12 overflow-hidden text-[22px] uppercase leading-none text-[#f4d240] sm:h-14 sm:text-[36px] lg:text-[48px]">
+        <div className="font-subheading h-16 overflow-hidden text-[34px] uppercase leading-none text-[#5E1C23] sm:h-20 sm:text-[54px] lg:h-24 lg:text-[72px]">
           <AnimatePresence mode="wait">
             <motion.p
               animate={{ opacity: 1, y: 0 }}
@@ -211,7 +299,7 @@ function HeroSection() {
 
       <button
         aria-label="Drag to reveal the color portrait"
-        className="absolute z-20 cursor-grab border border-white/90 bg-white/5 shadow-[0_0_0_1px_rgba(0,0,0,0.72),0_16px_44px_rgba(0,0,0,0.34)] backdrop-blur-[1px] active:cursor-grabbing"
+        className="group absolute z-20 cursor-grab border border-white/95 bg-white/5 shadow-[0_0_0_1px_rgba(255,255,255,0.24),0_14px_34px_rgba(0,0,0,0.22)] backdrop-saturate-125 transition active:cursor-grabbing"
         onKeyDown={(event) => {
           const step = event.shiftKey ? 5 : 1.75;
 
@@ -266,7 +354,27 @@ function HeroSection() {
           width: `${box.width}%`,
         }}
         type="button"
-      />
+      >
+        <span className="absolute -left-px -top-8 flex items-center gap-2 border border-white/55 bg-[#111]/55 px-2.5 py-1.5 text-[9px] font-bold uppercase leading-none text-white/88 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:-top-9 sm:text-[10px]">
+          <span>Focus area</span>
+          <span className="h-px w-6 bg-white/45" />
+          <span>{focusRegionLabel}</span>
+        </span>
+        <span className="absolute -right-8 top-1/2 hidden -translate-y-1/2 items-center gap-1 border border-white/50 bg-[#f2e5c6]/82 px-1.5 py-2 text-[#5E1C23] shadow-[0_8px_22px_rgba(0,0,0,0.16)] backdrop-blur-sm sm:flex">
+          <GripVertical aria-hidden="true" size={16} strokeWidth={1.8} />
+          <span className="text-[8px] font-bold uppercase leading-none [writing-mode:vertical-rl]">
+            Drag
+          </span>
+        </span>
+        <span className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-[#f2e5c6]/86 px-2 py-1 text-[8px] font-bold uppercase leading-none text-[#5E1C23] shadow-[0_7px_18px_rgba(0,0,0,0.12)] sm:hidden">
+          <GripVertical aria-hidden="true" size={13} strokeWidth={1.8} />
+          DRAG
+        </span>
+        <span
+          aria-hidden="true"
+          className="absolute inset-1 border border-white/55 opacity-0 transition group-hover:opacity-100 group-active:opacity-100"
+        />
+      </button>
     </section>
   );
 }
@@ -274,125 +382,440 @@ function HeroSection() {
 function WhoAmI() {
   return (
     <motion.section
-      className="mx-auto flex w-full max-w-5xl flex-col items-center px-5 py-20 text-center sm:px-8 md:py-24 lg:px-12"
+      className="group relative w-full overflow-hidden border-y border-[#f2e5c6]/12 bg-[#080807] py-20 text-center md:py-24"
       initial={{ opacity: 0, y: 36 }}
       transition={{ duration: 0.65, ease: "easeOut" }}
       viewport={{ amount: 0.35, once: true }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <h2 className="font-headline text-[54px] font-bold uppercase leading-[0.88] sm:text-[86px] lg:text-[118px]">
-        Who Am I
-      </h2>
-      <p className="mt-9 max-w-3xl text-xl font-light leading-9 text-[#282522] sm:text-2xl sm:leading-10">
-        I build thoughtful systems where code, hardware, and design can meet.
-        This placeholder text leaves room for the fuller story about process,
-        curiosity, and craft. I am happiest when a question turns into something
-        people can hold, use, or revisit.
-      </p>
+      <img
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover object-[center_46%] opacity-[0.24] grayscale saturate-[0.78] contrast-[1.05]"
+        src="/about/whoami.jpeg"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(8,8,7,0.48)_0%,rgba(8,8,7,0.72)_48%,rgba(8,8,7,0.92)_100%)]"
+      />
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 sm:px-8 lg:px-12">
+        <div className="mb-5 flex w-full items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#d7b82d]/86 sm:text-[10px]">
+          <span>Profile Note</span>
+          <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+          <span>02</span>
+        </div>
+        <div className="relative inline-block">
+          <img
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-x-[-8%] top-1/2 h-[130%] w-[116%] -translate-y-1/2 object-cover object-[center_46%] opacity-20 grayscale saturate-[0.76] contrast-[1.08]"
+            src="/about/whoami.jpeg"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-[-8%] top-1/2 h-[130%] w-[116%] -translate-y-1/2 bg-[#080807]/54"
+          />
+          <h2 className="who-mask-heading relative z-10 font-headline text-[54px] font-bold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[86px] lg:text-[118px]">
+            <span>Who Am I</span>
+            <motion.span
+              aria-hidden="true"
+              className="who-mask-text absolute inset-0"
+              initial={{ opacity: 0 }}
+              transition={{ delay: 0.2, duration: 0.9, ease: "easeOut" }}
+              viewport={{ amount: 0.7, once: true }}
+              whileInView={{ opacity: 0.68 }}
+            >
+              Who Am I
+            </motion.span>
+            <span aria-hidden="true" className="who-mask-text who-mask-hover absolute inset-0">
+              Who Am I
+            </span>
+          </h2>
+        </div>
+        <div className="relative z-10 mt-6 flex w-full max-w-2xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/66 sm:text-[11px]">
+          <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+          <span className="tracking-[0.18em]">
+            Current @ NVIDIA <span className="text-[#d7b82d]">•</span> Returning @ BNY
+          </span>
+          <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+        </div>
+        <p className="relative z-10 mt-9 max-w-3xl text-xl font-light leading-9 text-[#f2e5c6]/70 sm:text-2xl sm:leading-10">
+          I build thoughtful systems where code, hardware, and design can meet.
+          This placeholder text leaves room for the fuller story about process,
+          curiosity, and craft. I am happiest when a question turns into something
+          people can hold, use, or revisit.
+        </p>
+      </div>
     </motion.section>
   );
 }
 
 function ImageCarousel() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const [selectedCard, setSelectedCard] = useState<string | null>(null);
-  const visibleCards = [
-    aboutCards[(activeIndex - 1 + aboutCards.length) % aboutCards.length],
-    aboutCards[activeIndex],
-    aboutCards[(activeIndex + 1) % aboutCards.length],
-  ];
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Array<HTMLElement | null>>([]);
+  const frameRef = useRef<number | null>(null);
+  const autoFrameRef = useRef<number | null>(null);
+  const lastAutoTickRef = useRef<number | null>(null);
+  const autoPausedUntilRef = useRef(0);
+  const initialScrollSetRef = useRef(false);
+  const [isMobileCarousel, setIsMobileCarousel] = useState(getIsMobileViewport);
+  const [cardMotion, setCardMotion] = useState(() =>
+    carouselCards.map((_, index) =>
+      index === carouselMiddleCopy * aboutCards.length + 1 ? centerCardMotion : sideCardMotion,
+    ),
+  );
+  const activeCardIndex = useMemo(
+    () =>
+      cardMotion.reduce(
+        (bestIndex, motion, index) =>
+          motion.progress > (cardMotion[bestIndex]?.progress ?? -1) ? index : bestIndex,
+        carouselMiddleCopy * aboutCards.length + 1,
+      ),
+    [cardMotion],
+  );
+  const activeCard =
+    carouselCards[activeCardIndex] ?? carouselCards[carouselMiddleCopy * aboutCards.length + 1];
+  const activeImageNumber = (activeCard.cardIndex + 1).toString().padStart(2, "0");
 
-  function go(direction: -1 | 1) {
-    setActiveIndex((current) => (current + direction + aboutCards.length) % aboutCards.length);
-    setHoveredCard(null);
-    setSelectedCard(null);
-  }
+  const getLoopWidth = useCallback(() => {
+    const firstCard = cardRefs.current[0];
+    const secondSetFirstCard = cardRefs.current[aboutCards.length];
+
+    if (!firstCard || !secondSetFirstCard) {
+      return 0;
+    }
+
+    return secondSetFirstCard.offsetLeft - firstCard.offsetLeft;
+  }, []);
+
+  const keepScrollInInfiniteMiddle = useCallback((scroller: HTMLDivElement) => {
+    const loopWidth = getLoopWidth();
+
+    if (loopWidth <= 0) {
+      return;
+    }
+
+    const lowerBoundary = loopWidth * 2;
+    const upperBoundary = loopWidth * (carouselCopyCount - 3);
+    const loopShift = loopWidth * (carouselMiddleCopy - 1);
+
+    if (scroller.scrollLeft < lowerBoundary) {
+      scroller.scrollLeft += loopShift;
+    } else if (scroller.scrollLeft > upperBoundary) {
+      scroller.scrollLeft -= loopShift;
+    }
+  }, [getLoopWidth]);
+
+  const updateCardMotion = useCallback(() => {
+    const scroller = scrollRef.current;
+
+    if (!scroller) {
+      return;
+    }
+
+    keepScrollInInfiniteMiddle(scroller);
+
+    const scrollerRect = scroller.getBoundingClientRect();
+    const scrollerCenter = scrollerRect.left + scrollerRect.width / 2;
+    const distanceBase = scrollerRect.width * (isMobileCarousel ? 0.5 : 0.46);
+    const activeScale = isMobileCarousel ? 1.06 : 1.08;
+    const sideOpacity = isMobileCarousel ? 0.42 : 0.55;
+    const tilt = isMobileCarousel ? 13 : 9;
+
+    setCardMotion(
+      carouselCards.map((_, index) => {
+        const card = cardRefs.current[index];
+
+        if (!card) {
+          return sideCardMotion;
+        }
+
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2;
+        const distance = Math.max(
+          -1.45,
+          Math.min(1.45, (cardCenter - scrollerCenter) / distanceBase),
+        );
+        const progress = Math.max(0, Math.min(1, 1 - Math.abs(distance)));
+        const eased = progress * progress * (3 - 2 * progress);
+
+        return {
+          progress,
+          distance,
+          scale: 1 + eased * (activeScale - 1),
+          opacity: sideOpacity + eased * (1 - sideOpacity),
+          rotate: -distance * tilt,
+          y: 0,
+        };
+      }),
+    );
+  }, [isMobileCarousel, keepScrollInInfiniteMiddle]);
+
+  const scheduleCardMotionUpdate = useCallback(() => {
+    if (frameRef.current !== null) {
+      return;
+    }
+
+    frameRef.current = window.requestAnimationFrame(() => {
+      frameRef.current = null;
+      updateCardMotion();
+    });
+  }, [updateCardMotion]);
+
+  const pauseAutoScroll = useCallback(() => {
+    autoPausedUntilRef.current = performance.now() + carouselManualPauseMs;
+  }, []);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 639px)");
+
+    function syncMobileState() {
+      setIsMobileCarousel(query.matches);
+      scheduleCardMotionUpdate();
+    }
+
+    syncMobileState();
+    query.addEventListener("change", syncMobileState);
+
+    return () => query.removeEventListener("change", syncMobileState);
+  }, [scheduleCardMotionUpdate]);
+
+  useEffect(() => {
+    const scroller = scrollRef.current;
+
+    if (!scroller) {
+      return undefined;
+    }
+
+    if (!initialScrollSetRef.current) {
+      const initialCard = cardRefs.current[carouselMiddleCopy * aboutCards.length + 1];
+
+      if (initialCard) {
+        scroller.scrollLeft =
+          initialCard.offsetLeft + initialCard.offsetWidth / 2 - scroller.clientWidth / 2;
+        initialScrollSetRef.current = true;
+      }
+    }
+
+    const resizeObserver = new ResizeObserver(scheduleCardMotionUpdate);
+
+    resizeObserver.observe(scroller);
+    cardRefs.current.forEach((card) => {
+      if (card) {
+        resizeObserver.observe(card);
+      }
+    });
+
+    scheduleCardMotionUpdate();
+    window.addEventListener("resize", scheduleCardMotionUpdate);
+
+    function autoScroll(timestamp: number) {
+      const activeScroller = scrollRef.current;
+
+      if (!activeScroller) {
+        return;
+      }
+
+      const previousTick = lastAutoTickRef.current ?? timestamp;
+      const elapsed = Math.min(48, timestamp - previousTick);
+
+      lastAutoTickRef.current = timestamp;
+
+      if (timestamp >= autoPausedUntilRef.current && !document.hidden) {
+        activeScroller.scrollLeft += elapsed * carouselAutoScrollPixelsPerMs;
+        keepScrollInInfiniteMiddle(activeScroller);
+      }
+
+      updateCardMotion();
+      autoFrameRef.current = window.requestAnimationFrame(autoScroll);
+    }
+
+    autoFrameRef.current = window.requestAnimationFrame(autoScroll);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", scheduleCardMotionUpdate);
+
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+
+      if (autoFrameRef.current !== null) {
+        window.cancelAnimationFrame(autoFrameRef.current);
+        autoFrameRef.current = null;
+      }
+
+      lastAutoTickRef.current = null;
+    };
+  }, [keepScrollInInfiniteMiddle, scheduleCardMotionUpdate, updateCardMotion]);
 
   return (
     <motion.section
-      className="relative overflow-hidden bg-[#121212] px-5 py-20 text-white sm:px-8 lg:px-12"
+      className="relative overflow-hidden bg-[#0b0b0a] px-5 py-16 text-[#f2e5c6] sm:px-8 sm:py-20 lg:px-12 lg:py-24"
       initial={{ opacity: 0, y: 44 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
       viewport={{ amount: 0.22, once: true }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <div className="halftone absolute inset-0 opacity-25" />
-      <div className="relative mx-auto grid max-w-7xl gap-5 md:grid-cols-[0.82fr_1.08fr_0.82fr] md:items-center">
-        {visibleCards.map((card, index) => {
-          const centered = index === 1;
-          const revealed = hoveredCard === card.title || selectedCard === card.title;
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.055)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.045)_1px,transparent_1px),linear-gradient(180deg,#11100f,#070707)] [background-size:54px_54px,54px_54px,100%_100%]"
+      />
+      <div aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-35" />
+      <div className="absolute inset-x-0 top-0 h-px bg-[#f2e5c6]/16" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-[#f2e5c6]/16" />
 
-          return (
-            <div className="flex min-w-0 flex-col items-stretch" key={card.title}>
-              <button
-                aria-pressed={selectedCard === card.title}
-                className={`group relative min-w-0 overflow-hidden border bg-black text-left transition duration-500 ${
-                  centered
-                    ? "h-[430px] border-[#f4d240] shadow-[0_30px_90px_rgba(244,210,64,0.22)] sm:h-[500px] md:h-[620px]"
-                    : "h-[320px] border-white/18 sm:h-[380px] md:h-[460px]"
-                }`}
-                onBlur={() => setHoveredCard(null)}
-                onClick={() =>
-                  setSelectedCard((current) => (current === card.title ? null : card.title))
-                }
-                onFocus={() => setHoveredCard(card.title)}
-                onMouseEnter={() => setHoveredCard(card.title)}
-                onMouseLeave={() => setHoveredCard(null)}
-                type="button"
-              >
-                <img
-                  alt=""
-                  aria-hidden="true"
-                  className={`h-full w-full object-cover transition duration-500 ${
-                    revealed ? "opacity-45" : "opacity-100 group-hover:opacity-45"
-                  }`}
-                  src={card.image}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/84 via-black/10 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                  <p
-                    className={`font-headline font-bold uppercase leading-none ${
-                      centered
-                        ? "text-[40px] sm:text-[58px] lg:text-[70px]"
-                        : "text-[30px] sm:text-[40px] lg:text-[46px]"
-                    }`}
-                  >
-                    {card.title}
-                  </p>
-                  <p
-                    className={`mt-4 max-w-sm text-base font-light leading-6 text-white transition duration-300 ${
-                      revealed ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    {card.text}
-                  </p>
-                </div>
-              </button>
-
-              {centered ? (
-                <div className="mt-5 flex justify-center gap-4">
-                  <button
-                    aria-label="Previous carousel image"
-                    className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/70 text-white transition hover:border-[#f4d240] hover:text-[#f4d240] sm:h-14 sm:w-14"
-                    onClick={() => go(-1)}
-                    type="button"
-                  >
-                    <ChevronLeft aria-hidden="true" size={28} />
-                  </button>
-                  <button
-                    aria-label="Next carousel image"
-                    className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/70 text-white transition hover:border-[#f4d240] hover:text-[#f4d240] sm:h-14 sm:w-14"
-                    onClick={() => go(1)}
-                    type="button"
-                  >
-                    <ChevronRight aria-hidden="true" size={28} />
-                  </button>
-                </div>
-              ) : null}
+      <div className="relative z-10 mx-auto mb-7 grid max-w-[1500px] gap-6 border-b border-[#f2e5c6]/14 pb-6 md:grid-cols-[minmax(0,0.95fr)_minmax(260px,420px)] md:items-end lg:gap-8">
+        <div>
+          <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#d7b82d] sm:text-[11px]">
+            <span>Visual Archive</span>
+            <span className="h-px flex-1 bg-white/20" />
+          </div>
+          <h2 className="mt-4 font-headline text-[38px] font-bold leading-[0.9] text-[#f5efe6] sm:text-[48px] md:text-[56px]">
+            Me in Three Lenses
+          </h2>
+          <p className="mt-4 max-w-[36rem] text-sm font-light leading-6 text-white/68">
+            The same story can be told an infinite amount of ways – it&apos;s all about the perspective that you look at it through. My journalism instructor taught me this lesson five years ago and despite the fact I no longer write stories, it&apos;s never left me. To fully understand the why and what behind a person, event, or place, you need to look at it through different lenses. 
+            <br />
+            <br />
+            This is the way I see myself.
+          </p>
+        </div>
+        <div className="relative overflow-hidden border border-[#f2e5c6]/18 bg-[#080807]/92 p-2 shadow-[0_24px_70px_rgba(0,0,0,0.42)] md:justify-self-end md:w-full md:max-w-[420px]">
+          <div className="relative aspect-square overflow-hidden border border-[#f2e5c6]/20 bg-[#11100f]">
+            <video
+              aria-label="Looping visual archive preview"
+              autoPlay
+              className="h-full w-full object-cover brightness-[0.82] contrast-[1.12] grayscale saturate-[0.62]"
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              src="/experiences/IMG_4279.MOV"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_22%,rgba(215,184,45,0.16),transparent_34%),linear-gradient(180deg,rgba(8,8,7,0)_52%,rgba(8,8,7,0.62))]"
+            />
+            <span aria-hidden="true" className="archive-scanlines pointer-events-none absolute inset-0 opacity-[0.22]" />
+            <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/18 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/72">
+              <span>Motion Plate</span>
+              <span>01 / 03</span>
             </div>
-          );
-        })}
+            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-end gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/70">
+              <span>Auto Loop</span>
+              <span className="mb-0.5 h-px flex-1 bg-[#f2e5c6]/24" />
+              <span>Color Proof</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        aria-label="Scroll horizontally through about cards"
+        className="relative z-10 -mx-5 overflow-x-auto overflow-y-visible overscroll-x-contain px-[8vw] py-7 [perspective:1400px] [scrollbar-width:none] sm:-mx-8 sm:px-[calc(50vw-min(31vw,390px))] sm:py-9 lg:-mx-12 lg:px-[calc(50vw-min(29vw,420px))] [&::-webkit-scrollbar]:hidden"
+        onPointerDown={pauseAutoScroll}
+        onScroll={scheduleCardMotionUpdate}
+        onTouchStart={pauseAutoScroll}
+        onWheel={pauseAutoScroll}
+        ref={scrollRef}
+        role="region"
+      >
+        <div className="flex w-max items-center gap-0">
+          {carouselCards.map((card, index) => {
+            const motionState = cardMotion[index] ?? sideCardMotion;
+            const isCenterish = motionState.progress > 0.58;
+            const activeEmphasis = Math.max(0, Math.min(1, (motionState.progress - 0.42) / 0.58));
+            const inactiveEmphasis = 1 - activeEmphasis;
+
+            return (
+              <article
+                className="relative -ml-[30vw] h-[340px] w-[82vw] max-w-[480px] shrink-0 overflow-visible bg-transparent text-left first:ml-0 will-change-[transform,opacity] sm:-ml-[9vw] sm:h-[450px] sm:w-[min(58vw,640px)] sm:max-w-none md:h-[520px] lg:-ml-[6vw] lg:w-[min(50vw,700px)]"
+                data-carousel-card={isCenterish ? "center" : "side"}
+                key={card.renderKey}
+                ref={(node) => {
+                  cardRefs.current[index] = node;
+                }}
+                style={{
+                  opacity: motionState.opacity,
+                  transform: `translateY(${motionState.y}px) scale(${motionState.scale}) rotateY(${motionState.rotate}deg)`,
+                  transformOrigin: "center bottom",
+                  zIndex: Math.round(motionState.progress * 10),
+                }}
+              >
+                <div
+                  className="absolute bottom-0 left-1/2 h-[91%] w-[66%] -translate-x-1/2 overflow-visible border transition-[border-color,box-shadow] duration-150 ease-out sm:h-[93%] sm:w-[60%]"
+                  data-carousel-frame
+                  style={{
+                    borderColor: `rgba(242, 229, 198, ${0.18 + activeEmphasis * 0.16})`,
+                  }}
+                >
+                  <div
+                    aria-hidden="true"
+                    className="absolute bottom-[9%] left-[12%] right-[7%] h-[58%] sm:h-[62%]"
+                    style={{
+                      backgroundColor: card.backing,
+                      opacity: activeEmphasis,
+                    }}
+                  />
+                  <div className="relative h-full overflow-hidden border border-[#f2e5c6]/24 bg-[#080807] p-2 shadow-[0_22px_58px_rgba(0,0,0,0.52)]">
+                    <div className="relative h-full overflow-hidden border border-black/30 bg-[#d7d3c7]">
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-0"
+                        style={{
+                          backgroundColor: card.backing,
+                          opacity: activeEmphasis,
+                        }}
+                      />
+                      <img
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-x-0 bottom-0 z-10 h-[112%] w-full max-w-none object-contain object-bottom transition-[filter] duration-150 ease-out sm:h-[116%]"
+                        data-carousel-image
+                        src={card.image}
+                        style={{
+                          filter: `grayscale(${inactiveEmphasis}) brightness(${
+                            0.72 + activeEmphasis * 0.34
+                          }) contrast(${1.08 + activeEmphasis * 0.04}) saturate(${
+                            0.18 + activeEmphasis * 0.94
+                          })`,
+                        }}
+                      />
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 z-20 bg-[#080807] transition-opacity duration-150 ease-out"
+                        style={{ opacity: inactiveEmphasis * 0.32 }}
+                      />
+                      <span aria-hidden="true" className="archive-scanlines absolute inset-0 z-30 opacity-30" />
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+      <div className="relative z-10 mx-auto mt-5 grid max-w-[1500px] gap-4 border-t border-[#f2e5c6]/14 pt-5 md:grid-cols-[minmax(110px,0.24fr)_minmax(0,1fr)_minmax(160px,0.34fr)] md:items-end">
+        <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/52 md:grid md:gap-2">
+          <span className="text-[#d7b82d]">Active Plate</span>
+          <span>{activeImageNumber} / 03</span>
+        </div>
+        <div aria-live="polite" className="min-h-[112px] md:min-h-[104px]">
+          <h3 className="font-headline text-[42px] font-bold uppercase leading-[0.9] text-[#f2e5c6] sm:text-[58px]">
+            {activeCard.title}
+          </h3>
+          <p className="mt-3 max-w-2xl text-sm font-light leading-6 text-[#f2e5c6]/66 sm:text-base sm:leading-7">
+            {activeCard.text}
+          </p>
+        </div>
+        <div className="grid grid-cols-3 gap-px border border-[#f2e5c6]/14 bg-[#f2e5c6]/14 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58 md:grid-cols-1">
+          {[activeCard.category, activeCard.focus, activeCard.location].map((item) => (
+            <span className="bg-[#0f0e0d] px-3 py-2.5" key={item}>
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
     </motion.section>
   );
@@ -425,34 +848,50 @@ function WonderCaptcha() {
 
   return (
     <motion.section
-      className="relative overflow-hidden bg-[#0a1220] px-4 py-20 text-white sm:px-8 lg:px-12"
+      className="relative overflow-hidden bg-[#0f0f0e] px-5 py-20 text-white sm:px-8 lg:px-12"
       initial={{ opacity: 0, y: 44 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
       viewport={{ amount: 0.2, once: true }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(244,210,64,0.18),transparent_24%),radial-gradient(circle_at_80%_18%,rgba(63,149,223,0.32),transparent_28%),linear-gradient(160deg,#070b12,#17385d_52%,#05070b)]" />
-      <div className="halftone absolute inset-0 opacity-60" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.06)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.045)_1px,transparent_1px),linear-gradient(180deg,#121110,#090909)] [background-size:48px_48px,48px_48px,100%_100%]" />
+      <div className="absolute left-[8%] right-[8%] top-16 h-px bg-[#f2e5c6]/16" />
+      <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[#f2e5c6]/12" />
 
       <div
-        className={`relative mx-auto max-w-[720px] border-[8px] border-white bg-white text-[#111] shadow-[0_24px_0_rgba(0,0,0,0.38)] ${
+        className={`relative mx-auto max-w-[920px] border border-[#f2e5c6]/18 bg-[#11100f]/82 text-[#f2e5c6] shadow-[0_28px_80px_rgba(0,0,0,0.28)] backdrop-blur-sm ${
           flashing ? "captcha-flash" : ""
         }`}
       >
-        <div className="bg-[#3f95df] px-5 py-5 text-white sm:px-7 sm:py-6">
-          <h2 className="max-w-2xl text-3xl font-bold leading-8 sm:text-4xl sm:leading-10">
-            Select all the images that make you wonder
-          </h2>
+        <div className="px-4 py-4 sm:px-6 sm:py-5">
+          <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
+            <span>Human Check</span>
+            <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+            <span>09 Images</span>
+            <span>{selected.length.toString().padStart(2, "0")} Selected</span>
+          </div>
+          <div className="grid gap-4 pt-5 sm:grid-cols-[minmax(0,1fr)_minmax(170px,0.36fr)] sm:items-end">
+            <h2 className="max-w-2xl font-display text-[30px] font-medium leading-[1.02] text-[#f2e5c6] sm:text-[42px]">
+              Select all images that make you wonder.
+            </h2>
+            <p className="border-l border-[#f2e5c6]/16 pl-4 text-xs font-light leading-5 text-[#f2e5c6]/56">
+              Click verify once your curiosity is satisfied.
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-1 bg-white p-1">
+        <div className="grid grid-cols-3 gap-px border-y border-[#f2e5c6]/14 bg-[#f2e5c6]/14">
           {tiles.map((tile, index) => {
             const active = selectedSet.has(tile.id);
 
             return (
               <button
                 aria-pressed={active}
-                className="group relative aspect-square overflow-hidden bg-[#111] outline-none"
+                className={`group relative aspect-square overflow-hidden bg-[#0b0b0a] outline-none transition focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-[#d7b82d] ${
+                  active
+                    ? "shadow-[inset_0_0_0_1px_#d7b82d,inset_0_0_0_4px_rgba(15,15,14,0.84)]"
+                    : "hover:shadow-[inset_0_0_0_1px_rgba(242,229,198,0.34)]"
+                }`}
                 key={tile.id}
                 onClick={() => {
                   setSelected((current) =>
@@ -467,45 +906,62 @@ function WonderCaptcha() {
                   alt=""
                   aria-hidden="true"
                   className={`h-full w-full object-cover transition duration-300 ${
-                    active ? "opacity-[0.42]" : "opacity-100 group-hover:opacity-[0.42]"
+                    active
+                      ? "scale-[1.02] opacity-[0.76] saturate-[0.78]"
+                      : "opacity-95 group-hover:scale-[1.02] group-hover:opacity-[0.72]"
                   }`}
                   src={tile.image}
                   style={{ objectPosition: captchaPositions[index % captchaPositions.length] }}
                 />
                 <span
-                  className={`absolute inset-x-1 bottom-1 bg-black/78 px-2 py-1 text-[11px] font-black leading-tight text-white transition duration-300 ${
+                  className={`absolute inset-0 transition ${
+                    active ? "bg-[#d7b82d]/10" : "bg-black/0 group-hover:bg-black/22"
+                  }`}
+                />
+                <span
+                  className={`absolute inset-x-2 bottom-2 border-t border-[#f2e5c6]/40 pt-1.5 text-left text-[9px] font-bold uppercase leading-tight text-[#f2e5c6] transition duration-300 ${
                     active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                   }`}
                 >
                   {tile.caption}
                 </span>
                 <span
-                  className={`absolute left-2 top-2 inline-flex h-5 w-5 items-center justify-center border-2 border-white bg-black/20 transition ${
-                    active ? "bg-[#f4d240] text-black" : ""
+                  className={`absolute left-2 top-2 inline-flex h-5 w-5 items-center justify-center border text-[#f2e5c6] transition ${
+                    active
+                      ? "border-[#d7b82d] bg-[#d7b82d] text-[#111]"
+                      : "border-[#f2e5c6]/55 bg-black/18"
                   }`}
                 >
-                  {active ? <X aria-hidden="true" size={14} strokeWidth={3} /> : null}
+                  {active ? <X aria-hidden="true" size={13} strokeWidth={2.6} /> : null}
+                </span>
+                <span className="absolute right-2 top-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/50">
+                  {(index + 1).toString().padStart(2, "0")}
                 </span>
               </button>
             );
           })}
         </div>
 
-        <div className="flex items-center justify-between border-t border-[#cfd6de] bg-white px-5 py-4">
+        <div className="flex items-center justify-between gap-3 px-4 py-4 sm:px-6">
+          <div className="hidden items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/46 sm:flex">
+            <span>Choose by feel</span>
+            <span className="h-px w-16 bg-[#f2e5c6]/14" />
+            <span>There is no answer key</span>
+          </div>
           <button
             aria-label="Undo and shuffle images"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#545454] transition hover:bg-[#eef3f8] hover:text-[#111]"
+            className="inline-flex h-9 w-9 items-center justify-center border border-[#f2e5c6]/20 text-[#f2e5c6]/62 transition hover:border-[#f2e5c6]/40 hover:text-[#f2e5c6]"
             onClick={shuffle}
             type="button"
           >
-            <RotateCcw aria-hidden="true" size={20} />
+            <RotateCcw aria-hidden="true" size={17} strokeWidth={1.9} />
           </button>
           <button
-            className="inline-flex items-center gap-2 rounded-sm bg-[#3f95df] px-5 py-3 text-xs font-black uppercase text-white transition hover:bg-[#111]"
+            className="inline-flex h-9 items-center gap-2 border border-[#f2e5c6]/26 px-4 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/78 transition hover:border-[#d7b82d] hover:text-[#d7b82d]"
             onClick={verify}
             type="button"
           >
-            <ShieldCheck aria-hidden="true" size={16} />
+            <ShieldCheck aria-hidden="true" size={15} strokeWidth={1.9} />
             Verify
           </button>
         </div>

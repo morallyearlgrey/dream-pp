@@ -2,13 +2,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f2e5c6;
-  --foreground: #211b18;
+  --background: #0b0b0a;
+  --foreground: #f2e5c6;
   --maroon: #5e1c23;
   --bark: #605246;
   --linen-shadow: #a1947f;
-  --blue: #849aad;
+  --blue: #d7b82d;
   --cream: #f2e5c6;
+  --ink: #080807;
+  --gold: #d7b82d;
 }
 
 @theme inline {
@@ -31,10 +33,14 @@ html {
 body {
   min-height: 100vh;
   background:
-    linear-gradient(90deg, rgba(94, 28, 35, 0.06) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(96, 82, 70, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 229, 198, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(242, 229, 198, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 18% 8%, rgba(94, 28, 35, 0.18), transparent 28%),
     var(--background);
-  background-size: 42px 42px;
+  background-size:
+    48px 48px,
+    48px 48px,
+    100% 100%;
   color: var(--foreground);
   font-family: "Oxygen", Arial, Helvetica, sans-serif;
   font-weight: 300;
@@ -50,7 +56,39 @@ select {
 
 button,
 a {
+  cursor: pointer;
   touch-action: manipulation;
+}
+
+:where(
+  [role="button"],
+  [role="link"],
+  summary,
+  label,
+  select,
+  input[type="button"],
+  input[type="checkbox"],
+  input[type="color"],
+  input[type="file"],
+  input[type="radio"],
+  input[type="range"],
+  input[type="reset"],
+  input[type="submit"]
+) {
+  cursor: pointer;
+}
+
+:where(
+  button,
+  [role="button"],
+  a,
+  [role="link"],
+  select,
+  input,
+  textarea
+):disabled,
+:where([aria-disabled="true"]) {
+  cursor: not-allowed;
 }
 
 ::selection {
@@ -76,12 +114,12 @@ a {
 }
 
 .reference-phone {
-  background: white;
-  border: 2px solid #111;
-  border-radius: 28px;
+  background: #0d0c0b;
+  border: 1px solid rgba(242, 229, 198, 0.28);
+  border-radius: 0;
   box-shadow:
-    18px 18px 0 rgba(96, 82, 70, 0.16),
-    0 28px 70px rgba(94, 28, 35, 0.16);
+    12px 12px 0 rgba(94, 28, 35, 0.28),
+    0 28px 70px rgba(0, 0, 0, 0.42);
   overflow: hidden;
 }
 
@@ -139,7 +177,7 @@ a {
     radial-gradient(ellipse at 78% 33%, rgba(33, 23, 22, 0.92) 0 21%, transparent 38%),
     radial-gradient(ellipse at 51% 13%, rgba(26, 20, 20, 0.96) 0 24%, transparent 42%),
     radial-gradient(ellipse at 52% 82%, rgba(96, 82, 70, 0.72) 0 16%, transparent 31%),
-    linear-gradient(180deg, #f2e5c6 0%, #e7d2b4 46%, #849aad 100%);
+    linear-gradient(180deg, #f2e5c6 0%, #d7b82d 46%, #211b18 100%);
 }
 
 .abstract-photo {
@@ -149,7 +187,7 @@ a {
     radial-gradient(ellipse at 62% 31%, rgba(12, 12, 12, 0.62) 0 3%, transparent 6%),
     radial-gradient(ellipse at 50% 45%, rgba(94, 28, 35, 0.45) 0 5%, transparent 9%),
     radial-gradient(ellipse at 50% 18%, rgba(11, 11, 11, 0.9) 0 16%, transparent 31%),
-    linear-gradient(135deg, var(--photo-a, #849aad), var(--photo-b, #f2e5c6));
+    linear-gradient(135deg, var(--photo-a, #5e1c23), var(--photo-b, #f2e5c6));
   background-size: cover;
   overflow: hidden;
   position: relative;
@@ -157,10 +195,16 @@ a {
 
 .abstract-photo::after {
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 18px),
-    radial-gradient(rgba(0, 0, 0, 0.28) 0.8px, transparent 0.8px);
+    linear-gradient(90deg, rgba(242, 229, 198, 0.12) 0 1px, transparent 1px 18px),
+    repeating-linear-gradient(
+      180deg,
+      rgba(8, 8, 7, 0.2) 0 1px,
+      transparent 1px 6px
+    ),
+    radial-gradient(rgba(0, 0, 0, 0.3) 0.8px, transparent 0.8px);
   background-size:
     18px 100%,
+    100% 6px,
     8px 8px;
   content: "";
   inset: 0;
@@ -173,7 +217,7 @@ a {
 .halftone {
   background:
     radial-gradient(rgba(0, 0, 0, 0.54) 1.1px, transparent 1.1px),
-    linear-gradient(135deg, rgba(132, 154, 173, 0.8), rgba(94, 28, 35, 0.45));
+    linear-gradient(135deg, rgba(215, 184, 45, 0.8), rgba(94, 28, 35, 0.45));
   background-size:
     8px 8px,
     100% 100%;
@@ -181,11 +225,11 @@ a {
 
 .about-hero-colorwash {
   background:
-    radial-gradient(circle at 38% 42%, rgba(242, 210, 64, 0.34), transparent 20%),
-    radial-gradient(circle at 58% 46%, rgba(192, 65, 58, 0.28), transparent 18%),
-    linear-gradient(90deg, rgba(231, 181, 144, 0.7), rgba(91, 153, 207, 0.26));
-  mix-blend-mode: color;
-  opacity: 0.92;
+    radial-gradient(circle at 44% 42%, rgba(255, 255, 255, 0.2), transparent 18%),
+    radial-gradient(circle at 58% 44%, rgba(132, 154, 173, 0.18), transparent 24%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(132, 154, 173, 0.12));
+  mix-blend-mode: soft-light;
+  opacity: 0.48;
   pointer-events: none;
 }
 
@@ -201,11 +245,15 @@ a {
 
 .poster-sketch {
   background:
-    radial-gradient(ellipse at 45% 38%, rgba(20, 20, 20, 0.12) 0 18%, transparent 28%),
-    radial-gradient(ellipse at 55% 48%, rgba(20, 20, 20, 0.13) 0 16%, transparent 28%),
-    linear-gradient(104deg, transparent 0 18%, rgba(20, 20, 20, 0.22) 19% 23%, transparent 24%),
-    linear-gradient(78deg, transparent 0 44%, rgba(20, 20, 20, 0.2) 45% 48%, transparent 49%);
-  filter: blur(1px);
+    linear-gradient(90deg, rgba(8, 8, 7, 0.14) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(8, 8, 7, 0.14) 1px, transparent 1px),
+    radial-gradient(ellipse at 48% 38%, rgba(94, 28, 35, 0.16) 0 18%, transparent 29%),
+    radial-gradient(ellipse at 56% 47%, rgba(215, 184, 45, 0.12) 0 12%, transparent 24%);
+  background-size:
+    34px 34px,
+    34px 34px,
+    100% 100%,
+    100% 100%;
 }
 
 .noise {
@@ -235,7 +283,7 @@ a {
       rgba(255, 255, 255, 0.18) 0 10px,
       transparent 10px 22px
     ),
-    linear-gradient(135deg, #5e1c23, #849aad 46%, #605246);
+    linear-gradient(135deg, #5e1c23, #d7b82d 46%, #211b18);
   background-size:
     92px 100%,
     200% 200%;
@@ -245,7 +293,7 @@ a {
 .media-loop {
   background:
     linear-gradient(135deg, rgba(94, 28, 35, 0.16), rgba(132, 154, 173, 0.12)),
-    var(--loop-image, linear-gradient(135deg, #5e1c23, #849aad));
+    var(--loop-image, linear-gradient(135deg, #5e1c23, #d7b82d));
   background-position: center;
   background-size: cover;
   animation: slowPan 9s ease-in-out infinite alternate;
@@ -253,6 +301,104 @@ a {
 
 .media-loop.is-paused {
   animation-play-state: paused;
+}
+
+.editorial-film-sprockets {
+  background:
+    radial-gradient(circle, rgba(242, 229, 198, 0.46) 0 2px, transparent 2.6px)
+      0 50% / 18px 8px repeat-x,
+    linear-gradient(180deg, rgba(242, 229, 198, 0.04), rgba(242, 229, 198, 0));
+}
+
+.editorial-film-grain {
+  pointer-events: none;
+}
+
+.editorial-film-grain::after {
+  background:
+    radial-gradient(rgba(242, 229, 198, 0.2) 0.55px, transparent 0.6px),
+    radial-gradient(rgba(8, 8, 7, 0.34) 0.7px, transparent 0.75px),
+    repeating-linear-gradient(
+      180deg,
+      rgba(242, 229, 198, 0.07) 0 1px,
+      transparent 1px 4px
+    );
+  background-position:
+    0 0,
+    8px 7px,
+    0 0;
+  background-size:
+    15px 15px,
+    19px 19px,
+    100% 4px;
+  content: "";
+  inset: 0;
+  mix-blend-mode: overlay;
+  opacity: 0.18;
+  position: absolute;
+}
+
+.archive-scanlines {
+  pointer-events: none;
+}
+
+.archive-scanlines::after {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(242, 229, 198, 0.16) 0 1px,
+      transparent 1px 5px
+    ),
+    linear-gradient(90deg, rgba(94, 28, 35, 0.1), rgba(215, 184, 45, 0.08));
+  content: "";
+  inset: 0;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  position: absolute;
+}
+
+.who-mask-heading {
+  cursor: default;
+  display: inline-block;
+  isolation: isolate;
+  position: relative;
+}
+
+.who-mask-text {
+  background:
+    linear-gradient(120deg, rgba(242, 229, 198, 0.2), rgba(215, 184, 45, 0.18)),
+    url("/about/whoami.jpeg");
+  background-clip: text;
+  background-position:
+    center 42%,
+    center 42%;
+  background-size:
+    130% auto,
+    cover;
+  color: transparent;
+  filter: saturate(1.08) contrast(1.08);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    filter 260ms ease,
+    opacity 260ms ease;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: whoMaskDrift 9s ease-in-out infinite alternate;
+  will-change: background-position, filter, opacity;
+}
+
+.who-mask-hover {
+  background-size:
+    150% auto,
+    140% auto;
+  opacity: 0;
+}
+
+.group:hover .who-mask-text,
+.group:focus-within .who-mask-text {
+  filter: saturate(1.28) contrast(1.14);
+  opacity: 1;
 }
 
 .captcha-flash {
@@ -291,15 +437,30 @@ a {
   }
 }
 
+@keyframes whoMaskDrift {
+  from {
+    background-position:
+      center 38%,
+      center 38%;
+  }
+  to {
+    background-position:
+      center 58%,
+      center 58%;
+  }
+}
+
 @keyframes flashRed {
   0%,
   100% {
-    border-color: rgba(94, 28, 35, 0.28);
+    border-color: rgba(242, 229, 198, 0.18);
   }
   35%,
   70% {
-    border-color: #c5162e;
-    box-shadow: 0 0 0 5px rgba(197, 22, 46, 0.18);
+    border-color: rgba(215, 184, 45, 0.78);
+    box-shadow:
+      0 0 0 1px rgba(215, 184, 45, 0.2),
+      0 28px 80px rgba(0, 0, 0, 0.28);
   }
 }
 

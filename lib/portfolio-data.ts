@@ -1,31 +1,31 @@
 export const aboutCards = [
   {
-    title: "Builder",
-    image: "/references/projects.jpg",
-    text: "I like turning hazy ideas into working systems with names, edges, tests, and a pulse.",
+    title: "A Builder",
+    image: "/about/builder.png",
+    text: "Software projects, art, jewelry, writing, music, drinks – they all have one thing in common that fuels me: authenticity. It is utterly beautiful to see your own hands make nothing become something. Although I don't think anything I've created will change the world drastically, I know that everything I've made will leave my fingerprint – my personality, memories, motivations – on the world.",
   },
   {
-    title: "Friend",
-    image: "/references/experiences.jpg",
-    text: "I care about the people around the work: their context, their momentum, and their trust.",
+    title: "A Friend",
+    image: "/about/friend.png",
+    text: "I am a messy amalgamation of my loved ones and community. ",
   },
   {
-    title: "Explorer",
-    image: "/references/aboutme.jpg",
+    title: "An Explorer",
+    image: "/about/explorer.png",
     text: "I follow questions into codebases, books, circuits, galleries, and long walks.",
   },
 ];
 
 export const captchaTiles = [
-  { id: "tile-1", caption: "A hidden circuit", image: "/references/projects.jpg" },
-  { id: "tile-2", caption: "Soft static", image: "/references/aboutme.jpg" },
-  { id: "tile-3", caption: "Late train light", image: "/references/experiences.jpg" },
-  { id: "tile-4", caption: "The first prototype", image: "/references/projects.jpg" },
-  { id: "tile-5", caption: "A half-read page", image: "/references/aboutme.jpg" },
-  { id: "tile-6", caption: "Blue hour", image: "/references/experiences.jpg" },
-  { id: "tile-7", caption: "Almost solved", image: "/references/projects.jpg" },
-  { id: "tile-8", caption: "Quiet evidence", image: "/references/aboutme.jpg" },
-  { id: "tile-9", caption: "Small signal", image: "/references/experiences.jpg" },
+  { id: "tile-1", caption: "My favorite art piece", image: "/captcha/art.jpeg" },
+  { id: "tile-2", caption: "Best concert I've been to", image: "/captcha/concerts.jpeg" },
+  { id: "tile-3", caption: "Most memorable cosplay", image: "/captcha/cosplays.jpeg" },
+  { id: "tile-4", caption: "We did lines of matcha", image: "/captcha/drinks.jpeg" },
+  { id: "tile-5", caption: "Coolest hackathon project", image: "/captcha/hackathons.jpeg" },
+  { id: "tile-6", caption: "The reason I hate Unity", image: "/captcha/ieee.jpeg" },
+  { id: "tile-7", caption: "My proudest jewelry creation", image: "/captcha/jewelry.png" },
+  { id: "tile-8", caption: "I like to organize hackathons", image: "/captcha/knighthacks.jpeg" },
+  { id: "tile-9", caption: "Prettiest place I've seen", image: "/captcha/traveling.jpeg" },
 ];
 
 export const experiencesSeed = [
@@ -42,8 +42,8 @@ export const experiencesSeed = [
       "Created repeatable hardware validation notes for team review.",
       "Improved data capture loops across firmware and analysis scripts.",
     ],
-    photos: ["/references/experiences.jpg", "/references/projects.jpg"],
-    mainVideo: "/media/placeholder-signal.mp4",
+    photos: ["/references/experiences.jpg", "/references/projects.jpg", "/about/hero-hq.jpeg"],
+    mainVideo: "/experiences/IMG_0118.mov",
   },
   {
     id: "design-systems",
@@ -58,8 +58,8 @@ export const experiencesSeed = [
       "Translated motion concepts into Framer Motion interactions.",
       "Partnered with designers to sharpen responsive page systems.",
     ],
-    photos: ["/references/aboutme.jpg", "/references/experiences.jpg"],
-    mainVideo: "/media/placeholder-interface.mp4",
+    photos: ["/references/aboutme.jpg", "/references/experiences.jpg", "/about/whoami.jpeg"],
+    mainVideo: "/experiences/IMG_4279.MOV",
   },
 ];
 
@@ -74,7 +74,7 @@ export const projectsSeed = [
     whatIDid:
       "I shaped the data model, built the interactive visual language, and prepared the admin surface for blog publishing and endorsement moderation.",
     photos: ["/references/projects.jpg", "/references/aboutme.jpg"],
-    mainVideo: "/media/portfolio-engine.mp4",
+    mainVideo: "/projects/IMG_1775 2.MOV",
     projectLink: "#",
     toolsUsed: ["Next.js", "Tailwind", "Drizzle", "PostgreSQL"],
   },
@@ -88,7 +88,7 @@ export const projectsSeed = [
     whatIDid:
       "I designed the capture flow, modeled readings as timeline entries, and prototyped the visual comparison interface for repeat experiments.",
     photos: ["/references/experiences.jpg", "/references/projects.jpg"],
-    mainVideo: "/media/sensor-notebook.mp4",
+    mainVideo: "/projects/IMG_1967.MOV",
     projectLink: "#",
     toolsUsed: ["React", "Postgres", "Python", "Embedded C"],
   },
@@ -102,7 +102,7 @@ export const projectsSeed = [
     whatIDid:
       "I created the taxonomy, designed the reading card UI, and added tooling for turning highlights into publishable notes.",
     photos: ["/references/aboutme.jpg", "/references/projects.jpg"],
-    mainVideo: "/media/reading-room.mp4",
+    mainVideo: "/projects/IMG_2431.MOV",
     projectLink: "#",
     toolsUsed: ["TypeScript", "Next.js", "MDX", "Design"],
   },
@@ -116,7 +116,7 @@ export const projectsSeed = [
     whatIDid:
       "I prototyped motion states, built reusable timing presets, and tested interactions across mobile and laptop layouts.",
     photos: ["/references/projects.jpg", "/references/experiences.jpg"],
-    mainVideo: "/media/motion-lab.mp4",
+    mainVideo: "/projects/IMG_2443.MOV",
     projectLink: "#",
     toolsUsed: ["Framer Motion", "Tailwind", "React"],
   },
