@@ -85,6 +85,39 @@ function getWrappedProjectIndex(index: number) {
   return (index + projectsSeed.length) % projectsSeed.length;
 }
 
+function getDesktopStripItems(selected: number) {
+  const items = stripSlots.map((slot) => {
+    const projectIndex = getWrappedProjectIndex(selected + slot);
+
+    return {
+      project: projectsSeed[projectIndex],
+      projectIndex,
+      slot,
+    };
+  });
+  const stableSlots = new Map<number, (typeof stripSlots)[number]>();
+
+  for (const item of items) {
+    const previousSlot = stableSlots.get(item.projectIndex);
+
+    if (
+      previousSlot === undefined ||
+      Math.abs(item.slot) < Math.abs(previousSlot) ||
+      (Math.abs(item.slot) === Math.abs(previousSlot) && item.slot > previousSlot)
+    ) {
+      stableSlots.set(item.projectIndex, item.slot);
+    }
+  }
+
+  return items.map((item) => ({
+    ...item,
+    key:
+      stableSlots.get(item.projectIndex) === item.slot
+        ? item.project.id
+        : `${item.project.id}-${item.slot}`,
+  }));
+}
+
 function hasProjectLink(project: ProjectFeature) {
   return Boolean(project.projectLink && project.projectLink !== "#");
 }
@@ -93,7 +126,7 @@ export function ProjectsPage() {
   const [selected, setSelected] = useState(0);
 
   return (
-    <main className="overflow-visible bg-[#0b0b0a] text-[#f2e5c6]">
+    <main className="overflow-x-clip bg-[#0b0b0a] text-[#f2e5c6]">
       <ProjectHero selected={selected} setSelected={setSelected} />
       <EditorialSpreadSection selected={selected} setSelected={setSelected} />
     </main>
@@ -295,23 +328,17 @@ function EditorialSpreadSection({
   const project = projectsSeed[selected];
 
   return (
-    <section className="relative isolate overflow-visible bg-[#080807] px-5 pb-20 pt-10 text-[#f2e5c6] sm:px-8 sm:pb-24 sm:pt-12 lg:min-h-[1560px] lg:px-12 lg:pb-64 lg:pt-14 xl:min-h-[1640px] xl:pb-72">
+    <section className="relative isolate overflow-visible bg-[#080807] px-5 pb-16 pt-10 text-[#f2e5c6] sm:px-8 sm:pb-20 sm:pt-12 lg:min-h-[1120px] lg:px-10 lg:pb-28 lg:pt-14 xl:min-h-[1200px] xl:px-12 xl:pb-32">
       <ProjectSpreadBackground project={project} />
 
-      <div className="relative z-20 mx-auto max-w-[1500px] overflow-visible">
+      <div className="relative z-20 mx-auto w-full max-w-[1280px] overflow-visible">
         <div className="flex items-center justify-between gap-4 border-y border-[#f2e5c6]/20 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
           <span>Project {String(selected + 1).padStart(2, "0")}</span>
-          <span className="hidden text-center sm:block">{formatDateRange(project)}</span>
           <span>{projectsSeed.length} Works</span>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:min-h-[650px] lg:grid-cols-[minmax(250px,0.82fr)_minmax(470px,1.36fr)_minmax(250px,0.82fr)] lg:items-start lg:gap-8 xl:grid-cols-[minmax(300px,0.86fr)_minmax(520px,1.42fr)_minmax(290px,0.86fr)]">
+        <div className="mt-6 grid min-w-0 gap-6 overflow-visible lg:grid-cols-2 lg:items-start lg:gap-10 xl:gap-12">
           <ProjectInfoPanel
-            project={project}
-            selected={selected}
-          />
-
-          <ActiveProjectFeature
             project={project}
             selected={selected}
           />
@@ -330,41 +357,6 @@ function EditorialSpreadSection({
         />
       </div>
     </section>
-  );
-}
-
-function ActiveProjectFeature({
-  project,
-  selected,
-}: {
-  project: ProjectFeature;
-  selected: number;
-}) {
-  return (
-    <figure className="order-1 relative z-20 mx-auto flex min-h-[260px] w-full max-w-[620px] items-end justify-center overflow-visible lg:order-none lg:min-h-[520px] lg:max-w-[680px] xl:min-h-[560px]">
-      <div
-        aria-hidden="true"
-        className="absolute left-[-14%] right-[-14%] top-[16%] h-px bg-[#f2e5c6]/18"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute bottom-[22%] left-[-7%] right-[-7%] h-px bg-[#5E1C23]/60"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute bottom-[9%] left-1/2 h-[72%] w-[68%] -translate-x-1/2 border border-[#f2e5c6]/14 bg-[#f2e5c6]/[0.025] lg:w-[58%]"
-      />
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[4%] z-0 -translate-x-1/2 whitespace-nowrap font-display text-[96px] font-semibold uppercase leading-none text-[#f2e5c6]/10 mix-blend-screen sm:text-[140px] lg:text-[192px] xl:text-[238px]"
-      >
-        {String(selected + 1).padStart(2, "0")}
-      </span>
-      <figcaption className="absolute bottom-1 left-1/2 z-20 flex w-[min(100%,460px)] -translate-x-1/2 items-center justify-between gap-4 border-y border-[#f2e5c6]/18 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
-        <span>{project.id}</span>
-        <span className="text-right text-[#d7b82d]">{formatDateRange(project)}</span>
-      </figcaption>
-    </figure>
   );
 }
 
@@ -402,28 +394,28 @@ function ProjectInfoPanel({
   return (
     <section
       aria-live="polite"
-      className="order-2 relative z-30 border-y border-[#f2e5c6]/22 bg-[#080807]/32 px-0 py-4 text-[#f2e5c6] backdrop-blur-[2px] lg:order-none lg:mt-16 lg:border-y-0 lg:border-l lg:bg-transparent lg:py-0 lg:pl-4"
+      className="order-1 relative z-30 min-w-0 overflow-visible border-y border-[#f2e5c6]/22 bg-[#080807]/32 px-0 py-5 text-[#f2e5c6] backdrop-blur-[2px] lg:order-none lg:mt-4 lg:border-y-0 lg:border-l lg:bg-transparent lg:px-0 lg:pb-6 lg:pl-4 lg:pt-0 xl:mt-6"
     >
       <div className="flex items-center justify-between gap-4 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
         <span>Active Project</span>
         <span>{String(selected + 1).padStart(2, "0")}</span>
       </div>
-      <h3 className="mt-5 font-display text-[44px] font-semibold uppercase leading-[0.82] text-[#f2e5c6] sm:text-[64px] lg:text-[70px] xl:text-[86px]">
+      <h3 className="mt-5 max-w-full break-words font-display text-[44px] font-semibold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[60px] lg:text-[58px] xl:text-[72px]">
         {project.name}
       </h3>
       <dl className="mt-5 grid gap-2 border-y border-[#f2e5c6]/14 py-4 text-[10px] leading-5 sm:text-xs">
         <div className="grid grid-cols-[82px_1fr] gap-3">
           <dt className="font-bold uppercase text-[#d7b82d]">Dates</dt>
-          <dd className="text-[#f2e5c6]/72">{displayRange}</dd>
+          <dd className="min-w-0 break-words text-[#f2e5c6]/72">{displayRange}</dd>
         </div>
         {tools ? (
           <div className="grid grid-cols-[82px_1fr] gap-3">
             <dt className="font-bold uppercase text-[#d7b82d]">Tools</dt>
-            <dd className="text-[#f2e5c6]/72">{tools}</dd>
+            <dd className="min-w-0 break-words text-[#f2e5c6]/72">{tools}</dd>
           </div>
         ) : null}
       </dl>
-      <p className="mt-4 text-sm font-light leading-6 text-[#f2e5c6]/70">
+      <p className="mt-4 max-w-[64ch] text-sm font-light leading-6 text-[#f2e5c6]/70">
         {project.summary}
       </p>
       <ProjectLink project={project} />
@@ -434,7 +426,7 @@ function ProjectInfoPanel({
 function ProjectLink({ project }: { project: ProjectFeature }) {
   if (!hasProjectLink(project)) {
     return (
-      <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#f2e5c6]/14 pt-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/42">
+      <div className="mt-5 flex min-h-10 flex-wrap items-center justify-between gap-3 border-t border-[#f2e5c6]/14 pt-3 text-[10px] font-bold uppercase leading-4 text-[#f2e5c6]/42">
         <span>Project Link</span>
         <span>Pending</span>
       </div>
@@ -445,7 +437,7 @@ function ProjectLink({ project }: { project: ProjectFeature }) {
 
   return (
     <a
-      className="mt-5 inline-flex h-10 items-center gap-2 border border-[#f2e5c6]/28 bg-[#f2e5c6] px-3 text-[10px] font-bold uppercase leading-none text-[#080807] transition hover:border-[#d7b82d] hover:bg-[#d7b82d] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#d7b82d]"
+      className="mt-5 inline-flex min-h-10 max-w-full items-center gap-2 border border-[#f2e5c6]/28 bg-[#f2e5c6] px-3 py-2 text-[10px] font-bold uppercase leading-4 text-[#080807] transition hover:border-[#d7b82d] hover:bg-[#d7b82d] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#d7b82d]"
       href={project.projectLink}
       rel={external ? "noreferrer" : undefined}
       target={external ? "_blank" : undefined}
@@ -458,12 +450,12 @@ function ProjectLink({ project }: { project: ProjectFeature }) {
 
 function ProjectWorkPanel({ project }: { project: ProjectFeature }) {
   return (
-    <section className="order-3 relative z-30 border-l border-[#f2e5c6]/24 bg-[#080807]/26 py-4 pl-4 text-[#f2e5c6] backdrop-blur-[2px] sm:pl-5 lg:order-none lg:mt-28 lg:bg-transparent lg:py-0">
-      <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
+    <section className="order-2 relative z-30 min-w-0 overflow-visible border-l border-[#f2e5c6]/24 bg-[#080807]/26 py-5 pl-4 text-[#f2e5c6] backdrop-blur-[2px] sm:pl-5 lg:order-none lg:mt-10 lg:bg-transparent lg:pb-6 lg:pt-0 xl:mt-12">
+      <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/58">
         <span>What I Did</span>
         <span className="h-px flex-1 bg-[#f2e5c6]/16" />
       </div>
-      <p className="mt-5 text-sm font-light leading-6 text-[#f2e5c6]/72">
+      <p className="mt-5 max-w-[64ch] text-sm font-light leading-6 text-[#f2e5c6]/72">
         {project.whatIDid}
       </p>
       <div className="mt-6 grid grid-cols-2 border-y border-[#f2e5c6]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/44">
@@ -485,32 +477,27 @@ function DesktopProjectStrip({
   const cutout = getProjectFeatureCutout(project);
 
   return (
-    <div className="relative z-40 mt-10 hidden overflow-visible lg:block xl:mt-12">
-      <div className="mx-auto w-[min(96vw,1360px)] overflow-visible">
-        <div className="relative min-h-[820px] overflow-visible py-32 xl:min-h-[900px] xl:py-36">
+    <div className="relative z-20 mt-0 hidden w-full overflow-visible lg:block">
+      <div className="mx-auto w-full max-w-[1200px] overflow-visible">
+        <div className="relative min-h-[540px] overflow-visible pb-20 pt-0 xl:min-h-[600px] xl:pb-24">
           <img
             alt=""
             aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-6 z-10 max-h-[610px] w-[min(56vw,640px)] -translate-x-1/2 object-contain opacity-90 drop-shadow-[0_34px_70px_rgba(0,0,0,0.55)] xl:top-8 xl:max-h-[670px] xl:w-[min(52vw,700px)]"
+            className="pointer-events-none absolute left-1/2 top-[-64px] z-10 max-h-[500px] w-[min(54vw,560px)] -translate-x-1/2 object-contain opacity-90 drop-shadow-[0_34px_70px_rgba(0,0,0,0.55)] xl:top-[-78px] xl:max-h-[570px] xl:w-[min(50vw,620px)]"
             src={cutout}
           />
-          <div className="relative z-20 mx-auto flex min-h-[460px] w-max items-end justify-center overflow-visible">
-            {stripSlots.map((slot) => {
-              const projectIndex = getWrappedProjectIndex(selected + slot);
-              const stripProject = projectsSeed[projectIndex];
-
-              return (
-                <DesktopStripFrame
-                  key={slot}
-                  project={stripProject}
-                  projectIndex={projectIndex}
-                  setSelected={setSelected}
-                  slot={slot}
-                />
-              );
-            })}
+          <div className="relative z-20 mx-auto flex min-h-[410px] w-full max-w-[1120px] min-w-0 items-end justify-center overflow-visible xl:min-h-[450px]">
+            {getDesktopStripItems(selected).map((item) => (
+              <DesktopStripFrame
+                key={item.key}
+                project={item.project}
+                projectIndex={item.projectIndex}
+                setSelected={setSelected}
+                slot={item.slot}
+              />
+            ))}
             <ProjectArrowControls
-              className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-[min(58vw,700px)] -translate-x-1/2 -translate-y-1/2 justify-between"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-[700px] -translate-x-1/2 -translate-y-1/2 justify-between"
               controlClassName="pointer-events-auto border-[#f2e5c6]/42 bg-[#050505]/92 backdrop-blur"
               setSelected={setSelected}
             />
@@ -536,7 +523,7 @@ function DesktopProjectStrip({
 function getDesktopStripGeometry(slot: (typeof stripSlots)[number]) {
   const active = slot === 0;
   const distance = Math.abs(slot);
-  const width = active ? 440 : distance === 1 ? 296 : 232;
+  const width = active ? "29.5%" : distance === 1 ? "19.75%" : "15.5%";
   let topLeft = 12;
   let topRight = 12;
   let bottomLeft = 88;
@@ -585,7 +572,6 @@ function DesktopStripFrame({
     ? 10
     : `${100 - Math.min(frame.bottomLeft, frame.bottomRight) + 6}%`;
   const frameStyle: CSSProperties = {
-    height: 400,
     marginLeft: slot === stripSlots[0] ? 0 : -1,
     opacity: frame.opacity,
     width: frame.width,
@@ -594,16 +580,21 @@ function DesktopStripFrame({
 
   return (
     <motion.button
+      layout
       animate={{
         opacity: frame.opacity,
         width: frame.width,
       }}
       aria-label={`Select ${project.name}`}
       aria-pressed={active}
-      className="group relative h-[400px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#d7b82d]"
+      className="group relative h-[360px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#d7b82d] xl:h-[400px]"
       onClick={() => setSelected(projectIndex)}
       style={frameStyle}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1],
+        layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+      }}
       type="button"
     >
       <span
@@ -644,9 +635,6 @@ function DesktopStripFrame({
         <span className="block text-[#f2e5c6]/38">
           {formatDateRange(project)}
         </span>
-      </span>
-      <span className="absolute right-2 top-2 z-20 border-t border-[#f2e5c6]/36 pt-1 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/64">
-        {String(projectIndex + 1).padStart(2, "0")}
       </span>
     </motion.button>
   );
