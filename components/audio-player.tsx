@@ -131,7 +131,7 @@ export function NowPlayingModule() {
   return (
     <div aria-live="polite" className="grid gap-1.5 sm:gap-2">
       <div className="flex items-center gap-2 text-[9px] leading-none">
-        <span className="text-[#d7b82d]">Now playing</span>
+        <span className="text-[#8f2b35]">Now playing</span>
         <span className="h-px flex-1 bg-[#f2e5c6]/24" />
         <span>{hasTracks ? `${trackNumber}/${totalTracks}` : "0/0"}</span>
       </div>
@@ -139,7 +139,7 @@ export function NowPlayingModule() {
         <button
           aria-label={isPlaying ? "Pause track" : "Play track"}
           aria-pressed={isPlaying}
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/28 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#d7b82d] hover:text-[#d7b82d] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/28 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
           disabled={!hasTracks}
           onClick={togglePlayback}
           type="button"

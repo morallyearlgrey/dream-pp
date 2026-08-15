@@ -184,7 +184,7 @@ function FilmStrip({
 }) {
   return (
     <div className={`absolute z-20 ${className}`}>
-      <div className="relative overflow-hidden border-y border-[#f2e5c6]/24 bg-[#050505] py-3 shadow-[0_26px_70px_rgba(0,0,0,0.5)]">
+      <div className="relative overflow-hidden border-y border-[#f2e5c6]/24 bg-[#050505] py-3 shadow-[0_12px_32px_rgba(0,0,0,0.34)]">
         <div
           aria-hidden="true"
           className="editorial-film-sprockets absolute inset-x-0 top-0 h-3 border-b border-[#f2e5c6]/12 opacity-65"
@@ -256,7 +256,7 @@ function ExperienceRoleArchive({ experiences }: { experiences: ExperienceFeature
       <div className="mx-auto max-w-7xl border-t border-[#f2e5c6]/16 pt-8">
         <div className="mb-7 grid gap-4 md:grid-cols-[minmax(220px,0.45fr)_1fr] md:items-end">
           <div>
-            <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#d7b82d]">
+            <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
               Role Archive
               <span className="h-px flex-1 bg-[#f2e5c6]/16" />
             </p>
@@ -339,7 +339,7 @@ function MediaProofPanel({
         />
         <span
           aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.5)),radial-gradient(circle_at_22%_18%,rgba(215,184,45,0.1),transparent_30%)]"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.5)),radial-gradient(circle_at_22%_18%,rgba(143,43,53,0.1),transparent_30%)]"
         />
         <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
         <div className="absolute left-3 right-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/18 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/66">
@@ -369,7 +369,7 @@ function InfoPanel({
 }) {
   return (
     <section
-      className={`relative z-30 overflow-hidden border border-[#f2e5c6]/20 bg-[#0d0c0b] p-4 text-[#f2e5c6] sm:p-5 ${className}`}
+      className={`editorial-panel relative z-30 overflow-visible p-4 text-[#f2e5c6] sm:p-5 ${className}`}
     >
       <span
         aria-hidden="true"
@@ -380,7 +380,7 @@ function InfoPanel({
           <span>Experience {sequence.toString().padStart(2, "0")}</span>
           <span>{displayRange}</span>
         </div>
-        <div className="mt-5 flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#d7b82d]">
+        <div className="mt-5 flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
           <span>Role Note</span>
           <span className="h-px flex-1 bg-[#5E1C23]/70" />
         </div>
@@ -388,7 +388,7 @@ function InfoPanel({
           <h3 className="font-display text-[clamp(36px,8vw,62px)] font-semibold uppercase leading-[0.86] text-[#f2e5c6]">
             {experience.companyName}
           </h3>
-          <p className="mt-4 border-t border-[#f2e5c6]/16 pt-3 text-[10px] font-bold uppercase leading-none text-[#d7b82d]">
+          <p className="mt-4 border-t border-[#f2e5c6]/16 pt-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
             {experience.positionName}
           </p>
           <p className="mt-4 text-sm font-light leading-6 text-[#f2e5c6]/68">
@@ -428,7 +428,7 @@ function PhotoFlipPanel({
     <button
       aria-label={`Flip ${experience.companyName} media panel to responsibilities`}
       aria-pressed={flipped}
-      className="group/panel relative block h-[220px] w-full overflow-hidden border border-[#f2e5c6]/20 bg-[#080807] text-left transition hover:border-[#d7b82d]/75 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#d7b82d] sm:h-[250px] lg:h-[280px] xl:h-[300px]"
+      className="group/panel relative block h-[220px] w-full overflow-hidden border border-[#f2e5c6]/20 bg-[#080807] text-left transition hover:border-[#8f2b35]/75 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:h-[250px] lg:h-[280px] xl:h-[300px]"
       onClick={() => setFlipped((current) => !current)}
       type="button"
     >
@@ -554,7 +554,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
   }
 
   return (
-    <section className="relative z-40 mt-3 max-h-none w-full overflow-y-auto rounded-[24px] border border-white/70 bg-[#f8f4eb]/92 p-3 text-[#171311] shadow-[0_10px_28px_rgba(0,0,0,0.14)] backdrop-blur-md sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:max-h-[72%] lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
+    <section className="editorial-note-overlay relative z-40 mt-3 max-h-none w-full overflow-y-auto p-3 backdrop-blur-md sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:max-h-[72%] lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
       <div className="flex items-start gap-3">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#171311] text-[10px] font-bold uppercase leading-none text-[#f8f4eb]">
           {experienceInitials}
@@ -573,7 +573,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
             {featuredEndorsements.length > 0 ? (
               featuredEndorsements.map((endorsement, index) => (
                 <blockquote
-                  className="rounded-[18px] border border-[#171311]/10 bg-white/62 px-3 py-2"
+                  className="border border-[#171311]/10 bg-[#f8f4eb]/72 px-3 py-2"
                   key={endorsement.id}
                 >
                   <div className="flex items-start gap-2">
@@ -593,18 +593,18 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
                 </blockquote>
               ))
             ) : (
-              <p className="rounded-[18px] border border-[#171311]/10 bg-white/55 px-3 py-2 text-[11px] font-light leading-4 text-[#171311]/58">
+              <p className="border border-[#171311]/10 bg-[#f8f4eb]/62 px-3 py-2 text-[11px] font-light leading-4 text-[#171311]/58">
                 No endorsements selected yet.
               </p>
             )}
           </div>
 
           <form
-            className="mt-2 rounded-[20px] border border-[#171311]/10 bg-white/55 p-2.5"
+            className="mt-2 border border-[#171311]/10 bg-[#f8f4eb]/62 p-2.5"
             onSubmit={submitEndorsement}
           >
             <div className="flex items-center gap-2 border-b border-[#171311]/10 pb-2">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#d7b82d] text-[8px] font-bold uppercase leading-none text-[#171311]">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#8f2b35] text-[8px] font-bold uppercase leading-none text-[#f8f4eb]">
                 Me
               </span>
               <input
@@ -619,7 +619,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
               />
             </div>
             <textarea
-              className="mt-2 min-h-16 w-full resize-none rounded-[16px] bg-[#171311]/5 px-3 py-2 text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36 focus:bg-[#171311]/8"
+              className="mt-2 min-h-16 w-full resize-none border border-[#171311]/8 bg-[#171311]/5 px-3 py-2 text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36 focus:bg-[#171311]/8"
               maxLength={1000}
               onChange={(event) => setForm((current) => ({ ...current, note: event.target.value }))}
               placeholder={`Endorse ${experience.companyName}`}
@@ -644,7 +644,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
                 </span>
               </p>
               <button
-                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-[#171311] px-3 text-[9px] font-bold uppercase leading-none text-[#f8f4eb] transition hover:bg-[#5E1C23] disabled:cursor-not-allowed disabled:opacity-45"
+                className="inline-flex h-8 shrink-0 items-center gap-1.5 bg-[#171311] px-3 text-[9px] font-bold uppercase leading-none text-[#f8f4eb] transition hover:bg-[#5E1C23] disabled:cursor-not-allowed disabled:opacity-45"
                 disabled={status === "submitting"}
                 type="submit"
               >

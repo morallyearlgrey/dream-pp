@@ -69,10 +69,6 @@ function getProjectBackgroundMedia(project: ProjectFeature): ProjectMediaAsset {
   return getMediaAsset(src, `${project.name} background media`);
 }
 
-function getProjectFeatureCutout(project: ProjectFeature) {
-  return project.featureCutout ?? project.photos[1] ?? project.photos[0] ?? "/about/builder.png";
-}
-
 function formatDateRange(project: ProjectFeature) {
   if (project.fromDate && project.toDate) {
     return `${project.fromDate} - ${project.toDate}`;
@@ -203,7 +199,7 @@ function ProjectHero({
         <div className="absolute right-[9%] top-[29%] z-40 border border-[#f2e5c6]/28 bg-[#5E1C23] px-2 py-1 text-[10px] font-black uppercase leading-none text-[#f2e5c6] lg:right-[36%] lg:top-[10%]">
           Active
         </div>
-        <div className="absolute left-[5%] top-[62%] z-40 border border-[#f2e5c6]/28 bg-[#d7b82d] px-2 py-1 text-[10px] font-black uppercase leading-none text-[#111] lg:left-[2%] lg:top-[58%]">
+        <div className="absolute left-[5%] top-[62%] z-40 border border-[#f2e5c6]/28 bg-[#8f2b35] px-2 py-1 text-[10px] font-black uppercase leading-none text-[#f2e5c6] lg:left-[2%] lg:top-[58%]">
           Proof
         </div>
       </motion.div>
@@ -277,9 +273,9 @@ function ProjectVideoFrame({
       whileHover={{ scale: 1.015 }}
     >
       <span
-        className={`absolute inset-0 overflow-hidden border bg-[#080807] shadow-[0_18px_44px_rgba(0,0,0,0.24)] transition ${
+        className={`absolute inset-0 overflow-hidden border bg-[#080807] shadow-[0_10px_28px_rgba(0,0,0,0.22)] transition ${
           active
-            ? "border-[#d7b82d]/90"
+            ? "border-[#8f2b35]/90"
             : "border-[#f2e5c6]/36 hover:border-[#f2e5c6]/72"
         }`}
       >
@@ -305,7 +301,7 @@ function ProjectVideoFrame({
       <span
         className={`absolute -bottom-3 left-2 z-20 border px-2 py-1 text-[9px] font-black uppercase leading-none shadow-[0_8px_18px_rgba(0,0,0,0.26)] sm:text-[10px] ${
           active
-            ? "border-[#f2e5c6]/36 bg-[#d7b82d] text-[#111]"
+            ? "border-[#f2e5c6]/36 bg-[#8f2b35] text-[#f2e5c6]"
             : "border-[#f2e5c6]/28 bg-[#5E1C23] text-[#f2e5c6]"
         }`}
       >
@@ -328,16 +324,11 @@ function EditorialSpreadSection({
   const project = projectsSeed[selected];
 
   return (
-    <section className="relative isolate overflow-visible bg-[#080807] px-5 pb-16 pt-10 text-[#f2e5c6] sm:px-8 sm:pb-20 sm:pt-12 lg:min-h-[1120px] lg:px-10 lg:pb-28 lg:pt-14 xl:min-h-[1200px] xl:px-12 xl:pb-32">
+    <section className="relative isolate overflow-visible bg-[#080807] px-5 pb-14 pt-8 text-[#f2e5c6] sm:px-8 sm:pb-16 sm:pt-10 lg:px-10 lg:pb-20 lg:pt-12 xl:px-12">
       <ProjectSpreadBackground project={project} />
 
-      <div className="relative z-20 mx-auto w-full max-w-[1280px] overflow-visible">
-        <div className="flex items-center justify-between gap-4 border-y border-[#f2e5c6]/20 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
-          <span>Project {String(selected + 1).padStart(2, "0")}</span>
-          <span>{projectsSeed.length} Works</span>
-        </div>
-
-        <div className="mt-6 grid min-w-0 gap-6 overflow-visible lg:grid-cols-2 lg:items-start lg:gap-10 xl:gap-12">
+      <div className="relative z-20 mx-auto w-full max-w-[1180px] overflow-visible">
+        <div className="grid min-w-0 overflow-visible border-y border-[#f2e5c6]/22 bg-[#080807]/48 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.72fr)]">
           <ProjectInfoPanel
             project={project}
             selected={selected}
@@ -367,16 +358,16 @@ function ProjectSpreadBackground({ project }: { project: ProjectFeature }) {
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
       <div className="absolute inset-[-12%]">
         <ProjectMedia
-          className="h-full w-full scale-110 object-cover opacity-78 blur-2xl grayscale brightness-[0.32] contrast-[1.24]"
+          className="h-full w-full scale-110 object-cover opacity-30 blur-2xl grayscale brightness-[0.3] contrast-[1.28]"
           decorative
           media={media}
           project={project}
         />
       </div>
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.8)_0%,rgba(8,8,7,0.36)_42%,rgba(8,8,7,0.92)_100%),linear-gradient(90deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.24)_47%,rgba(8,8,7,0.88)_100%),radial-gradient(ellipse_at_50%_58%,rgba(242,229,198,0.16),transparent_44%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.76)_48%,rgba(8,8,7,0.94)_100%),linear-gradient(90deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.6)_48%,rgba(8,8,7,0.9)_100%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.065)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.05)_1px,transparent_1px)] [background-size:44px_44px]" />
-      <div className="archive-scanlines absolute inset-0 opacity-44" />
-      <div className="editorial-film-grain absolute inset-0 opacity-75" />
+      <div className="archive-scanlines absolute inset-0 opacity-34" />
+      <div className="editorial-film-grain absolute inset-0 opacity-60" />
     </div>
   );
 }
@@ -394,28 +385,28 @@ function ProjectInfoPanel({
   return (
     <section
       aria-live="polite"
-      className="order-1 relative z-30 min-w-0 overflow-visible border-y border-[#f2e5c6]/22 bg-[#080807]/32 px-0 py-5 text-[#f2e5c6] backdrop-blur-[2px] lg:order-none lg:mt-4 lg:border-y-0 lg:border-l lg:bg-transparent lg:px-0 lg:pb-6 lg:pl-4 lg:pt-0 xl:mt-6"
+      className="relative z-30 min-w-0 overflow-visible p-4 text-[#f2e5c6] sm:p-5 lg:border-r lg:border-[#f2e5c6]/18 lg:p-6 xl:p-7"
     >
       <div className="flex items-center justify-between gap-4 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
-        <span>Active Project</span>
-        <span>{String(selected + 1).padStart(2, "0")}</span>
+        <span>Project {String(selected + 1).padStart(2, "0")}</span>
+        <span>{projectsSeed.length} Works</span>
       </div>
-      <h3 className="mt-5 max-w-full break-words font-display text-[44px] font-semibold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[60px] lg:text-[58px] xl:text-[72px]">
+      <h3 className="mt-5 max-w-full break-words font-display text-[52px] font-semibold uppercase leading-[0.82] text-[#f2e5c6] sm:text-[72px] lg:text-[82px] xl:text-[100px]">
         {project.name}
       </h3>
-      <dl className="mt-5 grid gap-2 border-y border-[#f2e5c6]/14 py-4 text-[10px] leading-5 sm:text-xs">
-        <div className="grid grid-cols-[82px_1fr] gap-3">
-          <dt className="font-bold uppercase text-[#d7b82d]">Dates</dt>
+      <dl className="mt-5 grid border-y border-[#f2e5c6]/14 text-[10px] leading-5 sm:text-xs">
+        <div className="grid grid-cols-[82px_1fr] gap-3 border-b border-[#f2e5c6]/10 py-3 last:border-b-0">
+          <dt className="font-bold uppercase text-[#8f2b35]">Dates</dt>
           <dd className="min-w-0 break-words text-[#f2e5c6]/72">{displayRange}</dd>
         </div>
         {tools ? (
-          <div className="grid grid-cols-[82px_1fr] gap-3">
-            <dt className="font-bold uppercase text-[#d7b82d]">Tools</dt>
+          <div className="grid grid-cols-[82px_1fr] gap-3 border-b border-[#f2e5c6]/10 py-3 last:border-b-0">
+            <dt className="font-bold uppercase text-[#8f2b35]">Tools</dt>
             <dd className="min-w-0 break-words text-[#f2e5c6]/72">{tools}</dd>
           </div>
         ) : null}
       </dl>
-      <p className="mt-4 max-w-[64ch] text-sm font-light leading-6 text-[#f2e5c6]/70">
+      <p className="mt-5 max-w-[64ch] border-l border-[#8f2b35]/48 pl-4 text-sm font-light leading-6 text-[#f2e5c6]/70">
         {project.summary}
       </p>
       <ProjectLink project={project} />
@@ -437,7 +428,7 @@ function ProjectLink({ project }: { project: ProjectFeature }) {
 
   return (
     <a
-      className="mt-5 inline-flex min-h-10 max-w-full items-center gap-2 border border-[#f2e5c6]/28 bg-[#f2e5c6] px-3 py-2 text-[10px] font-bold uppercase leading-4 text-[#080807] transition hover:border-[#d7b82d] hover:bg-[#d7b82d] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#d7b82d]"
+      className="mt-5 inline-flex min-h-10 max-w-full items-center gap-2 border border-[#f2e5c6]/28 bg-[#f2e5c6] px-3 py-2 text-[10px] font-bold uppercase leading-4 text-[#080807] transition hover:border-[#8f2b35] hover:bg-[#8f2b35] hover:text-[#f2e5c6] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35]"
       href={project.projectLink}
       rel={external ? "noreferrer" : undefined}
       target={external ? "_blank" : undefined}
@@ -450,17 +441,17 @@ function ProjectLink({ project }: { project: ProjectFeature }) {
 
 function ProjectWorkPanel({ project }: { project: ProjectFeature }) {
   return (
-    <section className="order-2 relative z-30 min-w-0 overflow-visible border-l border-[#f2e5c6]/24 bg-[#080807]/26 py-5 pl-4 text-[#f2e5c6] backdrop-blur-[2px] sm:pl-5 lg:order-none lg:mt-10 lg:bg-transparent lg:pb-6 lg:pt-0 xl:mt-12">
+    <section className="relative z-30 flex min-w-0 flex-col overflow-visible border-t border-[#f2e5c6]/18 p-4 text-[#f2e5c6] sm:p-5 lg:border-t-0 lg:p-6 xl:p-7">
       <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/58">
         <span>What I Did</span>
         <span className="h-px flex-1 bg-[#f2e5c6]/16" />
       </div>
-      <p className="mt-5 max-w-[64ch] text-sm font-light leading-6 text-[#f2e5c6]/72">
+      <p className="mt-5 max-w-[58ch] text-sm font-light leading-6 text-[#f2e5c6]/72">
         {project.whatIDid}
       </p>
-      <div className="mt-6 grid grid-cols-2 border-y border-[#f2e5c6]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/44">
+      <div className="mt-auto grid grid-cols-2 border-y border-[#f2e5c6]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/44 lg:mt-8">
         <span>Archive ID</span>
-        <span className="text-right text-[#d7b82d]">{project.id}</span>
+        <span className="text-right text-[#8f2b35]">{project.id}</span>
       </div>
     </section>
   );
@@ -474,18 +465,11 @@ function DesktopProjectStrip({
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
   const project = projectsSeed[selected];
-  const cutout = getProjectFeatureCutout(project);
 
   return (
-    <div className="relative z-20 mt-0 hidden w-full overflow-visible lg:block">
-      <div className="mx-auto w-full max-w-[1200px] overflow-visible">
-        <div className="relative min-h-[540px] overflow-visible pb-20 pt-0 xl:min-h-[600px] xl:pb-24">
-          <img
-            alt=""
-            aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-[-64px] z-10 max-h-[500px] w-[min(54vw,560px)] -translate-x-1/2 object-contain opacity-90 drop-shadow-[0_34px_70px_rgba(0,0,0,0.55)] xl:top-[-78px] xl:max-h-[570px] xl:w-[min(50vw,620px)]"
-            src={cutout}
-          />
+    <div className="relative z-20 mt-5 hidden w-full overflow-visible lg:block xl:mt-6">
+      <div className="mx-auto w-full max-w-[1120px] overflow-visible">
+        <div className="relative min-h-[500px] overflow-visible pb-16 pt-4 xl:min-h-[540px] xl:pb-20">
           <div className="relative z-20 mx-auto flex min-h-[410px] w-full max-w-[1120px] min-w-0 items-end justify-center overflow-visible xl:min-h-[450px]">
             {getDesktopStripItems(selected).map((item) => (
               <DesktopStripFrame
@@ -587,7 +571,7 @@ function DesktopStripFrame({
       }}
       aria-label={`Select ${project.name}`}
       aria-pressed={active}
-      className="group relative h-[360px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#d7b82d] xl:h-[400px]"
+      className="group relative h-[360px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#8f2b35] xl:h-[400px]"
       onClick={() => setSelected(projectIndex)}
       style={frameStyle}
       transition={{
@@ -600,7 +584,7 @@ function DesktopStripFrame({
       <span
         aria-hidden="true"
         className={`absolute inset-0 block transition-colors duration-500 ${
-          active ? "bg-[#d7b82d]/86" : "bg-[#f2e5c6]/48 group-hover:bg-[#d7b82d]/70"
+          active ? "bg-[#8f2b35]/86" : "bg-[#f2e5c6]/48 group-hover:bg-[#8f2b35]/70"
         }`}
         style={{ clipPath: frame.clipPath }}
       />
@@ -626,15 +610,12 @@ function DesktopStripFrame({
       <span
         className={`absolute left-2 right-2 z-20 border-t pt-2 text-[9px] font-bold uppercase leading-3 transition ${
           active
-            ? "border-[#d7b82d]/70 text-[#d7b82d]"
+            ? "border-[#8f2b35]/70 text-[#8f2b35]"
             : "border-[#f2e5c6]/22 text-[#f2e5c6]/54"
         }`}
         style={{ bottom: labelBottom }}
       >
         {project.name}
-        <span className="block text-[#f2e5c6]/38">
-          {formatDateRange(project)}
-        </span>
       </span>
     </motion.button>
   );
@@ -648,7 +629,7 @@ function MobileProjectStrip({
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
   return (
-    <div className="relative z-30 mt-7 lg:hidden">
+    <div className="relative z-30 mt-5 lg:hidden">
       <div className="flex items-center justify-between gap-3 border-y border-[#f2e5c6]/18 py-2">
         <span className="text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
           Project {String(selected + 1).padStart(2, "0")}
@@ -659,7 +640,7 @@ function MobileProjectStrip({
           setSelected={setSelected}
         />
       </div>
-      <div className="-mx-5 mt-4 flex items-end overflow-x-auto px-5 pb-3 sm:-mx-8 sm:px-8">
+      <div className="mt-4 flex w-full items-end overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {projectsSeed.map((project, index) => {
           const active = selected === index;
 
@@ -667,8 +648,8 @@ function MobileProjectStrip({
             <button
               aria-label={`Select ${project.name}`}
               aria-pressed={active}
-              className={`group relative shrink-0 overflow-hidden border border-[#f2e5c6]/30 bg-[#050505] text-left transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#d7b82d] ${
-                active ? "z-10 h-[158px] w-[196px] border-[#d7b82d]/74" : "-ml-px h-[112px] w-[132px]"
+              className={`group relative shrink-0 overflow-hidden border border-[#f2e5c6]/30 bg-[#050505] text-left transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
+                active ? "z-10 h-[158px] w-[196px] border-[#8f2b35]/74" : "-ml-px h-[112px] w-[132px]"
               }`}
               key={project.id}
               onClick={() => setSelected(index)}
@@ -711,7 +692,7 @@ function ProjectArrowControls({
     <div className={`flex items-center gap-3 ${className}`}>
       <button
         aria-label="Previous project"
-        className={`inline-flex h-11 w-11 items-center justify-center border border-[#f2e5c6]/30 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#d7b82d] hover:text-[#d7b82d] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#d7b82d] ${controlClassName}`}
+        className={`inline-flex h-11 w-11 items-center justify-center border border-[#f2e5c6]/30 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#8f2b35] hover:text-[#8f2b35] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${controlClassName}`}
         onClick={() =>
           setSelected((current) =>
             current === 0 ? projectsSeed.length - 1 : current - 1,
@@ -723,7 +704,7 @@ function ProjectArrowControls({
       </button>
       <button
         aria-label="Next project"
-        className={`inline-flex h-11 w-11 items-center justify-center border border-[#f2e5c6]/30 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#d7b82d] hover:text-[#d7b82d] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#d7b82d] ${controlClassName}`}
+        className={`inline-flex h-11 w-11 items-center justify-center border border-[#f2e5c6]/30 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#8f2b35] hover:text-[#8f2b35] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${controlClassName}`}
         onClick={() => setSelected((current) => (current + 1) % projectsSeed.length)}
         type="button"
       >

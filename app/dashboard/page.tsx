@@ -43,23 +43,23 @@ export default async function Dashboard() {
 
   if (!session) {
     return (
-      <main className="mx-auto min-h-[72vh] w-full max-w-5xl px-4 py-20 text-[#f2e5c6] sm:px-6 lg:px-8">
-        <section className="grid gap-8 border border-[#f2e5c6]/18 bg-[#0f0e0d]/88 p-6 shadow-[12px_12px_0_rgba(94,28,35,0.28),0_28px_80px_rgba(0,0,0,0.36)] md:grid-cols-[1fr_0.8fr] md:p-10">
+      <main className="editorial-shell min-h-[72vh] w-full px-4 py-20 text-[#f2e5c6] sm:px-6 lg:px-8">
+        <section className="mx-auto grid w-full max-w-5xl gap-8 border border-[#f2e5c6]/18 bg-[#0f0e0d]/88 p-6 md:grid-cols-[1fr_0.8fr] md:p-10">
           <div>
-            <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#d7b82d]">
+            <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
               Protected dashboard
               <span className="h-px flex-1 bg-[#f2e5c6]/16" />
             </p>
             <h1 className="font-display mt-4 text-[52px] font-semibold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[76px]">
               Sign in with Discord
             </h1>
-            <p className="mt-5 max-w-xl border-l border-[#d7b82d]/40 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
+            <p className="mt-5 max-w-xl border-l border-[#8f2b35]/40 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
               The admin surface is ready for Discord OAuth. Add the Discord
               client credentials to the environment before using the live
               sign-in flow.
             </p>
             <Link
-              className="mt-8 inline-flex items-center justify-center border border-[#d7b82d]/55 px-5 py-3 text-[10px] font-bold uppercase leading-none text-[#d7b82d] transition hover:bg-[#d7b82d] hover:text-[#111]"
+              className="mt-8 inline-flex items-center justify-center border border-[#8f2b35]/55 px-5 py-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[#f2e5c6]"
               href="/api/auth/signin/discord"
             >
               Continue with Discord
@@ -86,10 +86,10 @@ export default async function Dashboard() {
   const featuredCount = dashboardData.endorsements.filter((endorsement) => endorsement.featured).length;
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-12 text-[#f2e5c6] sm:px-6 lg:px-8">
-      <div className="mb-8 flex flex-col gap-4 border-b border-[#f2e5c6]/18 pb-6 md:flex-row md:items-end md:justify-between">
+    <main className="editorial-shell w-full px-4 py-12 text-[#f2e5c6] sm:px-6 lg:px-8">
+      <div className="mx-auto mb-8 flex w-full max-w-7xl flex-col gap-4 border-b border-[#f2e5c6]/18 pb-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-[10px] font-bold uppercase leading-none text-[#d7b82d]">
+          <p className="text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
             Signed in as {session.user?.name ?? session.user?.email}
           </p>
           <h1 className="font-display mt-2 text-[56px] font-semibold uppercase leading-[0.88] text-[#f2e5c6]">
@@ -97,21 +97,21 @@ export default async function Dashboard() {
           </h1>
         </div>
         <Link
-          className="inline-flex items-center justify-center border border-[#f2e5c6]/22 px-4 py-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/70 transition hover:border-[#d7b82d] hover:text-[#d7b82d]"
+          className="inline-flex items-center justify-center border border-[#f2e5c6]/22 px-4 py-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35]"
           href="/api/auth/signout"
         >
           Sign out
         </Link>
       </div>
 
-      <section className="grid gap-5 md:grid-cols-4">
+      <section className="mx-auto grid w-full max-w-7xl gap-5 md:grid-cols-4">
         <Metric label="Experiences" value={dashboardData.experiences.length} />
         <Metric label="Projects" value={projectsSeed.length} />
         <Metric label="Blogs" value={blogSeed.length} />
         <Metric label="Top endorsements" value={featuredCount} />
       </section>
 
-      <section className="mt-8 grid gap-6 lg:grid-cols-[1fr_0.85fr]">
+      <section className="mx-auto mt-8 grid w-full max-w-7xl gap-6 lg:grid-cols-[1fr_0.85fr]">
         <form className="border border-[#f2e5c6]/18 bg-[#0f0e0d]/88 p-5">
           <p className="font-display text-3xl font-semibold uppercase leading-none text-[#f2e5c6]">
             New blog post
@@ -120,7 +120,7 @@ export default async function Dashboard() {
             <label className="grid gap-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">
               Title
               <input
-                className="border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 px-3 py-2 text-sm font-light normal-case leading-6 text-[#f2e5c6] outline-none placeholder:text-[#f2e5c6]/38 focus:border-[#d7b82d]"
+                className="border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 px-3 py-2 text-sm font-light normal-case leading-6 text-[#f2e5c6] outline-none placeholder:text-[#f2e5c6]/38 focus:border-[#8f2b35]"
                 name="title"
                 placeholder="Working title"
               />
@@ -128,7 +128,7 @@ export default async function Dashboard() {
             <label className="grid gap-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">
               Object storage media URLs
               <input
-                className="border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 px-3 py-2 text-sm font-light normal-case leading-6 text-[#f2e5c6] outline-none placeholder:text-[#f2e5c6]/38 focus:border-[#d7b82d]"
+                className="border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 px-3 py-2 text-sm font-light normal-case leading-6 text-[#f2e5c6] outline-none placeholder:text-[#f2e5c6]/38 focus:border-[#8f2b35]"
                 name="photos"
                 placeholder="https://..."
               />
@@ -136,13 +136,13 @@ export default async function Dashboard() {
             <label className="grid gap-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">
               Writing
               <textarea
-                className="min-h-44 border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 px-3 py-2 text-sm font-light normal-case leading-6 text-[#f2e5c6] outline-none placeholder:text-[#f2e5c6]/38 focus:border-[#d7b82d]"
+                className="min-h-44 border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 px-3 py-2 text-sm font-light normal-case leading-6 text-[#f2e5c6] outline-none placeholder:text-[#f2e5c6]/38 focus:border-[#8f2b35]"
                 name="content"
                 placeholder="Draft..."
               />
             </label>
             <button
-              className="border border-[#d7b82d]/55 px-4 py-3 text-[10px] font-bold uppercase leading-none text-[#d7b82d] transition hover:bg-[#d7b82d] hover:text-[#111]"
+              className="border border-[#8f2b35]/55 px-4 py-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[#f2e5c6]"
               type="button"
             >
               Save draft
@@ -160,7 +160,7 @@ export default async function Dashboard() {
                 Select up to three featured endorsements per experience for the public page.
               </p>
             </div>
-            <span className="border border-[#d7b82d]/35 px-2 py-1 text-[9px] font-bold uppercase leading-none text-[#d7b82d]">
+            <span className="border border-[#8f2b35]/35 px-2 py-1 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
               {dashboardData.databaseBacked ? "Live DB" : "Seed preview"}
             </span>
           </div>
@@ -173,7 +173,7 @@ export default async function Dashboard() {
               return (
                 <section className="border border-[#F2E5C6]/15 bg-[#F2E5C6]/5 p-4" key={experience.id}>
                   <div className="flex items-center justify-between gap-3 border-b border-[#f2e5c6]/12 pb-3">
-                    <p className="text-[10px] font-bold uppercase leading-none text-[#d7b82d]">
+                    <p className="text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
                       {experience.companyName}
                     </p>
                     <span className="text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/44">
@@ -188,10 +188,10 @@ export default async function Dashboard() {
                           key={endorsement.id}
                         >
                           <div className="flex items-center justify-between gap-3">
-                            <p className="text-[10px] font-bold uppercase leading-none text-[#d7b82d]">
+                            <p className="text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
                               {endorsement.authorName}
                             </p>
-                            <span className="border border-[#d7b82d]/45 px-2 py-1 text-[9px] font-bold uppercase leading-none text-[#d7b82d]">
+                            <span className="border border-[#8f2b35]/45 px-2 py-1 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
                               {endorsement.featured
                                 ? "Top 3"
                                 : endorsement.approved
@@ -235,7 +235,7 @@ function Metric({ label, value }: { label: string; value: number }) {
       <p className="text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/54">
         {label}
       </p>
-      <p className="font-display mt-2 text-5xl font-semibold leading-none text-[#d7b82d]">
+      <p className="font-display mt-2 text-5xl font-semibold leading-none text-[#8f2b35]">
         {value}
       </p>
     </article>

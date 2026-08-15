@@ -7,10 +7,10 @@
   --maroon: #5e1c23;
   --bark: #605246;
   --linen-shadow: #a1947f;
-  --blue: #d7b82d;
+  --accent: #8f2b35;
   --cream: #f2e5c6;
   --ink: #080807;
-  --gold: #d7b82d;
+  --accent-strong: #8f2b35;
 }
 
 @theme inline {
@@ -113,13 +113,79 @@ a {
   font-weight: 300;
 }
 
+.editorial-shell {
+  background:
+    linear-gradient(90deg, rgba(242, 229, 198, 0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(242, 229, 198, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, #0d0c0b 0%, #070707 100%);
+  background-size:
+    46px 46px,
+    46px 46px,
+    100% 100%;
+}
+
+.editorial-label {
+  color: rgba(242, 229, 198, 0.58);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.editorial-accent {
+  color: var(--accent);
+}
+
+.editorial-rule-row {
+  align-items: center;
+  border-bottom: 1px solid rgba(242, 229, 198, 0.16);
+  display: flex;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.editorial-rule-row::after {
+  background: rgba(242, 229, 198, 0.16);
+  content: "";
+  flex: 1;
+  height: 1px;
+  min-width: 2rem;
+}
+
+.editorial-panel {
+  background: rgba(8, 8, 7, 0.62);
+  border: 1px solid rgba(242, 229, 198, 0.16);
+}
+
+.editorial-proof-frame {
+  background: #050505;
+  border: 1px solid rgba(242, 229, 198, 0.2);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+.editorial-archive-tag {
+  border-top: 1px solid rgba(242, 229, 198, 0.24);
+  color: rgba(242, 229, 198, 0.58);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.25;
+  padding-top: 0.45rem;
+  text-transform: uppercase;
+}
+
+.editorial-note-overlay {
+  background: rgba(242, 229, 198, 0.9);
+  border: 1px solid rgba(8, 8, 7, 0.14);
+  border-radius: 0;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+  color: #171311;
+}
+
 .reference-phone {
   background: #0d0c0b;
   border: 1px solid rgba(242, 229, 198, 0.28);
   border-radius: 0;
-  box-shadow:
-    12px 12px 0 rgba(94, 28, 35, 0.28),
-    0 28px 70px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
   overflow: hidden;
 }
 
@@ -177,7 +243,7 @@ a {
     radial-gradient(ellipse at 78% 33%, rgba(33, 23, 22, 0.92) 0 21%, transparent 38%),
     radial-gradient(ellipse at 51% 13%, rgba(26, 20, 20, 0.96) 0 24%, transparent 42%),
     radial-gradient(ellipse at 52% 82%, rgba(96, 82, 70, 0.72) 0 16%, transparent 31%),
-    linear-gradient(180deg, #f2e5c6 0%, #d7b82d 46%, #211b18 100%);
+    linear-gradient(180deg, #f2e5c6 0%, #8f2b35 46%, #211b18 100%);
 }
 
 .abstract-photo {
@@ -217,7 +283,7 @@ a {
 .halftone {
   background:
     radial-gradient(rgba(0, 0, 0, 0.54) 1.1px, transparent 1.1px),
-    linear-gradient(135deg, rgba(215, 184, 45, 0.8), rgba(94, 28, 35, 0.45));
+    linear-gradient(135deg, rgba(143, 43, 53, 0.8), rgba(94, 28, 35, 0.45));
   background-size:
     8px 8px,
     100% 100%;
@@ -248,7 +314,7 @@ a {
     linear-gradient(90deg, rgba(8, 8, 7, 0.14) 1px, transparent 1px),
     linear-gradient(180deg, rgba(8, 8, 7, 0.14) 1px, transparent 1px),
     radial-gradient(ellipse at 48% 38%, rgba(94, 28, 35, 0.16) 0 18%, transparent 29%),
-    radial-gradient(ellipse at 56% 47%, rgba(215, 184, 45, 0.12) 0 12%, transparent 24%);
+    radial-gradient(ellipse at 56% 47%, rgba(143, 43, 53, 0.12) 0 12%, transparent 24%);
   background-size:
     34px 34px,
     34px 34px,
@@ -283,7 +349,7 @@ a {
       rgba(255, 255, 255, 0.18) 0 10px,
       transparent 10px 22px
     ),
-    linear-gradient(135deg, #5e1c23, #d7b82d 46%, #211b18);
+    linear-gradient(135deg, #5e1c23, #8f2b35 46%, #211b18);
   background-size:
     92px 100%,
     200% 200%;
@@ -293,7 +359,7 @@ a {
 .media-loop {
   background:
     linear-gradient(135deg, rgba(94, 28, 35, 0.16), rgba(132, 154, 173, 0.12)),
-    var(--loop-image, linear-gradient(135deg, #5e1c23, #d7b82d));
+    var(--loop-image, linear-gradient(135deg, #5e1c23, #8f2b35));
   background-position: center;
   background-size: cover;
   animation: slowPan 9s ease-in-out infinite alternate;
@@ -349,7 +415,7 @@ a {
       rgba(242, 229, 198, 0.16) 0 1px,
       transparent 1px 5px
     ),
-    linear-gradient(90deg, rgba(94, 28, 35, 0.1), rgba(215, 184, 45, 0.08));
+    linear-gradient(90deg, rgba(94, 28, 35, 0.1), rgba(143, 43, 53, 0.08));
   content: "";
   inset: 0;
   mix-blend-mode: soft-light;
@@ -366,7 +432,7 @@ a {
 
 .who-mask-text {
   background:
-    linear-gradient(120deg, rgba(242, 229, 198, 0.2), rgba(215, 184, 45, 0.18)),
+    linear-gradient(120deg, rgba(242, 229, 198, 0.2), rgba(143, 43, 53, 0.18)),
     url("/about/whoami.jpeg");
   background-clip: text;
   background-position:
@@ -457,9 +523,9 @@ a {
   }
   35%,
   70% {
-    border-color: rgba(215, 184, 45, 0.78);
+    border-color: rgba(143, 43, 53, 0.78);
     box-shadow:
-      0 0 0 1px rgba(215, 184, 45, 0.2),
+      0 0 0 1px rgba(143, 43, 53, 0.2),
       0 28px 80px rgba(0, 0, 0, 0.28);
   }
 }

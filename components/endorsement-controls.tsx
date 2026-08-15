@@ -49,7 +49,7 @@ export function EndorsementControls({
       <div className="flex flex-wrap gap-2">
         {!approved ? (
           <button
-            className="border border-[#d7b82d]/45 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#d7b82d] transition hover:bg-[#d7b82d] hover:text-[#111] disabled:cursor-not-allowed disabled:opacity-45"
+            className="border border-[#8f2b35]/45 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[#f2e5c6] disabled:cursor-not-allowed disabled:opacity-45"
             disabled={disabled || pendingAction !== null}
             onClick={() => updateEndorsement("approve", { approved: true })}
             type="button"
@@ -58,7 +58,7 @@ export function EndorsementControls({
           </button>
         ) : null}
         <button
-          className="border border-[#f2e5c6]/22 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/68 transition hover:border-[#d7b82d] hover:text-[#d7b82d] disabled:cursor-not-allowed disabled:opacity-45"
+          className="border border-[#f2e5c6]/22 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/68 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-45"
           disabled={disabled || pendingAction !== null}
           onClick={() =>
             updateEndorsement(featured ? "unfeature" : "feature", { featured: !featured })

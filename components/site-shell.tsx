@@ -37,7 +37,7 @@ export function SiteShell({
       <header className="sticky top-5 z-50 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8">
         <nav
           aria-label="Primary navigation"
-          className="mx-auto flex max-w-[48rem] items-center justify-between gap-0.5 border border-[#f2e5c6]/28 bg-[#080807]/72 px-1.5 py-1 text-[#f2e5c6] shadow-[0_14px_36px_rgba(0,0,0,0.24)] backdrop-blur-md sm:px-2"
+          className="mx-auto flex max-w-[48rem] items-center justify-between gap-0.5 border border-[#f2e5c6]/28 bg-[#080807]/72 px-1.5 py-1 text-[#f2e5c6] shadow-[0_8px_22px_rgba(0,0,0,0.2)] backdrop-blur-md sm:px-2"
         >
           {links.map((link) => {
             const active =
@@ -62,7 +62,7 @@ export function SiteShell({
                 <span
                   aria-hidden="true"
                   className={`absolute -bottom-[3px] left-2 right-2 h-px transition ${
-                    active ? "bg-[#d7b82d]" : "bg-transparent group-hover:bg-[#f2e5c6]/28"
+                    active ? "bg-[#8f2b35]" : "bg-transparent group-hover:bg-[#f2e5c6]/28"
                   }`}
                 />
               </Link>
@@ -78,7 +78,7 @@ export function SiteShell({
         <div className="relative mx-auto max-w-7xl border border-[#f2e5c6]/18">
           <div className="grid lg:grid-cols-[1.25fr_0.62fr_0.78fr_0.72fr]">
             <div className="border-b border-[#f2e5c6]/16 p-5 sm:p-6 lg:border-b-0 lg:border-r">
-              <div className="flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#d7b82d]">
+              <div className="flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
                 <span>Colophon</span>
                 <span className="h-px flex-1 bg-[#f2e5c6]/16" />
                 <span>2026</span>
@@ -96,13 +96,13 @@ export function SiteShell({
             </div>
 
             <div className="border-b border-[#f2e5c6]/16 p-5 sm:p-6 lg:border-b-0 lg:border-r">
-              <p className="border-b border-[#f2e5c6]/16 pb-2 text-[9px] font-bold uppercase leading-none text-[#d7b82d]">
+              <p className="border-b border-[#f2e5c6]/16 pb-2 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
                 Index
               </p>
               <div className="mt-4 grid gap-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">
                 {links.map((link) => (
                   <Link
-                    className="transition hover:text-[#d7b82d]"
+                    className="transition hover:text-[#8f2b35]"
                     href={link.href}
                     key={link.href}
                   >
@@ -113,12 +113,12 @@ export function SiteShell({
             </div>
 
             <div className="border-b border-[#f2e5c6]/16 p-5 sm:p-6 lg:border-b-0 lg:border-r">
-              <p className="border-b border-[#f2e5c6]/16 pb-2 text-[9px] font-bold uppercase leading-none text-[#d7b82d]">
+              <p className="border-b border-[#f2e5c6]/16 pb-2 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
                 Contact
               </p>
               <div className="mt-4 space-y-2 text-xs font-light leading-5 text-[#f2e5c6]/64">
                 <a
-                  className="block font-bold uppercase transition hover:text-[#d7b82d]"
+                  className="block font-bold uppercase transition hover:text-[#8f2b35]"
                   href="mailto:portfolio@example.com"
                 >
                   portfolio@example.com
@@ -128,12 +128,12 @@ export function SiteShell({
             </div>
 
             <div className="p-5 sm:p-6">
-              <p className="border-b border-[#f2e5c6]/16 pb-2 text-[9px] font-bold uppercase leading-none text-[#d7b82d]">
+              <p className="border-b border-[#f2e5c6]/16 pb-2 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
                 Social
               </p>
               <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">
                 {["GitHub", "LinkedIn", "Dribbble", "CV"].map((item) => (
-                  <a className="transition hover:text-[#d7b82d]" href="#" key={item}>
+                  <a className="transition hover:text-[#8f2b35]" href="#" key={item}>
                     {item}
                   </a>
                 ))}

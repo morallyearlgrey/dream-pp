@@ -70,7 +70,7 @@ const aboutEditorialCards = [
     location: "Orlando, FL",
     crop: "center bottom",
     accent: "#5E1C23",
-    backing: "#d7b82d",
+    backing: "#8f2b35",
   },
   {
     issue: "Archive 02",
@@ -84,7 +84,7 @@ const aboutEditorialCards = [
     location: "Wherever the table is",
     crop: "center bottom",
     accent: "#605246",
-    backing: "#d7b82d",
+    backing: "#8f2b35",
   },
   {
     issue: "Archive 03",
@@ -97,8 +97,8 @@ const aboutEditorialCards = [
     currently: "Following questions",
     location: "In transit",
     crop: "center bottom",
-    accent: "#d7b82d",
-    backing: "#d7b82d",
+    accent: "#8f2b35",
+    backing: "#8f2b35",
   },
 ];
 const carouselCards = Array.from({ length: carouselCopyCount }, (_, copyIndex) =>
@@ -399,7 +399,7 @@ function WhoAmI() {
         className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(8,8,7,0.48)_0%,rgba(8,8,7,0.72)_48%,rgba(8,8,7,0.92)_100%)]"
       />
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 sm:px-8 lg:px-12">
-        <div className="mb-5 flex w-full items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#d7b82d]/86 sm:text-[10px]">
+        <div className="mb-5 flex w-full items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]/86 sm:text-[10px]">
           <span>Profile Note</span>
           <span className="h-px flex-1 bg-[#f2e5c6]/14" />
           <span>02</span>
@@ -435,7 +435,7 @@ function WhoAmI() {
         <div className="relative z-10 mt-6 flex w-full max-w-2xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/66 sm:text-[11px]">
           <span className="h-px flex-1 bg-[#f2e5c6]/16" />
           <span className="tracking-[0.18em]">
-            Current @ NVIDIA <span className="text-[#d7b82d]">•</span> Returning @ BNY
+            Current @ NVIDIA <span className="text-[#8f2b35]">•</span> Returning @ BNY
           </span>
           <span className="h-px flex-1 bg-[#f2e5c6]/16" />
         </div>
@@ -668,7 +668,7 @@ function ImageCarousel() {
 
       <div className="relative z-10 mx-auto mb-7 grid max-w-[1500px] gap-6 border-b border-[#f2e5c6]/14 pb-6 md:grid-cols-[minmax(0,0.95fr)_minmax(260px,420px)] md:items-end lg:gap-8">
         <div>
-          <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#d7b82d] sm:text-[11px]">
+          <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35] sm:text-[11px]">
             <span>Visual Archive</span>
             <span className="h-px flex-1 bg-white/20" />
           </div>
@@ -682,7 +682,7 @@ function ImageCarousel() {
             This is the way I see myself.
           </p>
         </div>
-        <div className="relative overflow-hidden border border-[#f2e5c6]/18 bg-[#080807]/92 p-2 shadow-[0_24px_70px_rgba(0,0,0,0.42)] md:justify-self-end md:w-full md:max-w-[420px]">
+        <div className="editorial-proof-frame relative overflow-hidden p-2 md:justify-self-end md:w-full md:max-w-[420px]">
           <div className="relative aspect-square overflow-hidden border border-[#f2e5c6]/20 bg-[#11100f]">
             <video
               aria-label="Looping visual archive preview"
@@ -696,7 +696,7 @@ function ImageCarousel() {
             />
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_22%,rgba(215,184,45,0.16),transparent_34%),linear-gradient(180deg,rgba(8,8,7,0)_52%,rgba(8,8,7,0.62))]"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_22%,rgba(143,43,53,0.16),transparent_34%),linear-gradient(180deg,rgba(8,8,7,0)_52%,rgba(8,8,7,0.62))]"
             />
             <span aria-hidden="true" className="archive-scanlines pointer-events-none absolute inset-0 opacity-[0.22]" />
             <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/18 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/72">
@@ -758,7 +758,7 @@ function ImageCarousel() {
                       opacity: activeEmphasis,
                     }}
                   />
-                  <div className="relative h-full overflow-hidden border border-[#f2e5c6]/24 bg-[#080807] p-2 shadow-[0_22px_58px_rgba(0,0,0,0.52)]">
+                  <div className="editorial-proof-frame relative h-full overflow-hidden p-2">
                     <div className="relative h-full overflow-hidden border border-black/30 bg-[#d7d3c7]">
                       <div
                         aria-hidden="true"
@@ -798,7 +798,7 @@ function ImageCarousel() {
       </div>
       <div className="relative z-10 mx-auto mt-5 grid max-w-[1500px] gap-4 border-t border-[#f2e5c6]/14 pt-5 md:grid-cols-[minmax(110px,0.24fr)_minmax(0,1fr)_minmax(160px,0.34fr)] md:items-end">
         <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/52 md:grid md:gap-2">
-          <span className="text-[#d7b82d]">Active Plate</span>
+          <span className="text-[#8f2b35]">Active Plate</span>
           <span>{activeImageNumber} / 03</span>
         </div>
         <div aria-live="polite" className="min-h-[112px] md:min-h-[104px]">
@@ -859,7 +859,7 @@ function WonderCaptcha() {
       <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[#f2e5c6]/12" />
 
       <div
-        className={`relative mx-auto max-w-[920px] border border-[#f2e5c6]/18 bg-[#11100f]/82 text-[#f2e5c6] shadow-[0_28px_80px_rgba(0,0,0,0.28)] backdrop-blur-sm ${
+        className={`relative mx-auto max-w-[920px] border border-[#f2e5c6]/18 bg-[#11100f]/82 text-[#f2e5c6] shadow-[0_12px_34px_rgba(0,0,0,0.22)] backdrop-blur-sm ${
           flashing ? "captcha-flash" : ""
         }`}
       >
@@ -887,9 +887,9 @@ function WonderCaptcha() {
             return (
               <button
                 aria-pressed={active}
-                className={`group relative aspect-square overflow-hidden bg-[#0b0b0a] outline-none transition focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-[#d7b82d] ${
+                className={`group relative aspect-square overflow-hidden bg-[#0b0b0a] outline-none transition focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-[#8f2b35] ${
                   active
-                    ? "shadow-[inset_0_0_0_1px_#d7b82d,inset_0_0_0_4px_rgba(15,15,14,0.84)]"
+                    ? "shadow-[inset_0_0_0_1px_#8f2b35,inset_0_0_0_4px_rgba(15,15,14,0.84)]"
                     : "hover:shadow-[inset_0_0_0_1px_rgba(242,229,198,0.34)]"
                 }`}
                 key={tile.id}
@@ -915,7 +915,7 @@ function WonderCaptcha() {
                 />
                 <span
                   className={`absolute inset-0 transition ${
-                    active ? "bg-[#d7b82d]/10" : "bg-black/0 group-hover:bg-black/22"
+                    active ? "bg-[#8f2b35]/10" : "bg-black/0 group-hover:bg-black/22"
                   }`}
                 />
                 <span
@@ -928,7 +928,7 @@ function WonderCaptcha() {
                 <span
                   className={`absolute left-2 top-2 inline-flex h-5 w-5 items-center justify-center border text-[#f2e5c6] transition ${
                     active
-                      ? "border-[#d7b82d] bg-[#d7b82d] text-[#111]"
+                      ? "border-[#8f2b35] bg-[#8f2b35] text-[#f2e5c6]"
                       : "border-[#f2e5c6]/55 bg-black/18"
                   }`}
                 >
@@ -957,7 +957,7 @@ function WonderCaptcha() {
             <RotateCcw aria-hidden="true" size={17} strokeWidth={1.9} />
           </button>
           <button
-            className="inline-flex h-9 items-center gap-2 border border-[#f2e5c6]/26 px-4 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/78 transition hover:border-[#d7b82d] hover:text-[#d7b82d]"
+            className="inline-flex h-9 items-center gap-2 border border-[#f2e5c6]/26 px-4 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/78 transition hover:border-[#8f2b35] hover:text-[#8f2b35]"
             onClick={verify}
             type="button"
           >

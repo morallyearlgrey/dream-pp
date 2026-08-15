@@ -1,0 +1,384 @@
+"use client";
+
+/* eslint-disable @next/next/no-img-element */
+import { useEffect, useMemo, useState } from "react";
+import { Bookmark, X } from "lucide-react";
+import { blogSeed } from "@/lib/portfolio-data";
+
+const filters = ["ALL", "FIELD NOTES", "BUILD LOGS", "READING", "VISUAL"] as const;
+
+type BlogFilter = (typeof filters)[number];
+type SavedNote = {
+  category: Exclude<BlogFilter, "ALL">;
+  content: string;
+  date: string;
+  featured?: boolean;
+  heightClassName: string;
+  id: string;
+  image: string;
+  readTime: string;
+  title: string;
+};
+
+const savedNotes: SavedNote[] = [
+  {
+    id: blogSeed[0]?.id ?? "hello-archive",
+    title: blogSeed[0]?.title ?? "Hello, Archive",
+    category: "FIELD NOTES",
+    content:
+      blogSeed[0]?.content ??
+      "A starter entry for future essays, project notes, and visual process writing.",
+    date: formatDate(blogSeed[0]?.createdAt ?? "2026-07-22"),
+    featured: true,
+    heightClassName: "h-[430px] sm:h-[520px]",
+    image: blogSeed[0]?.photos[0] ?? "/references/aboutme.jpg",
+    readTime: "03 min read",
+  },
+  {
+    id: "motion-without-noise",
+    title: "Motion Without Noise",
+    category: "BUILD LOGS",
+    content:
+      "A note on keeping Framer Motion subtle: small shifts, clear hierarchy, and animation that behaves like editorial pacing instead of decoration.",
+    date: "Jul 18, 2026",
+    heightClassName: "h-[340px] sm:h-[390px]",
+    image: "/references/projects.jpg",
+    readTime: "05 min read",
+  },
+  {
+    id: "reading-the-interface",
+    title: "Reading The Interface",
+    category: "READING",
+    content:
+      "Fragments from books, tools, and screens that changed how I think about software as a composed visual system.",
+    date: "Jun 30, 2026",
+    heightClassName: "h-[390px] sm:h-[470px]",
+    image: "/about/whoami.jpeg",
+    readTime: "04 min read",
+  },
+  {
+    id: "lab-light",
+    title: "Lab Light",
+    category: "VISUAL",
+    content:
+      "A saved-board study of dim rooms, prototype tables, reflective surfaces, and the way technical work can still feel cinematic.",
+    date: "May 24, 2026",
+    heightClassName: "h-[300px] sm:h-[350px]",
+    image: "/references/experiences.jpg",
+    readTime: "02 min read",
+  },
+  {
+    id: "archive-as-instrument",
+    title: "Archive As Instrument",
+    category: "FIELD NOTES",
+    content:
+      "The portfolio as a working instrument: part proof cabinet, part control surface, part place to keep process visible.",
+    date: "Apr 12, 2026",
+    heightClassName: "h-[380px] sm:h-[440px]",
+    image: "/about/hero-hq.jpeg",
+    readTime: "06 min read",
+  },
+  {
+    id: "contact-sheet-systems",
+    title: "Contact Sheet Systems",
+    category: "VISUAL",
+    content:
+      "Why contact sheets, proof frames, and saved folders make sense for dense technical portfolios with image-led work.",
+    date: "Mar 09, 2026",
+    heightClassName: "h-[320px] sm:h-[410px]",
+    image: "/captcha/hackathons.jpeg",
+    readTime: "04 min read",
+  },
+  {
+    id: "debugging-after-dark",
+    title: "Debugging After Dark",
+    category: "BUILD LOGS",
+    content:
+      "Notes from the quiet part of building: narrowing a bug, trusting the trace, and making the interface feel calm again.",
+    date: "Feb 21, 2026",
+    heightClassName: "h-[350px] sm:h-[460px]",
+    image: "/captcha/ieee.jpeg",
+    readTime: "05 min read",
+  },
+];
+
+function formatDate(value: string) {
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+export function BlogSavedArchive() {
+  const [selectedFilter, setSelectedFilter] = useState<BlogFilter>("ALL");
+  const [openNoteId, setOpenNoteId] = useState<string | null>(null);
+  const openNote = savedNotes.find((note) => note.id === openNoteId) ?? null;
+  const visibleNotes = useMemo(
+    () =>
+      savedNotes.filter(
+        (note) => !note.featured && (selectedFilter === "ALL" || note.category === selectedFilter),
+      ),
+    [selectedFilter],
+  );
+  const featuredNote = savedNotes.find((note) => note.featured) ?? savedNotes[0];
+
+  useEffect(() => {
+    if (!openNote) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpenNoteId(null);
+      }
+    }
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openNote]);
+
+  return (
+    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[#080807] px-4 pb-16 pt-20 text-[#f2e5c6] sm:px-6 lg:px-8">
+      <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+        <img
+          alt=""
+          className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-[0.16] blur-2xl grayscale brightness-[0.28] contrast-[1.28]"
+          src={featuredNote.image}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.92),rgba(8,8,7,0.78)_46%,rgba(8,8,7,0.96)),linear-gradient(90deg,rgba(8,8,7,0.95),rgba(8,8,7,0.62),rgba(8,8,7,0.95))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.05)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.04)_1px,transparent_1px)] [background-size:44px_44px]" />
+        <div className="archive-scanlines absolute inset-0 opacity-30" />
+        <div className="editorial-film-grain absolute inset-0 opacity-60" />
+      </div>
+
+      <section className="relative z-10 mx-auto w-full max-w-7xl">
+        <div className="grid gap-5 border-y border-[#f2e5c6]/20 py-5 lg:grid-cols-[minmax(260px,0.42fr)_minmax(0,1fr)] lg:items-end">
+          <div>
+            <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+              <span>Saved Folder</span>
+              <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+              <span>Index 04</span>
+            </div>
+            <h1 className="font-display mt-4 text-[58px] font-semibold uppercase leading-[0.82] text-[#f2e5c6] sm:text-[98px] lg:text-[124px]">
+              Saved Notes
+            </h1>
+          </div>
+          <p className="max-w-2xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base lg:justify-self-end">
+            A high-contrast reading room for process notes, visual references,
+            and saved fragments from the build archive.
+          </p>
+        </div>
+
+        <div className="mt-5 flex w-full gap-px overflow-x-auto border-y border-[#f2e5c6]/18 bg-[#f2e5c6]/12 py-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {filters.map((filter) => {
+            const active = selectedFilter === filter;
+            const count =
+              filter === "ALL"
+                ? savedNotes.length
+                : savedNotes.filter((note) => note.category === filter).length;
+
+            return (
+              <button
+                aria-pressed={active}
+                className={`shrink-0 bg-[#080807] px-4 py-3 text-[10px] font-bold uppercase leading-none transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
+                  active
+                    ? "text-[#f2e5c6] shadow-[inset_0_-3px_0_#8f2b35]"
+                    : "text-[#f2e5c6]/52 hover:text-[#8f2b35]"
+                }`}
+                key={filter}
+                onClick={() => setSelectedFilter(filter)}
+                type="button"
+              >
+                {filter} <span className="ml-2 text-[#8f2b35]">{count.toString().padStart(2, "0")}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <section className="mt-6 grid gap-5 xl:grid-cols-[minmax(300px,0.42fr)_minmax(0,1fr)]">
+          <FeaturedNote note={featuredNote} onOpen={setOpenNoteId} />
+
+          <div className="columns-1 gap-5 sm:columns-2 xl:columns-3">
+            {visibleNotes.map((note) => (
+              <BlogTile key={note.id} note={note} onOpen={setOpenNoteId} />
+            ))}
+          </div>
+        </section>
+      </section>
+
+      {openNote ? <ReadingDrawer note={openNote} onClose={() => setOpenNoteId(null)} /> : null}
+    </main>
+  );
+}
+
+function FeaturedNote({
+  note,
+  onOpen,
+}: {
+  note: SavedNote;
+  onOpen: (id: string) => void;
+}) {
+  return (
+    <button
+      aria-label={`Open featured note ${note.title}`}
+      className="group relative min-h-[520px] overflow-hidden border border-[#f2e5c6]/24 bg-[#050505] text-left transition hover:border-[#8f2b35]/76 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] xl:sticky xl:top-24 xl:min-h-[620px]"
+      onClick={() => onOpen(note.id)}
+      type="button"
+    >
+      <img
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover brightness-[0.72] contrast-[1.16] saturate-[0.72] transition duration-500 group-hover:scale-[1.025] group-hover:brightness-[0.48]"
+        src={note.image}
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.12),rgba(8,8,7,0.38)_44%,rgba(8,8,7,0.88))]" />
+      <div className="archive-scanlines absolute inset-0 opacity-20" />
+      <div className="absolute left-4 right-4 top-4 flex items-center justify-between border-b border-[#f2e5c6]/24 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/62">
+        <span className="inline-flex items-center gap-2 text-[#8f2b35]">
+          <Bookmark aria-hidden="true" size={12} strokeWidth={2} />
+          Pinned
+        </span>
+        <span>{note.readTime}</span>
+      </div>
+      <div className="absolute bottom-5 left-5 right-5">
+        <p className="text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
+          {note.category} / {note.date}
+        </p>
+        <h2 className="font-display mt-3 text-[46px] font-semibold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[60px]">
+          {note.title}
+        </h2>
+        <p className="mt-4 max-w-sm border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-6 text-[#f2e5c6]/68">
+          {note.content}
+        </p>
+      </div>
+      <span className="absolute right-4 top-14 border border-[#8f2b35]/65 bg-[#080807]/80 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6] opacity-0 transition group-hover:opacity-100">
+        Open Note
+      </span>
+    </button>
+  );
+}
+
+function BlogTile({
+  note,
+  onOpen,
+}: {
+  note: SavedNote;
+  onOpen: (id: string) => void;
+}) {
+  return (
+    <button
+      aria-label={`Open note ${note.title}`}
+      className={`group mb-5 inline-block w-full break-inside-avoid overflow-hidden border border-[#f2e5c6]/18 bg-[#050505] text-left transition hover:border-[#8f2b35]/76 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${note.heightClassName}`}
+      onClick={() => onOpen(note.id)}
+      type="button"
+    >
+      <div className="relative h-full">
+        <img
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover brightness-[0.68] contrast-[1.18] saturate-[0.62] transition duration-500 group-hover:scale-[1.03] group-hover:brightness-[0.44]"
+          src={note.image}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.06),rgba(8,8,7,0.28)_46%,rgba(8,8,7,0.84))]" />
+        <div className="archive-scanlines absolute inset-0 opacity-[0.18]" />
+        <div className="absolute left-3 right-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/22 pb-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58">
+          <span>{note.category}</span>
+          <span>{note.readTime}</span>
+        </div>
+        <div className="absolute bottom-4 left-4 right-4">
+          <p className="text-[8px] font-bold uppercase leading-none text-[#8f2b35]">
+            {note.date}
+          </p>
+          <h3 className="font-display mt-2 text-[30px] font-semibold uppercase leading-[0.9] text-[#f2e5c6] sm:text-[36px]">
+            {note.title}
+          </h3>
+        </div>
+        <span className="absolute left-4 top-12 border border-[#8f2b35]/65 bg-[#080807]/84 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6] opacity-0 transition group-hover:opacity-100">
+          Open Note
+        </span>
+      </div>
+    </button>
+  );
+}
+
+function ReadingDrawer({
+  note,
+  onClose,
+}: {
+  note: SavedNote;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-[80] bg-[#080807]/78 backdrop-blur-sm">
+      <button
+        aria-label="Close note overlay"
+        className="absolute inset-0 hidden cursor-default md:block"
+        onClick={onClose}
+        type="button"
+      />
+      <aside className="absolute inset-0 overflow-y-auto border-l border-[#f2e5c6]/18 bg-[#080807] text-[#f2e5c6] md:left-auto md:w-[min(540px,44vw)]">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-[#f2e5c6]/16 bg-[#080807]/92 px-4 py-3 backdrop-blur">
+          <div className="min-w-0 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
+            <span className="text-[#8f2b35]">Reading Drawer</span>
+            <span className="mx-2 text-[#f2e5c6]/24">/</span>
+            <span>{note.category}</span>
+          </div>
+          <button
+            aria-label="Close note"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center border border-[#f2e5c6]/22 text-[#f2e5c6]/68 transition hover:border-[#8f2b35] hover:text-[#8f2b35] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35]"
+            onClick={onClose}
+            type="button"
+          >
+            <X aria-hidden="true" size={17} strokeWidth={1.9} />
+          </button>
+        </div>
+
+        <div className="relative h-[46vh] min-h-[320px] overflow-hidden border-b border-[#f2e5c6]/16">
+          <img
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover brightness-[0.72] contrast-[1.16] saturate-[0.7]"
+            src={note.image}
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.68))]" />
+          <div className="absolute bottom-4 left-4 right-4">
+            <p className="text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
+              {note.date} / {note.readTime}
+            </p>
+            <h2 className="font-display mt-2 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[58px]">
+              {note.title}
+            </h2>
+          </div>
+        </div>
+
+        <article className="px-4 py-6 sm:px-6">
+          <div className="grid grid-cols-2 border-y border-[#f2e5c6]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/46">
+            <span>Saved Artifact</span>
+            <span className="text-right text-[#8f2b35]">{note.category}</span>
+          </div>
+          <p className="mt-6 text-base font-light leading-8 text-[#f2e5c6]/74">
+            {note.content}
+          </p>
+          <p className="mt-5 border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/58">
+            This note is kept as a visual reading-room fragment: image first,
+            metadata visible, and ready to expand into a longer entry.
+          </p>
+        </article>
+      </aside>
+    </div>
+  );
+}
