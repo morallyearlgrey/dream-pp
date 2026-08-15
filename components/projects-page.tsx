@@ -49,14 +49,28 @@ const projectVideoAssets: ProjectVideoAsset[] = [
 ];
 const stripSlots = [-2, -1, 0, 1, 2] as const;
 
-function getProjectMedia(project: ProjectFeature): ProjectMediaAsset {
-  const src = project.mainVideo ?? project.photos[0] ?? "/references/projects.jpg";
-
+function getMediaAsset(src: string, alt: string): ProjectMediaAsset {
   return {
-    alt: `${project.name} project media`,
+    alt,
     src,
     type: /\.(mov|mp4|webm)$/i.test(src) ? "video" : "image",
   };
+}
+
+function getProjectCarouselMedia(project: ProjectFeature): ProjectMediaAsset {
+  const src = project.carouselMedia ?? project.mainVideo ?? project.photos[0] ?? "/references/projects.jpg";
+
+  return getMediaAsset(src, `${project.name} carousel media`);
+}
+
+function getProjectBackgroundMedia(project: ProjectFeature): ProjectMediaAsset {
+  const src = project.backgroundMedia ?? project.mainVideo ?? project.photos[0] ?? "/references/projects.jpg";
+
+  return getMediaAsset(src, `${project.name} background media`);
+}
+
+function getProjectFeatureCutout(project: ProjectFeature) {
+  return project.featureCutout ?? project.photos[1] ?? project.photos[0] ?? "/about/builder.png";
 }
 
 function formatDateRange(project: ProjectFeature) {
@@ -79,7 +93,7 @@ export function ProjectsPage() {
   const [selected, setSelected] = useState(0);
 
   return (
-    <main className="overflow-hidden bg-[#0b0b0a] text-[#f2e5c6]">
+    <main className="overflow-visible bg-[#0b0b0a] text-[#f2e5c6]">
       <ProjectHero selected={selected} setSelected={setSelected} />
       <EditorialSpreadSection selected={selected} setSelected={setSelected} />
     </main>
@@ -281,7 +295,7 @@ function EditorialSpreadSection({
   const project = projectsSeed[selected];
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#080807] px-5 py-10 text-[#f2e5c6] sm:px-8 sm:py-12 lg:min-h-[1080px] lg:px-12 lg:py-14">
+    <section className="relative isolate overflow-visible bg-[#080807] px-5 pb-20 pt-10 text-[#f2e5c6] sm:px-8 sm:pb-24 sm:pt-12 lg:min-h-[1560px] lg:px-12 lg:pb-64 lg:pt-14 xl:min-h-[1640px] xl:pb-72">
       <ProjectSpreadBackground project={project} />
 
       <div className="relative z-20 mx-auto max-w-[1500px] overflow-visible">
@@ -327,31 +341,26 @@ function ActiveProjectFeature({
   selected: number;
 }) {
   return (
-    <figure className="order-1 relative z-20 mx-auto w-full max-w-[520px] lg:order-none lg:max-w-[590px]">
+    <figure className="order-1 relative z-20 mx-auto flex min-h-[260px] w-full max-w-[620px] items-end justify-center overflow-visible lg:order-none lg:min-h-[520px] lg:max-w-[680px] xl:min-h-[560px]">
       <div
         aria-hidden="true"
-        className="absolute left-[-12%] right-[-12%] top-[14%] hidden h-px bg-[#f2e5c6]/18 lg:block"
+        className="absolute left-[-14%] right-[-14%] top-[16%] h-px bg-[#f2e5c6]/18"
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-[18%] left-[-6%] right-[-6%] hidden h-px bg-[#5E1C23]/58 lg:block"
+        className="absolute bottom-[22%] left-[-7%] right-[-7%] h-px bg-[#5E1C23]/60"
       />
-      <div className="relative mx-auto aspect-[4/5] w-full max-w-[430px] overflow-hidden border border-[#f2e5c6]/40 bg-[#050505] lg:h-[560px] lg:max-w-[440px] xl:h-[590px]">
-        <ProjectMedia
-          className="h-full w-full object-cover brightness-[0.9] contrast-[1.14] saturate-[0.92]"
-          project={project}
-        />
-        <span
-          aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.02)_0%,rgba(8,8,7,0.08)_46%,rgba(8,8,7,0.5)_100%)]"
-        />
-        <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
-        <div className="absolute left-3 right-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/24 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/74">
-          <span>Feature Frame</span>
-          <span>{String(selected + 1).padStart(2, "0")}</span>
-        </div>
-      </div>
-      <figcaption className="mx-auto mt-3 flex max-w-[430px] items-center justify-between gap-4 border-y border-[#f2e5c6]/18 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54 lg:max-w-[440px]">
+      <div
+        aria-hidden="true"
+        className="absolute bottom-[9%] left-1/2 h-[72%] w-[68%] -translate-x-1/2 border border-[#f2e5c6]/14 bg-[#f2e5c6]/[0.025] lg:w-[58%]"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-[4%] z-0 -translate-x-1/2 whitespace-nowrap font-display text-[96px] font-semibold uppercase leading-none text-[#f2e5c6]/10 mix-blend-screen sm:text-[140px] lg:text-[192px] xl:text-[238px]"
+      >
+        {String(selected + 1).padStart(2, "0")}
+      </span>
+      <figcaption className="absolute bottom-1 left-1/2 z-20 flex w-[min(100%,460px)] -translate-x-1/2 items-center justify-between gap-4 border-y border-[#f2e5c6]/18 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
         <span>{project.id}</span>
         <span className="text-right text-[#d7b82d]">{formatDateRange(project)}</span>
       </figcaption>
@@ -360,18 +369,21 @@ function ActiveProjectFeature({
 }
 
 function ProjectSpreadBackground({ project }: { project: ProjectFeature }) {
+  const media = getProjectBackgroundMedia(project);
+
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
       <div className="absolute inset-[-12%]">
         <ProjectMedia
-          className="h-full w-full scale-110 object-cover opacity-70 blur-2xl grayscale brightness-[0.34] contrast-[1.22]"
+          className="h-full w-full scale-110 object-cover opacity-78 blur-2xl grayscale brightness-[0.32] contrast-[1.24]"
           decorative
+          media={media}
           project={project}
         />
       </div>
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.72)_0%,rgba(8,8,7,0.34)_40%,rgba(8,8,7,0.9)_100%),linear-gradient(90deg,rgba(8,8,7,0.86)_0%,rgba(8,8,7,0.3)_46%,rgba(8,8,7,0.86)_100%),radial-gradient(ellipse_at_50%_56%,rgba(242,229,198,0.13),transparent_46%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.06)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.045)_1px,transparent_1px)] [background-size:46px_46px]" />
-      <div className="archive-scanlines absolute inset-0 opacity-40" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.8)_0%,rgba(8,8,7,0.36)_42%,rgba(8,8,7,0.92)_100%),linear-gradient(90deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.24)_47%,rgba(8,8,7,0.88)_100%),radial-gradient(ellipse_at_50%_58%,rgba(242,229,198,0.16),transparent_44%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.065)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.05)_1px,transparent_1px)] [background-size:44px_44px]" />
+      <div className="archive-scanlines absolute inset-0 opacity-44" />
       <div className="editorial-film-grain absolute inset-0 opacity-75" />
     </div>
   );
@@ -470,27 +482,26 @@ function DesktopProjectStrip({
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
   const project = projectsSeed[selected];
+  const cutout = getProjectFeatureCutout(project);
 
   return (
-    <div className="relative z-40 -mx-5 mt-[-72px] hidden overflow-visible px-5 lg:block xl:mt-[-94px]">
-      <div className="mx-auto w-[min(96vw,1320px)] overflow-visible">
-        <div className="relative h-[402px] overflow-visible xl:h-[438px]">
-          <div
+    <div className="relative z-40 mt-10 hidden overflow-visible lg:block xl:mt-12">
+      <div className="mx-auto w-[min(96vw,1360px)] overflow-visible">
+        <div className="relative min-h-[820px] overflow-visible py-32 xl:min-h-[900px] xl:py-36">
+          <img
+            alt=""
             aria-hidden="true"
-            className="absolute bottom-[29px] left-0 right-0 h-px bg-[#f2e5c6]/28"
+            className="pointer-events-none absolute left-1/2 top-6 z-10 max-h-[610px] w-[min(56vw,640px)] -translate-x-1/2 object-contain opacity-90 drop-shadow-[0_34px_70px_rgba(0,0,0,0.55)] xl:top-8 xl:max-h-[670px] xl:w-[min(52vw,700px)]"
+            src={cutout}
           />
-          <div
-            aria-hidden="true"
-            className="absolute bottom-[6px] left-[5%] right-[5%] h-px bg-[#5E1C23]/70"
-          />
-          <div className="absolute bottom-[30px] left-1/2 flex w-max -translate-x-1/2 items-end overflow-visible border-y border-[#f2e5c6]/38 bg-[#050505]">
+          <div className="relative z-20 mx-auto flex min-h-[460px] w-max items-end justify-center overflow-visible">
             {stripSlots.map((slot) => {
               const projectIndex = getWrappedProjectIndex(selected + slot);
               const stripProject = projectsSeed[projectIndex];
 
               return (
                 <DesktopStripFrame
-                  key={`${slot}-${stripProject.id}`}
+                  key={slot}
                   project={stripProject}
                   projectIndex={projectIndex}
                   setSelected={setSelected}
@@ -498,13 +509,21 @@ function DesktopProjectStrip({
                 />
               );
             })}
+            <ProjectArrowControls
+              className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-[min(58vw,700px)] -translate-x-1/2 -translate-y-1/2 justify-between"
+              controlClassName="pointer-events-auto border-[#f2e5c6]/42 bg-[#050505]/92 backdrop-blur"
+              setSelected={setSelected}
+            />
           </div>
-          <ProjectArrowControls
-            className="pointer-events-none absolute bottom-[174px] left-1/2 z-50 w-[min(58vw,700px)] -translate-x-1/2 justify-between xl:bottom-[192px]"
-            controlClassName="pointer-events-auto border-[#f2e5c6]/42 bg-[#050505]/92 backdrop-blur"
-            setSelected={setSelected}
+          <div
+            aria-hidden="true"
+            className="relative z-30 mx-auto h-px w-full bg-[#f2e5c6]/28"
           />
-          <div className="absolute bottom-0 left-1/2 flex w-[min(86vw,1040px)] -translate-x-1/2 items-center justify-between border-y border-[#f2e5c6]/16 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/48">
+          <div
+            aria-hidden="true"
+            className="relative z-30 mx-auto mt-7 h-px w-[90%] bg-[#5E1C23]/70"
+          />
+          <div className="relative z-40 mx-auto mt-9 flex w-[min(86vw,1040px)] items-center justify-between border-y border-[#f2e5c6]/16 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/48">
             <span>{project.id}</span>
             <span>{project.toolsUsed?.slice(0, 2).join(" / ") ?? "Project Media"}</span>
           </div>
@@ -512,6 +531,41 @@ function DesktopProjectStrip({
       </div>
     </div>
   );
+}
+
+function getDesktopStripGeometry(slot: (typeof stripSlots)[number]) {
+  const active = slot === 0;
+  const distance = Math.abs(slot);
+  const width = active ? 440 : distance === 1 ? 296 : 232;
+  let topLeft = 12;
+  let topRight = 12;
+  let bottomLeft = 88;
+  let bottomRight = 88;
+
+  if (slot < 0) {
+    topLeft = distance === 2 ? 0 : 6;
+    topRight = distance === 2 ? 6 : 12;
+    bottomLeft = distance === 2 ? 100 : 94;
+    bottomRight = distance === 2 ? 94 : 88;
+  }
+
+  if (slot > 0) {
+    topLeft = distance === 2 ? 6 : 12;
+    topRight = distance === 2 ? 0 : 6;
+    bottomLeft = distance === 2 ? 94 : 88;
+    bottomRight = distance === 2 ? 100 : 94;
+  }
+
+  const clipPath = `polygon(0 ${topLeft}%, 100% ${topRight}%, 100% ${bottomRight}%, 0 ${bottomLeft}%)`;
+
+  return {
+    bottomLeft,
+    bottomRight,
+    clipPath,
+    opacity: active ? 1 : distance === 1 ? 0.82 : 0.64,
+    width,
+    zIndex: active ? 44 : 34 - distance,
+  };
 }
 
 function DesktopStripFrame({
@@ -526,58 +580,65 @@ function DesktopStripFrame({
   slot: (typeof stripSlots)[number];
 }) {
   const active = slot === 0;
-  const distance = Math.abs(slot);
-  const width = active ? 410 : distance === 1 ? 252 : 186;
-  const height = active ? 348 : distance === 1 ? 250 : 178;
+  const frame = getDesktopStripGeometry(slot);
+  const labelBottom = active
+    ? 10
+    : `${100 - Math.min(frame.bottomLeft, frame.bottomRight) + 6}%`;
   const frameStyle: CSSProperties = {
-    height,
+    height: 400,
     marginLeft: slot === stripSlots[0] ? 0 : -1,
-    opacity: active ? 1 : 0.76,
-    transform: active
-      ? "perspective(900px) rotateY(0deg) skewY(0deg)"
-      : `perspective(900px) rotateY(${slot < 0 ? 7 : -7}deg) skewY(${slot * -0.6}deg)`,
-    transformOrigin: "bottom center",
-    width,
-    zIndex: active ? 44 : 34 - distance,
+    opacity: frame.opacity,
+    width: frame.width,
+    zIndex: frame.zIndex,
   };
 
   return (
     <motion.button
       animate={{
-        height,
-        opacity: active ? 1 : 0.76,
-        width,
+        opacity: frame.opacity,
+        width: frame.width,
       }}
       aria-label={`Select ${project.name}`}
       aria-pressed={active}
-      className="group relative shrink-0 overflow-hidden border border-[#f2e5c6]/36 bg-[#050505] text-left transition-[border-color,filter,transform] duration-500 ease-out hover:border-[#d7b82d]/70 hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#d7b82d]"
+      className="group relative h-[400px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#d7b82d]"
       onClick={() => setSelected(projectIndex)}
       style={frameStyle}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       type="button"
     >
-      <ProjectMedia
-        className={`h-full w-full object-cover transition duration-500 ${
-          active
-            ? "brightness-[0.94] contrast-[1.14] saturate-[0.95]"
-            : "grayscale brightness-[0.54] contrast-[1.24] saturate-[0.28]"
-        }`}
-        decorative
-        project={project}
-      />
       <span
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.03)_0%,rgba(8,8,7,0.08)_48%,rgba(8,8,7,0.58)_100%)]"
+        className={`absolute inset-0 block transition-colors duration-500 ${
+          active ? "bg-[#d7b82d]/86" : "bg-[#f2e5c6]/48 group-hover:bg-[#d7b82d]/70"
+        }`}
+        style={{ clipPath: frame.clipPath }}
       />
-      <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
-      <span aria-hidden="true" className="absolute inset-y-0 right-0 w-px bg-black/60" />
-      <span aria-hidden="true" className="absolute inset-y-0 left-0 w-px bg-[#f2e5c6]/22" />
       <span
-        className={`absolute bottom-2 left-2 right-2 z-20 border-t pt-2 text-[9px] font-bold uppercase leading-3 transition ${
+        className="absolute inset-px block overflow-visible bg-[#050505]"
+        style={{ clipPath: frame.clipPath }}
+      >
+        <ProjectMedia
+          className={`h-full w-full object-cover transition duration-500 ${
+            active
+              ? "brightness-[0.94] contrast-[1.14] saturate-[0.95]"
+              : "grayscale brightness-[0.54] contrast-[1.24] saturate-[0.28]"
+          }`}
+          decorative
+          project={project}
+        />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.03)_0%,rgba(8,8,7,0.08)_48%,rgba(8,8,7,0.58)_100%)]"
+        />
+        <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
+      </span>
+      <span
+        className={`absolute left-2 right-2 z-20 border-t pt-2 text-[9px] font-bold uppercase leading-3 transition ${
           active
             ? "border-[#d7b82d]/70 text-[#d7b82d]"
             : "border-[#f2e5c6]/22 text-[#f2e5c6]/54"
         }`}
+        style={{ bottom: labelBottom }}
       >
         {project.name}
         <span className="block text-[#f2e5c6]/38">
@@ -687,15 +748,17 @@ function ProjectArrowControls({
 function ProjectMedia({
   className,
   decorative = false,
+  media,
   project,
 }: {
   className: string;
   decorative?: boolean;
+  media?: ProjectMediaAsset;
   project: ProjectFeature;
 }) {
-  const media = getProjectMedia(project);
+  const resolvedMedia = media ?? getProjectCarouselMedia(project);
 
-  if (media.type === "video") {
+  if (resolvedMedia.type === "video") {
     return decorative ? (
       <video
         aria-hidden="true"
@@ -705,28 +768,28 @@ function ProjectMedia({
         muted
         playsInline
         preload="metadata"
-        src={media.src}
+        src={resolvedMedia.src}
       />
     ) : (
       <video
-        aria-label={media.alt}
+        aria-label={resolvedMedia.alt}
         autoPlay
         className={className}
         loop
         muted
         playsInline
         preload="metadata"
-        src={media.src}
+        src={resolvedMedia.src}
       />
     );
   }
 
   return (
     <img
-      alt={decorative ? "" : media.alt}
+      alt={decorative ? "" : resolvedMedia.alt}
       aria-hidden={decorative ? "true" : undefined}
       className={className}
-      src={media.src}
+      src={resolvedMedia.src}
     />
   );
 }

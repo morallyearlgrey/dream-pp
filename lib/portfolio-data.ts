@@ -74,6 +74,9 @@ export const projectsSeed = [
     whatIDid:
       "I shaped the data model, built the interactive visual language, and prepared the admin surface for blog publishing and endorsement moderation.",
     photos: ["/references/projects.jpg", "/references/aboutme.jpg"],
+    backgroundMedia: "/projects/IMG_1775 2.MOV",
+    carouselMedia: "/projects/IMG_1775 2.MOV",
+    featureCutout: "/about/builder.png",
     mainVideo: "/projects/IMG_1775 2.MOV",
     projectLink: "#",
     toolsUsed: ["Next.js", "Tailwind", "Drizzle", "PostgreSQL"],
@@ -88,6 +91,9 @@ export const projectsSeed = [
     whatIDid:
       "I designed the capture flow, modeled readings as timeline entries, and prototyped the visual comparison interface for repeat experiments.",
     photos: ["/references/experiences.jpg", "/references/projects.jpg"],
+    backgroundMedia: "/projects/IMG_1967.MOV",
+    carouselMedia: "/projects/IMG_1967.MOV",
+    featureCutout: "/about/explorer.png",
     mainVideo: "/projects/IMG_1967.MOV",
     projectLink: "#",
     toolsUsed: ["React", "Postgres", "Python", "Embedded C"],
@@ -102,6 +108,9 @@ export const projectsSeed = [
     whatIDid:
       "I created the taxonomy, designed the reading card UI, and added tooling for turning highlights into publishable notes.",
     photos: ["/references/aboutme.jpg", "/references/projects.jpg"],
+    backgroundMedia: "/projects/IMG_2431.MOV",
+    carouselMedia: "/projects/IMG_2431.MOV",
+    featureCutout: "/about/friend.png",
     mainVideo: "/projects/IMG_2431.MOV",
     projectLink: "#",
     toolsUsed: ["TypeScript", "Next.js", "MDX", "Design"],
@@ -116,6 +125,9 @@ export const projectsSeed = [
     whatIDid:
       "I prototyped motion states, built reusable timing presets, and tested interactions across mobile and laptop layouts.",
     photos: ["/references/projects.jpg", "/references/experiences.jpg"],
+    backgroundMedia: "/projects/IMG_2443.MOV",
+    carouselMedia: "/projects/IMG_2443.MOV",
+    featureCutout: "/experiences/me.png",
     mainVideo: "/projects/IMG_2443.MOV",
     projectLink: "#",
     toolsUsed: ["Framer Motion", "Tailwind", "React"],
