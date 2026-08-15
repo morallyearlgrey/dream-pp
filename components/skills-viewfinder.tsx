@@ -1,7 +1,15 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
+import { useState, type PointerEvent } from "react";
+import {
+  motion,
+  type MotionValue,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { skillsSeed } from "@/lib/portfolio-data";
 
 const skillModes = [
@@ -20,10 +28,64 @@ type SkillItem = {
   photo: string;
 };
 
+type FloatingBlock = {
+  className: string;
+  depth: number;
+  image: string;
+  label: string;
+  meta: string;
+  rotate: number;
+  speed: "slow" | "fast";
+  status: string;
+};
+
 const skillItems: SkillItem[] = skillsSeed.map((skill) => ({
   ...skill,
   category: isSkillCategory(skill.category) ? skill.category : "tools",
 }));
+
+const floatingBlocks: FloatingBlock[] = [
+  {
+    className: "left-[4%] top-[18%] w-[250px] sm:w-[310px]",
+    depth: 30,
+    image: "/references/projects.jpg",
+    label: "Frameworks",
+    meta: "Next.js / React",
+    rotate: -13,
+    speed: "slow",
+    status: "Pinned Skill",
+  },
+  {
+    className: "right-[6%] top-[15%] w-[230px] sm:w-[300px]",
+    depth: 42,
+    image: "/references/aboutme.jpg",
+    label: "Languages",
+    meta: "TypeScript / Systems",
+    rotate: 10,
+    speed: "fast",
+    status: "Saved Mode",
+  },
+  {
+    className: "left-[10%] bottom-[18%] w-[260px] sm:w-[350px]",
+    depth: 52,
+    image: "/references/experiences.jpg",
+    label: "Tools",
+    meta: "Drizzle / Postgres",
+    rotate: 8,
+    speed: "fast",
+    status: "Live Stack",
+  },
+  {
+    className: "right-[10%] bottom-[12%] w-[250px] sm:w-[330px]",
+    depth: 36,
+    image: "/captcha/hackathons.jpeg",
+    label: "Libraries",
+    meta: "Motion / UI State",
+    rotate: -10,
+    speed: "slow",
+    status: "Focus Set",
+  },
+];
 
 function isSkillCategory(value: string): value is SkillCategory {
   return skillModes.some((mode) => mode.id === value);
@@ -65,7 +127,9 @@ export function SkillsViewfinder() {
   }
 
   return (
-    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[#080807] px-4 pb-16 pt-20 text-[#f2e5c6] sm:px-6 lg:px-8">
+    <main className="overflow-x-clip bg-[#080807] text-[#f2e5c6]">
+      <SkillsHero />
+      <section className="relative isolate px-4 pb-16 pt-10 sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         <img
           alt=""
@@ -79,21 +143,10 @@ export function SkillsViewfinder() {
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="grid gap-5 border-y border-[#f2e5c6]/20 py-5 lg:grid-cols-[minmax(220px,0.34fr)_minmax(0,1fr)] lg:items-end">
-          <div>
-            <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
-              <span>Capability Monitor</span>
-              <span className="h-px flex-1 bg-[#f2e5c6]/14" />
-              <span>Index 05</span>
-            </div>
-            <h1 className="font-display mt-4 text-[70px] font-semibold uppercase leading-[0.8] text-[#f2e5c6] sm:text-[112px] lg:text-[132px]">
-              Skills
-            </h1>
-          </div>
-          <p className="max-w-2xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base lg:justify-self-end">
-            A camera-style technical archive: select a mode, inspect the active
-            shot, then scrub the contact sheet to move between skills.
-          </p>
+        <div className="flex items-center justify-between gap-4 border-y border-[#f2e5c6]/20 py-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
+          <span className="text-[#8f2b35]">Viewfinder Archive</span>
+          <span>Camera Modes / Contact Sheet</span>
+          <span>Index 05</span>
         </div>
 
         <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_292px]">
@@ -263,6 +316,169 @@ export function SkillsViewfinder() {
           </div>
         </section>
       </section>
+      </section>
     </main>
+  );
+}
+
+function SkillsHero() {
+  const { scrollYProgress } = useScroll();
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
+  const slowY = useTransform(scrollYProgress, [0, 0.28], [0, -52]);
+  const fastY = useTransform(scrollYProgress, [0, 0.28], [0, -92]);
+  const titleY = useTransform(scrollYProgress, [0, 0.28], [0, -36]);
+
+  function handlePointerMove(event: PointerEvent<HTMLElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    cursorX.set((event.clientX - rect.left) / rect.width - 0.5);
+    cursorY.set((event.clientY - rect.top) / rect.height - 0.5);
+  }
+
+  function handlePointerLeave() {
+    cursorX.set(0);
+    cursorY.set(0);
+  }
+
+  return (
+    <section
+      className="relative isolate flex min-h-[calc(100svh-72px)] items-center justify-center overflow-hidden px-4 py-20 text-[#f2e5c6] sm:px-6 lg:min-h-screen lg:px-8"
+      onPointerLeave={handlePointerLeave}
+      onPointerMove={handlePointerMove}
+    >
+      <div aria-hidden="true" className="absolute inset-0">
+        <img
+          alt=""
+          className="h-full w-full object-cover opacity-42 grayscale brightness-[0.5] contrast-[1.16]"
+          src="/about/hero-hq.jpeg"
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(8,8,7,0.12),rgba(8,8,7,0.78)_58%,rgba(8,8,7,0.96)),linear-gradient(180deg,rgba(8,8,7,0.2),rgba(8,8,7,0.86))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.04)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.035)_1px,transparent_1px)] [background-size:46px_46px]" />
+        <div className="archive-scanlines absolute inset-0 opacity-28" />
+      </div>
+
+      {floatingBlocks.map((block) => (
+        <FloatingSkillBlock
+          block={block}
+          cursorX={cursorX}
+          cursorY={cursorY}
+          key={block.label}
+          scrollY={block.speed === "fast" ? fastY : slowY}
+        />
+      ))}
+
+      <motion.div
+        className="relative z-10 mx-auto max-w-5xl text-center"
+        style={{ y: titleY }}
+      >
+        <div className="mx-auto mb-5 flex max-w-xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+          <span>Capability Mix</span>
+          <span className="h-px flex-1 bg-[#f2e5c6]/18" />
+          <span>Live Set</span>
+        </div>
+        <h1 className="font-display text-[78px] font-semibold uppercase leading-[0.76] text-[#f2e5c6] sm:text-[132px] lg:text-[168px]">
+          Skills
+        </h1>
+        <p className="mx-auto mt-6 max-w-2xl text-sm font-light leading-7 text-[#f2e5c6]/72 sm:text-base">
+          A moving technical playlist: languages, frameworks, libraries, and
+          tools arranged like saved tracks from the build archive.
+        </p>
+      </motion.div>
+    </section>
+  );
+}
+
+function FloatingSkillBlock({
+  block,
+  cursorX,
+  cursorY,
+  scrollY,
+}: {
+  block: FloatingBlock;
+  cursorX: MotionValue<number>;
+  cursorY: MotionValue<number>;
+  scrollY: MotionValue<number>;
+}) {
+  const smoothX = useSpring(cursorX, { damping: 24, mass: 0.35, stiffness: 95 });
+  const smoothY = useSpring(cursorY, { damping: 24, mass: 0.35, stiffness: 95 });
+  const x = useTransform(smoothX, [-0.5, 0.5], [-block.depth, block.depth]);
+  const y = useTransform(smoothY, [-0.5, 0.5], [-block.depth * 0.62, block.depth * 0.62]);
+  const rotate = useTransform(
+    smoothX,
+    [-0.5, 0.5],
+    [block.rotate - 2.4, block.rotate + 2.4],
+  );
+
+  return (
+    <motion.div
+      aria-hidden="true"
+      className={`pointer-events-none absolute hidden md:block ${block.className}`}
+      style={{ y: scrollY }}
+    >
+      <motion.div
+        animate={{
+          scale: [1, 1.018, 1],
+        }}
+        className="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/90 p-2.5 text-[#080807] shadow-[0_24px_70px_rgba(0,0,0,0.32)] ring-1 ring-[#080807]/8 backdrop-blur-xl"
+        style={{ rotate, x, y }}
+        transition={{ duration: 7.5, ease: "easeInOut", repeat: Infinity }}
+      >
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.94),rgba(255,255,255,0.74)_54%,rgba(242,229,198,0.82))]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-white/90" />
+
+        <div className="relative">
+          <div className="flex items-center justify-between gap-3 border-b border-[#080807]/10 pb-2 text-[8px] font-bold uppercase leading-none text-[#080807]/44">
+            <span className="inline-flex items-center gap-1.5 text-[#8f2b35]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#8f2b35]" />
+              {block.status}
+            </span>
+            <span>Skill Mix</span>
+          </div>
+
+          <div className="mt-2.5 grid grid-cols-[58px_1fr] items-center gap-3">
+            <img
+              alt=""
+              className="h-[58px] w-[58px] rounded-[17px] object-cover grayscale brightness-[0.82] contrast-[1.14]"
+              src={block.image}
+            />
+            <div className="min-w-0">
+              <p className="truncate text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
+                {block.label}
+              </p>
+              <p className="font-display mt-1 truncate text-[22px] font-semibold uppercase leading-none text-[#080807] sm:text-2xl">
+                {block.meta}
+              </p>
+              <p className="mt-1 truncate text-[9px] font-bold uppercase leading-none text-[#080807]/42">
+                Portfolio Capture / Saved
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-3.5 grid grid-cols-[28px_1fr_28px] items-center gap-3">
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-[#080807]">
+              <span className="ml-0.5 h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-white" />
+            </span>
+            <span className="relative h-[3px] overflow-hidden rounded-full bg-[#080807]/14">
+              <span className="absolute inset-y-0 left-0 w-[54%] rounded-full bg-[#8f2b35]" />
+              <span className="absolute left-[54%] top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full border border-white bg-[#8f2b35]" />
+            </span>
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-[#080807]/8">
+              <span className="h-3 w-3 rounded-full border border-[#080807]/46" />
+            </span>
+          </div>
+
+          <div className="mt-3 flex items-center justify-between border-t border-[#080807]/10 pt-2 text-[8px] font-bold uppercase leading-none text-[#080807]/42">
+            <span>00:15</span>
+            <span className="inline-flex items-center gap-1">
+              <span className="h-1 w-1 rounded-full bg-[#8f2b35]" />
+              <span className="h-1 w-1 rounded-full bg-[#080807]/28" />
+              <span className="h-1 w-1 rounded-full bg-[#080807]/28" />
+            </span>
+            <span>03:10</span>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }

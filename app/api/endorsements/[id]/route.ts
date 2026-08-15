@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { getDb } from "@/db";
 import { endorsements } from "@/db/schema";
-import { authOptions } from "@/lib/auth";
+import { authOptions, isAuthorizedAdminSession } from "@/lib/auth";
 
 type PatchPayload = {
   approved?: unknown;
@@ -18,6 +18,10 @@ export async function PATCH(
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  if (!isAuthorizedAdminSession(session)) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
   }
 
   const { id } = await context.params;

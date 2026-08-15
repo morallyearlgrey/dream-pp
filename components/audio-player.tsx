@@ -17,6 +17,12 @@ export type AudioTrack = {
   title: string;
 };
 
+type StoredAudioState = {
+  currentIndex?: number;
+  currentTime?: number;
+  isPlaying?: boolean;
+};
+
 type AudioPlayerContextValue = {
   currentTrack: AudioTrack | undefined;
   hasTracks: boolean;
@@ -27,6 +33,25 @@ type AudioPlayerContextValue = {
 };
 
 const AudioPlayerContext = createContext<AudioPlayerContextValue | null>(null);
+const audioStorageKey = "kai-portfolio-audio-state";
+
+function readStoredAudioState(): StoredAudioState | null {
+  try {
+    const value = window.localStorage.getItem(audioStorageKey);
+
+    return value ? (JSON.parse(value) as StoredAudioState) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredAudioState(state: StoredAudioState) {
+  try {
+    window.localStorage.setItem(audioStorageKey, JSON.stringify(state));
+  } catch {
+    // Local storage is optional; route-level persistence still works without it.
+  }
+}
 
 export function PersistentAudioProvider({
   children,
@@ -36,11 +61,72 @@ export function PersistentAudioProvider({
   tracks: AudioTrack[];
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const restoredRef = useRef(false);
+  const pendingSeekRef = useRef<number | null>(null);
+  const lastPersistedAtRef = useRef(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const safeCurrentIndex = tracks.length ? Math.min(currentIndex, tracks.length - 1) : 0;
   const currentTrack = tracks[safeCurrentIndex];
   const currentSrc = currentTrack?.src;
+
+  useEffect(() => {
+    if (restoredRef.current || !tracks.length) {
+      return;
+    }
+
+    const stored = readStoredAudioState();
+
+    if (stored) {
+      if (typeof stored.currentTime === "number") {
+        pendingSeekRef.current = Math.max(0, stored.currentTime);
+      }
+
+      window.requestAnimationFrame(() => {
+        if (typeof stored.currentIndex === "number") {
+          setCurrentIndex(Math.max(0, Math.min(stored.currentIndex, tracks.length - 1)));
+        }
+
+        if (stored.isPlaying) {
+          setIsPlaying(true);
+        }
+      });
+    }
+
+    restoredRef.current = true;
+  }, [tracks.length]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+
+    if (!audio || pendingSeekRef.current === null) {
+      return;
+    }
+
+    const seekToStoredTime = () => {
+      if (pendingSeekRef.current !== null) {
+        audio.currentTime = pendingSeekRef.current;
+        pendingSeekRef.current = null;
+      }
+    };
+
+    if (audio.readyState >= 1) {
+      seekToStoredTime();
+      return;
+    }
+
+    audio.addEventListener("loadedmetadata", seekToStoredTime, { once: true });
+
+    return () => audio.removeEventListener("loadedmetadata", seekToStoredTime);
+  }, [currentSrc]);
+
+  useEffect(() => {
+    writeStoredAudioState({
+      currentIndex: safeCurrentIndex,
+      currentTime: audioRef.current?.currentTime ?? 0,
+      isPlaying,
+    });
+  }, [isPlaying, safeCurrentIndex]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -56,6 +142,21 @@ export function PersistentAudioProvider({
 
     void audio.play().catch(() => setIsPlaying(false));
   }, [currentSrc, isPlaying]);
+
+  const persistCurrentTime = useCallback(() => {
+    const now = Date.now();
+
+    if (now - lastPersistedAtRef.current < 1500) {
+      return;
+    }
+
+    lastPersistedAtRef.current = now;
+    writeStoredAudioState({
+      currentIndex: safeCurrentIndex,
+      currentTime: audioRef.current?.currentTime ?? 0,
+      isPlaying,
+    });
+  }, [isPlaying, safeCurrentIndex]);
 
   const handleEnded = useCallback(() => {
     if (!tracks.length) {
@@ -103,6 +204,7 @@ export function PersistentAudioProvider({
       {children}
       <audio
         onEnded={handleEnded}
+        onTimeUpdate={persistCurrentTime}
         preload="metadata"
         ref={audioRef}
         src={currentSrc}
@@ -156,5 +258,13 @@ export function NowPlayingModule() {
         </div>
       </div>
     </div>
+  );
+}
+
+export function GlobalAudioDock() {
+  return (
+    <aside className="fixed bottom-4 left-4 z-[70] w-[min(360px,calc(100vw-2rem))] border border-[#f2e5c6]/24 bg-[#080807]/84 p-3 text-[#f2e5c6] shadow-[0_10px_28px_rgba(0,0,0,0.22)] backdrop-blur-md">
+      <NowPlayingModule />
+    </aside>
   );
 }

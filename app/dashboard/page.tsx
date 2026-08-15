@@ -7,7 +7,7 @@ import {
   experiences as experiencesTable,
 } from "@/db/schema";
 import { EndorsementControls } from "@/components/endorsement-controls";
-import { authOptions } from "@/lib/auth";
+import { authOptions, isAuthorizedAdminSession } from "@/lib/auth";
 import {
   blogSeed,
   endorsementsSeed,
@@ -54,9 +54,12 @@ export default async function Dashboard() {
               Sign in with Discord
             </h1>
             <p className="mt-5 max-w-xl border-l border-[#8f2b35]/40 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
-              The admin surface is ready for Discord OAuth. Add the Discord
-              client credentials to the environment before using the live
-              sign-in flow.
+              The admin surface is locked to the Discord account morallyearlgrey.
+              Add the Discord client secret, then register{" "}
+              <span className="font-bold text-[#f2e5c6]">
+                {process.env.NEXTAUTH_URL ?? "http://localhost:3000"}/api/auth/callback/discord
+              </span>{" "}
+              as the redirect URI.
             </p>
             <Link
               className="mt-8 inline-flex items-center justify-center border border-[#8f2b35]/55 px-5 py-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[#f2e5c6]"
@@ -75,6 +78,42 @@ export default async function Dashboard() {
               <li>Review endorsements and feature the top three.</li>
               <li>Manage seed data for portfolio sections.</li>
             </ul>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
+  if (!isAuthorizedAdminSession(session)) {
+    return (
+      <main className="editorial-shell min-h-[72vh] w-full px-4 py-20 text-[#f2e5c6] sm:px-6 lg:px-8">
+        <section className="mx-auto grid w-full max-w-5xl gap-8 border border-[#f2e5c6]/18 bg-[#0f0e0d]/88 p-6 md:grid-cols-[1fr_0.8fr] md:p-10">
+          <div>
+            <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+              Admin restricted
+              <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+            </p>
+            <h1 className="font-display mt-4 text-[52px] font-semibold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[76px]">
+              Access denied
+            </h1>
+            <p className="mt-5 max-w-xl border-l border-[#8f2b35]/40 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
+              This dashboard only accepts the configured admin Discord account.
+            </p>
+            <Link
+              className="mt-8 inline-flex items-center justify-center border border-[#f2e5c6]/22 px-5 py-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35]"
+              href="/api/auth/signout"
+            >
+              Sign out
+            </Link>
+          </div>
+          <div className="border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 p-5">
+            <p className="font-display text-3xl font-semibold uppercase leading-none text-[#f2e5c6]">
+              Locked admin
+            </p>
+            <p className="mt-5 text-sm font-light leading-6 text-[#f2e5c6]/64">
+              The admin check is enforced in both the dashboard route and the
+              endorsement moderation API.
+            </p>
           </div>
         </section>
       </main>

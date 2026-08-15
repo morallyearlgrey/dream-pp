@@ -859,38 +859,38 @@ function WonderCaptcha() {
       <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[#f2e5c6]/12" />
 
       <div
-        className={`relative mx-auto max-w-[920px] border border-[#f2e5c6]/18 bg-[#11100f]/82 text-[#f2e5c6] shadow-[0_12px_34px_rgba(0,0,0,0.22)] backdrop-blur-sm ${
+        className={`relative mx-auto max-w-[920px] overflow-hidden rounded-[34px] border border-white/52 bg-[#f8f4eb]/94 text-[#171311] shadow-[0_22px_58px_rgba(0,0,0,0.22)] backdrop-blur-xl ${
           flashing ? "captcha-flash" : ""
         }`}
       >
         <div className="px-4 py-4 sm:px-6 sm:py-5">
-          <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
+          <div className="flex items-center gap-3 border-b border-[#171311]/12 pb-3 text-[9px] font-bold uppercase leading-none text-[#171311]/50 sm:text-[10px]">
             <span>Human Check</span>
-            <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+            <span className="h-px flex-1 bg-[#171311]/10" />
             <span>09 Images</span>
             <span>{selected.length.toString().padStart(2, "0")} Selected</span>
           </div>
           <div className="grid gap-4 pt-5 sm:grid-cols-[minmax(0,1fr)_minmax(170px,0.36fr)] sm:items-end">
-            <h2 className="max-w-2xl font-display text-[30px] font-medium leading-[1.02] text-[#f2e5c6] sm:text-[42px]">
+            <h2 className="max-w-2xl font-display text-[30px] font-medium leading-[1.02] text-[#171311] sm:text-[42px]">
               Select all images that make you wonder.
             </h2>
-            <p className="border-l border-[#f2e5c6]/16 pl-4 text-xs font-light leading-5 text-[#f2e5c6]/56">
+            <p className="border-l border-[#8f2b35]/38 pl-4 text-xs font-light leading-5 text-[#171311]/58">
               Click verify once your curiosity is satisfied.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-px border-y border-[#f2e5c6]/14 bg-[#f2e5c6]/14">
+        <div className="grid grid-cols-3 gap-1 border-y border-[#171311]/10 bg-[#171311]/8 p-1.5">
           {tiles.map((tile, index) => {
             const active = selectedSet.has(tile.id);
 
             return (
               <button
                 aria-pressed={active}
-                className={`group relative aspect-square overflow-hidden bg-[#0b0b0a] outline-none transition focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-[#8f2b35] ${
+                className={`group relative aspect-square overflow-hidden rounded-[18px] bg-[#0b0b0a] outline-none transition focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-[#8f2b35] ${
                   active
-                    ? "shadow-[inset_0_0_0_1px_#8f2b35,inset_0_0_0_4px_rgba(15,15,14,0.84)]"
-                    : "hover:shadow-[inset_0_0_0_1px_rgba(242,229,198,0.34)]"
+                    ? "shadow-[inset_0_0_0_2px_#8f2b35,inset_0_0_0_6px_rgba(248,244,235,0.9)]"
+                    : "hover:shadow-[inset_0_0_0_1px_rgba(23,19,17,0.28)]"
                 }`}
                 key={tile.id}
                 onClick={() => {
@@ -929,7 +929,7 @@ function WonderCaptcha() {
                   className={`absolute left-2 top-2 inline-flex h-5 w-5 items-center justify-center border text-[#f2e5c6] transition ${
                     active
                       ? "border-[#8f2b35] bg-[#8f2b35] text-[#f2e5c6]"
-                      : "border-[#f2e5c6]/55 bg-black/18"
+                      : "border-white/60 bg-black/18"
                   }`}
                 >
                   {active ? <X aria-hidden="true" size={13} strokeWidth={2.6} /> : null}
@@ -943,21 +943,21 @@ function WonderCaptcha() {
         </div>
 
         <div className="flex items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <div className="hidden items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/46 sm:flex">
+          <div className="hidden items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#171311]/42 sm:flex">
             <span>Choose by feel</span>
-            <span className="h-px w-16 bg-[#f2e5c6]/14" />
+            <span className="h-px w-16 bg-[#171311]/12" />
             <span>There is no answer key</span>
           </div>
           <button
             aria-label="Undo and shuffle images"
-            className="inline-flex h-9 w-9 items-center justify-center border border-[#f2e5c6]/20 text-[#f2e5c6]/62 transition hover:border-[#f2e5c6]/40 hover:text-[#f2e5c6]"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#171311]/12 bg-white/64 text-[#171311]/62 transition hover:border-[#8f2b35]/40 hover:text-[#8f2b35]"
             onClick={shuffle}
             type="button"
           >
             <RotateCcw aria-hidden="true" size={17} strokeWidth={1.9} />
           </button>
           <button
-            className="inline-flex h-9 items-center gap-2 border border-[#f2e5c6]/26 px-4 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/78 transition hover:border-[#8f2b35] hover:text-[#8f2b35]"
+            className="inline-flex h-9 items-center gap-2 rounded-full border border-[#171311]/14 bg-[#171311] px-4 text-[9px] font-bold uppercase leading-none text-[#f8f4eb] transition hover:bg-[#5E1C23]"
             onClick={verify}
             type="button"
           >

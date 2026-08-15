@@ -554,17 +554,17 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
   }
 
   return (
-    <section className="editorial-note-overlay relative z-40 mt-3 max-h-none w-full overflow-y-auto p-3 backdrop-blur-md sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:max-h-[72%] lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
+    <section className="relative z-40 mt-3 max-h-none w-full overflow-y-auto rounded-[28px] border border-white/62 bg-[#f8f4eb]/94 p-3 text-[#171311] shadow-[0_18px_42px_rgba(0,0,0,0.18)] backdrop-blur-xl sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:max-h-[72%] lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#171311] text-[10px] font-bold uppercase leading-none text-[#f8f4eb]">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#171311,#5E1C23)] text-[10px] font-bold uppercase leading-none text-[#f8f4eb] shadow-[0_8px_18px_rgba(0,0,0,0.18)]">
           {experienceInitials}
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3 border-b border-[#171311]/12 pb-2">
             <p className="text-[9px] font-bold uppercase leading-none text-[#5E1C23]">
-              Endorsements
+              Notes
             </p>
-            <span className="text-[9px] font-bold uppercase leading-none text-[#171311]/42">
+            <span className="rounded-full bg-[#171311]/6 px-2 py-1 text-[9px] font-bold uppercase leading-none text-[#171311]/48">
               {featuredEndorsements.length.toString().padStart(2, "0")} / 03
             </span>
           </div>
@@ -573,7 +573,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
             {featuredEndorsements.length > 0 ? (
               featuredEndorsements.map((endorsement, index) => (
                 <blockquote
-                  className="border border-[#171311]/10 bg-[#f8f4eb]/72 px-3 py-2"
+                  className="rounded-[20px] border border-[#171311]/8 bg-white/72 px-3 py-2 shadow-[0_4px_16px_rgba(23,19,17,0.06)]"
                   key={endorsement.id}
                 >
                   <div className="flex items-start gap-2">
@@ -593,14 +593,14 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
                 </blockquote>
               ))
             ) : (
-              <p className="border border-[#171311]/10 bg-[#f8f4eb]/62 px-3 py-2 text-[11px] font-light leading-4 text-[#171311]/58">
+              <p className="rounded-[20px] border border-[#171311]/8 bg-white/66 px-3 py-2 text-[11px] font-light leading-4 text-[#171311]/58">
                 No endorsements selected yet.
               </p>
             )}
           </div>
 
           <form
-            className="mt-2 border border-[#171311]/10 bg-[#f8f4eb]/62 p-2.5"
+            className="mt-2 rounded-[22px] border border-[#171311]/8 bg-white/66 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
             onSubmit={submitEndorsement}
           >
             <div className="flex items-center gap-2 border-b border-[#171311]/10 pb-2">
@@ -619,7 +619,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
               />
             </div>
             <textarea
-              className="mt-2 min-h-16 w-full resize-none border border-[#171311]/8 bg-[#171311]/5 px-3 py-2 text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36 focus:bg-[#171311]/8"
+              className="mt-2 min-h-16 w-full resize-none rounded-[18px] border border-[#171311]/8 bg-[#171311]/5 px-3 py-2 text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36 focus:bg-[#171311]/8"
               maxLength={1000}
               onChange={(event) => setForm((current) => ({ ...current, note: event.target.value }))}
               placeholder={`Endorse ${experience.companyName}`}
@@ -644,7 +644,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
                 </span>
               </p>
               <button
-                className="inline-flex h-8 shrink-0 items-center gap-1.5 bg-[#171311] px-3 text-[9px] font-bold uppercase leading-none text-[#f8f4eb] transition hover:bg-[#5E1C23] disabled:cursor-not-allowed disabled:opacity-45"
+                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-[#171311] px-3 text-[9px] font-bold uppercase leading-none text-[#f8f4eb] transition hover:bg-[#5E1C23] disabled:cursor-not-allowed disabled:opacity-45"
                 disabled={status === "submitting"}
                 type="submit"
               >

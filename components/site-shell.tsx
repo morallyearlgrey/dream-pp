@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { PersistentAudioProvider, type AudioTrack } from "@/components/audio-player";
+import {
+  GlobalAudioDock,
+  PersistentAudioProvider,
+  type AudioTrack,
+} from "@/components/audio-player";
 import {
   BadgeCheck,
   BookOpen,
@@ -11,14 +15,20 @@ import {
   Grid2X2,
   Home,
   LayoutDashboard,
+  Mail,
 } from "lucide-react";
 
-const links = [
+const primaryLinks = [
   { href: "/", label: "Home", icon: Home },
   { href: "/experiences", label: "Experiences", icon: BriefcaseBusiness },
   { href: "/projects", label: "Projects", icon: FolderKanban },
   { href: "/blog", label: "Blog", icon: BookOpen },
   { href: "/skills", label: "Skills", icon: Grid2X2 },
+  { href: "/contact", label: "Contact Me", icon: Mail },
+];
+
+const footerLinks = [
+  ...primaryLinks,
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
@@ -37,9 +47,9 @@ export function SiteShell({
       <header className="sticky top-5 z-50 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8">
         <nav
           aria-label="Primary navigation"
-          className="mx-auto flex max-w-[48rem] items-center justify-between gap-0.5 border border-[#f2e5c6]/28 bg-[#080807]/72 px-1.5 py-1 text-[#f2e5c6] shadow-[0_8px_22px_rgba(0,0,0,0.2)] backdrop-blur-md sm:px-2"
+          className="mx-auto flex max-w-[56rem] items-center justify-between gap-0.5 border border-[#f2e5c6]/28 bg-[#080807]/72 px-1.5 py-1 text-[#f2e5c6] shadow-[0_8px_22px_rgba(0,0,0,0.2)] backdrop-blur-md sm:px-2"
         >
-          {links.map((link) => {
+          {primaryLinks.map((link) => {
             const active =
               pathname === link.href ||
               (link.href !== "/" && pathname.startsWith(link.href));
@@ -72,6 +82,7 @@ export function SiteShell({
       </header>
 
       {children}
+      <GlobalAudioDock />
 
       <footer className="relative w-full overflow-hidden bg-[#080807] px-5 py-8 text-[#f2e5c6] sm:px-6 lg:px-8">
         <div aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-[0.18]" />
@@ -100,7 +111,7 @@ export function SiteShell({
                 Index
               </p>
               <div className="mt-4 grid gap-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">
-                {links.map((link) => (
+                {footerLinks.map((link) => (
                   <Link
                     className="transition hover:text-[#8f2b35]"
                     href={link.href}

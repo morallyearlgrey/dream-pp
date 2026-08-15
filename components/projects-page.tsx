@@ -48,6 +48,7 @@ const projectVideoAssets: ProjectVideoAsset[] = [
   },
 ];
 const stripSlots = [-2, -1, 0, 1, 2] as const;
+const mobileStripSlots = [-1, 0, 1] as const;
 
 function getMediaAsset(src: string, alt: string): ProjectMediaAsset {
   return {
@@ -112,6 +113,19 @@ function getDesktopStripItems(selected: number) {
         ? item.project.id
         : `${item.project.id}-${item.slot}`,
   }));
+}
+
+function getMobileStripItems(selected: number) {
+  return mobileStripSlots.map((slot) => {
+    const projectIndex = getWrappedProjectIndex(selected + slot);
+
+    return {
+      key: `${projectsSeed[projectIndex].id}-mobile-${slot}`,
+      project: projectsSeed[projectIndex],
+      projectIndex,
+      slot,
+    };
+  });
 }
 
 function hasProjectLink(project: ProjectFeature) {
@@ -621,6 +635,121 @@ function DesktopStripFrame({
   );
 }
 
+function getMobileStripGeometry(slot: (typeof mobileStripSlots)[number]) {
+  const active = slot === 0;
+  let topLeft = 12;
+  let topRight = 12;
+  let bottomLeft = 88;
+  let bottomRight = 88;
+
+  if (slot < 0) {
+    topLeft = 3;
+    topRight = 12;
+    bottomLeft = 99;
+    bottomRight = 88;
+  }
+
+  if (slot > 0) {
+    topLeft = 12;
+    topRight = 3;
+    bottomLeft = 88;
+    bottomRight = 99;
+  }
+
+  const clipPath = `polygon(0 ${topLeft}%, 100% ${topRight}%, 100% ${bottomRight}%, 0 ${bottomLeft}%)`;
+
+  return {
+    bottomLeft,
+    bottomRight,
+    clipPath,
+    opacity: active ? 1 : 0.68,
+    width: active ? "42%" : "29%",
+    zIndex: active ? 34 : 26,
+  };
+}
+
+function MobileStripFrame({
+  project,
+  projectIndex,
+  setSelected,
+  slot,
+}: {
+  project: ProjectFeature;
+  projectIndex: number;
+  setSelected: Dispatch<SetStateAction<number>>;
+  slot: (typeof mobileStripSlots)[number];
+}) {
+  const active = slot === 0;
+  const frame = getMobileStripGeometry(slot);
+  const labelBottom = active
+    ? 22
+    : `${100 - Math.min(frame.bottomLeft, frame.bottomRight) + 6}%`;
+  const frameStyle: CSSProperties = {
+    marginLeft: slot === mobileStripSlots[0] ? 0 : -1,
+    opacity: frame.opacity,
+    width: frame.width,
+    zIndex: frame.zIndex,
+  };
+
+  return (
+    <motion.button
+      layout
+      animate={{
+        opacity: frame.opacity,
+        width: frame.width,
+      }}
+      aria-label={`Select ${project.name}`}
+      aria-pressed={active}
+      className="group relative h-[260px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-40 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:h-[320px]"
+      onClick={() => setSelected(projectIndex)}
+      style={frameStyle}
+      transition={{
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1],
+        layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+      }}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute inset-0 block transition-colors duration-500 ${
+          active ? "bg-[#8f2b35]/86" : "bg-[#f2e5c6]/46 group-hover:bg-[#8f2b35]/66"
+        }`}
+        style={{ clipPath: frame.clipPath }}
+      />
+      <span
+        className="absolute inset-px block overflow-visible bg-[#050505]"
+        style={{ clipPath: frame.clipPath }}
+      >
+        <ProjectMedia
+          className={`h-full w-full object-cover transition duration-500 ${
+            active
+              ? "brightness-[0.92] contrast-[1.14] saturate-[0.9]"
+              : "grayscale brightness-[0.5] contrast-[1.26] saturate-[0.24]"
+          }`}
+          decorative
+          project={project}
+        />
+        <span
+          aria-hidden="true"
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.04)_0%,rgba(8,8,7,0.08)_50%,rgba(8,8,7,0.64)_100%)]"
+        />
+        <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
+      </span>
+      <span
+        className={`absolute left-2 right-2 z-20 border-t pt-2 text-[8px] font-bold uppercase leading-3 transition sm:text-[9px] ${
+          active
+            ? "border-[#8f2b35]/74 text-[#8f2b35]"
+            : "border-[#f2e5c6]/24 text-[#f2e5c6]/56"
+        }`}
+        style={{ bottom: labelBottom }}
+      >
+        {project.name}
+      </span>
+    </motion.button>
+  );
+}
+
 function MobileProjectStrip({
   selected,
   setSelected,
@@ -628,52 +757,50 @@ function MobileProjectStrip({
   selected: number;
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
+  const project = projectsSeed[selected];
+
   return (
-    <div className="relative z-30 mt-5 lg:hidden">
+    <div className="relative z-30 mt-4 overflow-visible lg:hidden">
       <div className="flex items-center justify-between gap-3 border-y border-[#f2e5c6]/18 py-2">
         <span className="text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
           Project {String(selected + 1).padStart(2, "0")}
         </span>
-        <ProjectArrowControls
-          className="gap-2"
-          controlClassName="h-9 w-9 bg-[#050505]/92"
-          setSelected={setSelected}
-        />
+        <span className="max-w-[48vw] truncate text-right text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
+          {project.name}
+        </span>
       </div>
-      <div className="mt-4 flex w-full items-end overflow-x-auto pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {projectsSeed.map((project, index) => {
-          const active = selected === index;
 
-          return (
-            <button
-              aria-label={`Select ${project.name}`}
-              aria-pressed={active}
-              className={`group relative shrink-0 overflow-hidden border border-[#f2e5c6]/30 bg-[#050505] text-left transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
-                active ? "z-10 h-[158px] w-[196px] border-[#8f2b35]/74" : "-ml-px h-[112px] w-[132px]"
-              }`}
-              key={project.id}
-              onClick={() => setSelected(index)}
-              type="button"
-            >
-              <ProjectMedia
-                className={`h-full w-full object-cover transition duration-500 ${
-                  active
-                    ? "brightness-[0.88] contrast-[1.12] saturate-[0.86]"
-                    : "grayscale brightness-[0.58] contrast-[1.18] saturate-[0.45]"
-                }`}
-                decorative
-                project={project}
-              />
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.02),rgba(8,8,7,0.62))]"
-              />
-              <span className="absolute bottom-2 left-2 right-2 text-[9px] font-bold uppercase leading-3 text-[#f2e5c6]">
-                {project.name}
-              </span>
-            </button>
-          );
-        })}
+      <div className="relative mx-auto mt-3 w-full max-w-[560px] overflow-visible pb-10 pt-3">
+        <div className="relative z-20 mx-auto flex min-h-[288px] w-full min-w-0 items-end justify-center overflow-visible sm:min-h-[348px]">
+          {getMobileStripItems(selected).map((item) => (
+            <MobileStripFrame
+              key={item.key}
+              project={item.project}
+              projectIndex={item.projectIndex}
+              setSelected={setSelected}
+              slot={item.slot}
+            />
+          ))}
+          <ProjectArrowControls
+            className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-[calc(100%-0.75rem)] -translate-x-1/2 -translate-y-1/2 justify-between"
+            controlClassName="pointer-events-auto h-9 w-9 border-[#f2e5c6]/42 bg-[#050505]/90 backdrop-blur"
+            setSelected={setSelected}
+          />
+        </div>
+        <div
+          aria-hidden="true"
+          className="relative z-30 mx-auto h-px w-full bg-[#f2e5c6]/24"
+        />
+        <div
+          aria-hidden="true"
+          className="relative z-30 mx-auto mt-5 h-px w-[88%] bg-[#5E1C23]/70"
+        />
+        <div className="relative z-40 mx-auto mt-6 flex w-full items-center justify-between gap-3 border-y border-[#f2e5c6]/16 py-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/48">
+          <span>{project.id}</span>
+          <span className="min-w-0 truncate text-right">
+            {project.toolsUsed?.slice(0, 2).join(" / ") ?? "Project Media"}
+          </span>
+        </div>
       </div>
     </div>
   );
