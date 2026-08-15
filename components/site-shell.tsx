@@ -7,6 +7,7 @@ import {
   PersistentAudioProvider,
   type AudioTrack,
 } from "@/components/audio-player";
+import { OpeningProofLoader } from "@/components/opening-proof-loader";
 import {
   BadgeCheck,
   BookOpen,
@@ -43,6 +44,7 @@ export function SiteShell({
 
   return (
     <PersistentAudioProvider tracks={audioTracks}>
+      <OpeningProofLoader />
       <div className="min-h-screen">
       <header className="sticky top-5 z-50 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8">
         <nav
@@ -128,12 +130,12 @@ export function SiteShell({
                 Contact
               </p>
               <div className="mt-4 space-y-2 text-xs font-light leading-5 text-[#f2e5c6]/64">
-                <a
+                <Link
                   className="block font-bold uppercase transition hover:text-[#8f2b35]"
-                  href="mailto:portfolio@example.com"
+                  href="/contact"
                 >
-                  portfolio@example.com
-                </a>
+                  Send A Note
+                </Link>
                 <p>Open to thoughtful software, embedded, and design work.</p>
               </div>
             </div>

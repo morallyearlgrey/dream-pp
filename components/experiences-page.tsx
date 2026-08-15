@@ -554,106 +554,112 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
   }
 
   return (
-    <section className="relative z-40 mt-3 max-h-none w-full overflow-y-auto rounded-[28px] border border-white/62 bg-[#f8f4eb]/94 p-3 text-[#171311] shadow-[0_18px_42px_rgba(0,0,0,0.18)] backdrop-blur-xl sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:max-h-[72%] lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
-      <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#171311,#5E1C23)] text-[10px] font-bold uppercase leading-none text-[#f8f4eb] shadow-[0_8px_18px_rgba(0,0,0,0.18)]">
-          {experienceInitials}
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-3 border-b border-[#171311]/12 pb-2">
-            <p className="text-[9px] font-bold uppercase leading-none text-[#5E1C23]">
-              Notes
+    <section className="relative z-40 mt-3 max-h-none w-full overflow-y-auto rounded-[26px] border border-[#f2e5c6]/18 bg-[#080807]/82 p-2 text-[#f2e5c6] shadow-none backdrop-blur-xl sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:max-h-[72%] lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
+      <div className="rounded-[22px] border border-white/16 bg-[#f8f4eb]/92 p-2 text-[#171311]">
+        <div className="flex items-center gap-2 border-b border-[#171311]/10 pb-2">
+          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#171311,#5E1C23)] text-[9px] font-bold uppercase leading-none text-[#f8f4eb]">
+            {experienceInitials}
+            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border border-[#f8f4eb] bg-[#8f2b35]" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between gap-2 text-[8px] font-bold uppercase leading-none">
+              <span className="truncate text-[#5E1C23]">{experience.companyName}</span>
+              <span className="text-[#171311]/42">
+                {featuredEndorsements.length.toString().padStart(2, "0")} / 03
+              </span>
+            </div>
+            <p className="mt-1 text-[8px] font-bold uppercase leading-none text-[#171311]/38">
+              Notes active now / replies held for review
             </p>
-            <span className="rounded-full bg-[#171311]/6 px-2 py-1 text-[9px] font-bold uppercase leading-none text-[#171311]/48">
-              {featuredEndorsements.length.toString().padStart(2, "0")} / 03
-            </span>
           </div>
+        </div>
 
-          <div className="mt-2 grid gap-1.5">
-            {featuredEndorsements.length > 0 ? (
-              featuredEndorsements.map((endorsement, index) => (
-                <blockquote
-                  className="rounded-[20px] border border-[#171311]/8 bg-white/72 px-3 py-2 shadow-[0_4px_16px_rgba(23,19,17,0.06)]"
-                  key={endorsement.id}
-                >
-                  <div className="flex items-start gap-2">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#5E1C23] text-[8px] font-bold uppercase leading-none text-[#f8f4eb]">
-                      {getInitials(endorsement.authorName)}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2 text-[8px] font-bold uppercase leading-none text-[#171311]/48">
-                        <span className="truncate">{endorsement.authorName}</span>
-                        <span>{(index + 1).toString().padStart(2, "0")}</span>
-                      </div>
-                      <p className="mt-1 text-[11px] font-light leading-4 text-[#171311]/72">
-                        {endorsement.note}
-                      </p>
-                    </div>
+        <div className="mt-3 grid gap-2">
+          {featuredEndorsements.length > 0 ? (
+            featuredEndorsements.map((endorsement, index) => (
+              <blockquote className="flex items-end gap-2" key={endorsement.id}>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#5E1C23] text-[8px] font-bold uppercase leading-none text-[#f8f4eb]">
+                  {getInitials(endorsement.authorName)}
+                </span>
+                <div className="min-w-0 flex-1 rounded-[19px] rounded-bl-md border border-[#171311]/8 bg-white/78 px-3 py-2">
+                  <div className="flex items-center justify-between gap-2 text-[8px] font-bold uppercase leading-none text-[#171311]/42">
+                    <span className="truncate">{endorsement.authorName}</span>
+                    <span>Seen {(index + 1).toString().padStart(2, "0")}</span>
                   </div>
-                </blockquote>
-              ))
-            ) : (
-              <p className="rounded-[20px] border border-[#171311]/8 bg-white/66 px-3 py-2 text-[11px] font-light leading-4 text-[#171311]/58">
+                  <p className="mt-1.5 text-[11px] font-light leading-4 text-[#171311]/74">
+                    {endorsement.note}
+                  </p>
+                </div>
+              </blockquote>
+            ))
+          ) : (
+            <div className="flex items-end gap-2">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#5E1C23] text-[8px] font-bold uppercase leading-none text-[#f8f4eb]">
+                KS
+              </span>
+              <p className="min-w-0 flex-1 rounded-[19px] rounded-bl-md border border-[#171311]/8 bg-white/72 px-3 py-2 text-[11px] font-light leading-4 text-[#171311]/58">
                 No endorsements selected yet.
               </p>
-            )}
+            </div>
+          )}
+        </div>
+
+        <form
+          className="mt-3 border-t border-[#171311]/10 pt-2"
+          onSubmit={submitEndorsement}
+        >
+          <div className="flex items-center gap-2">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#8f2b35] text-[8px] font-bold uppercase leading-none text-[#f8f4eb]">
+              Me
+            </span>
+            <input
+              className="min-w-0 flex-1 rounded-full border border-[#171311]/8 bg-[#171311]/5 px-3 py-2 text-[11px] font-light leading-none text-[#171311] outline-none transition placeholder:text-[#171311]/36 focus:border-[#8f2b35]/70 focus:bg-white/70"
+              maxLength={120}
+              onChange={(event) =>
+                setForm((current) => ({ ...current, authorName: event.target.value }))
+              }
+              placeholder="Your name"
+              required
+              value={form.authorName}
+            />
           </div>
 
-          <form
-            className="mt-2 rounded-[22px] border border-[#171311]/8 bg-white/66 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
-            onSubmit={submitEndorsement}
-          >
-            <div className="flex items-center gap-2 border-b border-[#171311]/10 pb-2">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#8f2b35] text-[8px] font-bold uppercase leading-none text-[#f8f4eb]">
-                Me
-              </span>
-              <input
-                className="min-w-0 flex-1 bg-transparent text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36"
-                maxLength={120}
-                onChange={(event) =>
-                  setForm((current) => ({ ...current, authorName: event.target.value }))
-                }
-                placeholder="Name"
-                required
-                value={form.authorName}
-              />
-            </div>
+          <div className="mt-2 flex items-end gap-2 rounded-[22px] border border-[#171311]/8 bg-white/70 px-2 py-2">
             <textarea
-              className="mt-2 min-h-16 w-full resize-none rounded-[18px] border border-[#171311]/8 bg-[#171311]/5 px-3 py-2 text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36 focus:bg-[#171311]/8"
+              className="min-h-10 flex-1 resize-none bg-transparent px-1 text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36"
               maxLength={1000}
               onChange={(event) => setForm((current) => ({ ...current, note: event.target.value }))}
-              placeholder={`Endorse ${experience.companyName}`}
+              placeholder={`Message ${experience.companyName}`}
               required
               value={form.note}
             />
-            <div className="mt-2 flex items-center justify-between gap-2 border-t border-[#171311]/10 pt-2">
-              <p
-                aria-live="polite"
-                className={`flex min-h-4 min-w-0 items-center gap-1.5 text-[8px] font-bold uppercase leading-none ${
-                  status === "success"
-                    ? "text-[#5E1C23]"
-                    : status === "error"
-                      ? "text-[#9b3026]"
-                      : "text-[#171311]/38"
-                }`}
-              >
-                {status === "success" ? <CheckCircle2 aria-hidden="true" size={12} /> : null}
-                {status === "error" ? <AlertCircle aria-hidden="true" size={12} /> : null}
-                <span className="truncate">
-                  {message || "Reviewed before it appears."}
-                </span>
-              </p>
-              <button
-                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-[#171311] px-3 text-[9px] font-bold uppercase leading-none text-[#f8f4eb] transition hover:bg-[#5E1C23] disabled:cursor-not-allowed disabled:opacity-45"
-                disabled={status === "submitting"}
-                type="submit"
-              >
-                <Send aria-hidden="true" size={12} strokeWidth={1.9} />
-                {status === "submitting" ? "Sending" : "Send"}
-              </button>
-            </div>
-          </form>
-        </div>
+            <button
+              aria-label={status === "submitting" ? "Sending endorsement" : "Send endorsement"}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#171311] text-[#f8f4eb] transition hover:bg-[#5E1C23] disabled:cursor-not-allowed disabled:opacity-45"
+              disabled={status === "submitting"}
+              type="submit"
+            >
+              <Send aria-hidden="true" size={14} strokeWidth={2} />
+            </button>
+          </div>
+
+          <p
+            aria-live="polite"
+            className={`mt-2 flex min-h-4 min-w-0 items-center gap-1.5 px-1 text-[8px] font-bold uppercase leading-none ${
+              status === "success"
+                ? "text-[#5E1C23]"
+                : status === "error"
+                  ? "text-[#9b3026]"
+                  : "text-[#171311]/38"
+            }`}
+          >
+            {status === "success" ? <CheckCircle2 aria-hidden="true" size={12} /> : null}
+            {status === "error" ? <AlertCircle aria-hidden="true" size={12} /> : null}
+            <span className="truncate">
+              {message || (status === "submitting" ? "Sending reply." : "Hold to archive review.")}
+            </span>
+          </p>
+        </form>
       </div>
     </section>
   );
