@@ -94,7 +94,7 @@ const aboutEditorialCards = [
     quote: "New places reset perspective.",
     focus: "Research + range",
     currently: "Following questions",
-    location: "In transit",
+    location: "In ",
     crop: "center bottom",
     accent: "#8f2b35",
     backing: "#8f2b35",
