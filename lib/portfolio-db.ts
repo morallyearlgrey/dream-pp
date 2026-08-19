@@ -16,6 +16,13 @@ import type {
   ProjectRecord,
   SkillRecord,
 } from "@/lib/portfolio-records";
+import {
+  getExperienceVideoUrl,
+  getPhotoUrls,
+  getProjectImageUrls,
+  getProjectVideoUrl,
+  getSkillImageUrl,
+} from "@/lib/supabase-media";
 
 const emptyCounts: PortfolioCounts = {
   blogs: 0,
@@ -39,8 +46,8 @@ export async function getProjectsFromDb(): Promise<ProjectRecord[]> {
     toDate: serializeNullableDateOnly(project.toDate),
     summary: project.summary,
     whatIDid: project.whatIDid,
-    photos: normalizeStringArray(project.photos),
-    mainVideo: project.mainVideo,
+    photos: getProjectImageUrls(normalizeStringArray(project.photos)),
+    mainVideo: getProjectVideoUrl(project.mainVideo),
     projectLink: project.projectLink,
     toolsUsed: normalizeStringArray(project.toolsUsed),
   }));
@@ -57,7 +64,7 @@ export async function getSkillsFromDb(): Promise<SkillRecord[]> {
     category: skill.category,
     id: skill.id,
     name: skill.name,
-    photo: skill.photo,
+    photo: getSkillImageUrl(skill.photo) ?? skill.photo,
   }));
 }
 
@@ -73,7 +80,7 @@ export async function getPublishedBlogsFromDb(): Promise<BlogRecord[]> {
     content: blog.content,
     createdAt: serializeTimestamp(blog.createdAt),
     id: blog.id,
-    photos: normalizeStringArray(blog.photos),
+    photos: getPhotoUrls(normalizeStringArray(blog.photos)),
     published: blog.published,
     slug: blog.slug,
     title: blog.title,
@@ -119,8 +126,8 @@ export async function getExperiencesFromDb(): Promise<ExperienceRecord[]> {
     endorsements: endorsementsByExperience.get(experience.id) ?? [],
     fromDate: serializeDateOnly(experience.fromDate),
     id: experience.id,
-    mainVideo: experience.mainVideo,
-    photos: normalizeStringArray(experience.photos),
+    mainVideo: getExperienceVideoUrl(experience.mainVideo),
+    photos: getPhotoUrls(normalizeStringArray(experience.photos)),
     positionName: experience.positionName,
     responsibilities: normalizeStringArray(experience.responsibilities),
     summary: experience.summary,

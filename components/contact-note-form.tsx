@@ -79,7 +79,7 @@ export function ContactNoteForm() {
   }
 
   return (
-    <section className="relative min-w-0 border border-[#f2e5c6]/18 bg-[#080807]/74 p-3 text-[#f2e5c6] backdrop-blur-sm sm:p-4">
+    <section className="relative min-w-0 border-y border-[#f2e5c6]/16 bg-[#080807]/58 p-3 text-[#f2e5c6] backdrop-blur-sm sm:p-4">
       <div className="flex items-center justify-between gap-4 border-b border-[#f2e5c6]/14 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
         <span className="text-[#8f2b35]">Send A Note</span>
         <span>Reply-To Enabled</span>
@@ -103,7 +103,7 @@ export function ContactNoteForm() {
           />
         </div>
 
-        <div className="grid gap-px border border-[#f2e5c6]/14 bg-[#f2e5c6]/14">
+        <div className="grid gap-px border-y border-[#f2e5c6]/12 bg-transparent">
           <label className="grid gap-2 bg-[#080807] p-3" htmlFor="contact-name">
             <span className="text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
               Name
@@ -187,7 +187,7 @@ export function ContactNoteForm() {
         </div>
       </form>
 
-      <div className="mt-4 grid grid-cols-2 gap-px border border-[#f2e5c6]/14 bg-[#f2e5c6]/14 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
+      <div className="mt-4 grid grid-cols-2 gap-px border-y border-[#f2e5c6]/14 bg-transparent text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
         <span className="bg-[#080807] px-3 py-2.5">
           <Mail aria-hidden="true" className="mr-2 inline text-[#8f2b35]" size={13} />
           Private Send

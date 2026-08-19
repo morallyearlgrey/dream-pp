@@ -3,8 +3,21 @@
 /* eslint-disable @next/next/no-img-element */
 import { AnimatePresence, motion } from "framer-motion";
 import { GripVertical, RotateCcw, ShieldCheck, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { aboutCards, captchaTiles } from "@/lib/about-data";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import {
+  aboutCards,
+  captchaTiles,
+  heroPhoto,
+  visualArchiveVideo,
+  whoAmIPhoto,
+} from "@/lib/about-data";
 
 const titles = [
   "Software Engineer",
@@ -14,7 +27,6 @@ const titles = [
   "Artist",
 ];
 
-const heroPhoto = "/about/hero-hq.jpeg";
 type RevealBox = { x: number; y: number; width: number; height: number };
 type FocusRegionLabel = "EYES" | "FACE" | "HAIR" | "SHOULDER" | "SKY" | "BACKGROUND";
 type FocusZone = {
@@ -263,6 +275,17 @@ function HeroSection() {
         <span className="hidden sm:inline">July 2026</span>
         <span>01</span>
       </div>
+      <div className="absolute left-4 top-36 z-10 hidden w-[min(420px,44vw)] grid-cols-3 gap-3 border-y border-[#5E1C23]/22 py-3 text-[8px] font-bold uppercase leading-none text-[#5E1C23]/70 sm:grid lg:left-14">
+        <span>
+          Lens <span className="text-[#5E1C23]">85mm</span>
+        </span>
+        <span>
+          ISO <span className="text-[#5E1C23]">200</span>
+        </span>
+        <span className="text-right">
+          Light <span className="text-[#5E1C23]">Window</span>
+        </span>
+      </div>
       <p className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/64 [writing-mode:vertical-rl] sm:block lg:right-14">
         Move the lens. Reveal the next detail.
       </p>
@@ -376,10 +399,15 @@ function HeroSection() {
 }
 
 function WhoAmI() {
+  const maskImageStyle = {
+    "--who-mask-image": `url("${whoAmIPhoto}")`,
+  } as CSSProperties;
+
   return (
     <motion.section
       className="group relative w-full overflow-hidden border-y border-[#f2e5c6]/12 bg-[#080807] py-20 text-center md:py-24"
       initial={{ opacity: 0, y: 36 }}
+      style={maskImageStyle}
       transition={{ duration: 0.65, ease: "easeOut" }}
       viewport={{ amount: 0.35, once: true }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -388,7 +416,7 @@ function WhoAmI() {
         alt=""
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover object-[center_46%] opacity-[0.24] grayscale saturate-[0.78] contrast-[1.05]"
-        src="/about/whoami.jpeg"
+        src={whoAmIPhoto}
       />
       <div
         aria-hidden="true"
@@ -405,7 +433,7 @@ function WhoAmI() {
             alt=""
             aria-hidden="true"
             className="absolute inset-x-[-8%] top-1/2 h-[130%] w-[116%] -translate-y-1/2 object-cover object-[center_46%] opacity-20 grayscale saturate-[0.76] contrast-[1.08]"
-            src="/about/whoami.jpeg"
+            src={whoAmIPhoto}
           />
           <div
             aria-hidden="true"
@@ -656,9 +684,9 @@ function ImageCarousel() {
     >
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.055)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.045)_1px,transparent_1px),linear-gradient(180deg,#11100f,#070707)] [background-size:54px_54px,54px_54px,100%_100%]"
+        className="absolute inset-0 bg-[linear-gradient(180deg,#11100f,#070707)]"
       />
-      <div aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-35" />
+      <div aria-hidden="true" className="editorial-film-grain absolute inset-0 opacity-24" />
       <div className="absolute inset-x-0 top-0 h-px bg-[#f2e5c6]/16" />
       <div className="absolute inset-x-0 bottom-0 h-px bg-[#f2e5c6]/16" />
 
@@ -688,7 +716,7 @@ function ImageCarousel() {
               muted
               playsInline
               preload="metadata"
-              src="/experiences/IMG_4279.MOV"
+              src={visualArchiveVideo}
             />
             <span
               aria-hidden="true"
@@ -850,7 +878,7 @@ function WonderCaptcha() {
       viewport={{ amount: 0.2, once: true }}
       whileInView={{ opacity: 1, y: 0 }}
     >
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.06)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.045)_1px,transparent_1px),linear-gradient(180deg,#121110,#090909)] [background-size:48px_48px,48px_48px,100%_100%]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,#121110,#090909)]" />
       <div className="absolute left-[8%] right-[8%] top-16 h-px bg-[#f2e5c6]/16" />
       <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[#f2e5c6]/12" />
 

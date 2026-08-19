@@ -53,7 +53,7 @@ function getMediaAsset(src: string | null | undefined, alt: string): ProjectMedi
   return {
     alt,
     src,
-    type: /\.(mov|mp4|webm)$/i.test(src) ? "video" : "image",
+    type: /\.(mov|mp4|webm)(?:$|[?#])/i.test(src) ? "video" : "image",
   };
 }
 
@@ -155,14 +155,14 @@ function ProjectsEmptyState() {
         <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
           Project Archive
           <span className="h-px flex-1 bg-[#f2e5c6]/16" />
-          Database Empty
+          No Frames Yet
         </p>
         <h1 className="font-display mt-5 text-[64px] font-semibold uppercase leading-[0.84] text-[#f2e5c6] sm:text-[112px] lg:text-[148px]">
           Projects
         </h1>
         <p className="mt-6 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66">
           No project records are published from the database yet. Add rows to
-          the projects table with media URLs to populate this spread.
+          the projects table with project bucket object keys to populate this spread.
         </p>
       </section>
     </main>
@@ -188,7 +188,7 @@ function ProjectHero({
 
       <div className="relative z-30 mx-auto flex max-w-7xl items-center justify-between gap-4 border-b border-[#f2e5c6]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
         <span>Project Cover Archive</span>
-        <span className="hidden text-center sm:block">Interactive Systems / Motion Proof</span>
+        <span className="hidden text-center sm:block">Projects / Contact Sheet / Notes</span>
         <span>Issue 03</span>
       </div>
 
@@ -239,10 +239,10 @@ function ProjectHero({
         ))}
 
         <div className="absolute right-[9%] top-[29%] z-40 border border-[#f2e5c6]/28 bg-[#5E1C23] px-2 py-1 text-[10px] font-black uppercase leading-none text-[#f2e5c6] lg:right-[36%] lg:top-[10%]">
-          Active
+          In Frame
         </div>
         <div className="absolute left-[5%] top-[62%] z-40 border border-[#f2e5c6]/28 bg-[#8f2b35] px-2 py-1 text-[10px] font-black uppercase leading-none text-[#f2e5c6] lg:left-[2%] lg:top-[58%]">
-          Proof
+          Look
         </div>
       </motion.div>
     </section>
@@ -276,9 +276,8 @@ function ProjectBackgroundTexture({
         ))}
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.58)_0%,rgba(8,8,7,0.2)_44%,rgba(8,8,7,0.74)_100%),radial-gradient(ellipse_at_50%_42%,rgba(242,229,198,0.18),transparent_44%),linear-gradient(90deg,rgba(8,8,7,0.74),rgba(8,8,7,0.12),rgba(8,8,7,0.72))]" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.055)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.04)_1px,transparent_1px)] [background-size:46px_46px]" />
-      <div className="archive-scanlines absolute inset-0 opacity-35" />
-      <div className="editorial-film-grain absolute inset-0 opacity-70" />
+      <div className="absolute inset-0 bg-[#0b0b0a]/42" />
+      <div className="editorial-film-grain absolute inset-0 opacity-34" />
     </div>
   );
 }
@@ -407,9 +406,8 @@ function ProjectSpreadBackground({ project }: { project: ProjectFeature }) {
         />
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.76)_48%,rgba(8,8,7,0.94)_100%),linear-gradient(90deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.6)_48%,rgba(8,8,7,0.9)_100%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.065)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.05)_1px,transparent_1px)] [background-size:44px_44px]" />
-      <div className="archive-scanlines absolute inset-0 opacity-34" />
-      <div className="editorial-film-grain absolute inset-0 opacity-60" />
+      <div className="absolute inset-0 bg-[#0b0b0a]/36" />
+      <div className="editorial-film-grain absolute inset-0 opacity-30" />
     </div>
   );
 }
@@ -445,7 +443,7 @@ function ProjectInfoPanel({
         </div>
         {tools ? (
           <div className="grid grid-cols-[82px_1fr] gap-3 border-b border-[#f2e5c6]/10 py-3 last:border-b-0">
-            <dt className="font-bold uppercase text-[#8f2b35]">Tools</dt>
+            <dt className="font-bold uppercase text-[#8f2b35]">Materials</dt>
             <dd className="min-w-0 break-words text-[#f2e5c6]/72">{tools}</dd>
           </div>
         ) : null}
@@ -453,6 +451,17 @@ function ProjectInfoPanel({
       <p className="mt-5 max-w-[64ch] border-l border-[#8f2b35]/48 pl-4 text-sm font-light leading-6 text-[#f2e5c6]/70">
         {project.summary}
       </p>
+      <div className="mt-5 grid grid-cols-3 gap-3 border-y border-[#f2e5c6]/12 py-3 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/46">
+        <span>
+          Lens <span className="text-[#8f2b35]">50mm</span>
+        </span>
+        <span>
+          ISO <span className="text-[#8f2b35]">400</span>
+        </span>
+        <span className="text-right">
+          WB <span className="text-[#8f2b35]">5200K</span>
+        </span>
+      </div>
       <ProjectLink project={project} />
     </section>
   );
@@ -495,7 +504,7 @@ function ProjectWorkPanel({ project }: { project: ProjectFeature }) {
         {project.whatIDid}
       </p>
       <div className="mt-auto grid grid-cols-2 border-y border-[#f2e5c6]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/44 lg:mt-8">
-        <span>Archive ID</span>
+        <span>Frame ID</span>
         <span className="text-right text-[#8f2b35]">{project.id}</span>
       </div>
     </section>

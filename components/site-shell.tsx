@@ -49,7 +49,7 @@ export function SiteShell({
       <header className="sticky top-5 z-50 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8">
         <nav
           aria-label="Primary navigation"
-          className="mx-auto flex max-w-[56rem] items-center justify-between gap-0.5 border border-[#f2e5c6]/28 bg-[#080807]/72 px-1.5 py-1 text-[#f2e5c6] shadow-[0_8px_22px_rgba(0,0,0,0.2)] backdrop-blur-md sm:px-2"
+          className="mx-auto flex max-w-[56rem] items-center justify-between gap-0.5 border-y border-[#f2e5c6]/20 bg-[#080807]/64 px-1.5 py-1 text-[#f2e5c6] backdrop-blur-md sm:px-2"
         >
           {primaryLinks.map((link) => {
             const active =
@@ -87,8 +87,8 @@ export function SiteShell({
       <GlobalAudioDock />
 
       <footer className="relative w-full overflow-hidden bg-[#080807] px-5 py-8 text-[#f2e5c6] sm:px-6 lg:px-8">
-        <div aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-[0.18]" />
-        <div className="relative mx-auto max-w-7xl border border-[#f2e5c6]/18">
+        <div aria-hidden="true" className="editorial-film-grain absolute inset-0 opacity-[0.12]" />
+        <div className="relative mx-auto max-w-7xl border-y border-[#f2e5c6]/16">
           <div className="grid lg:grid-cols-[1.25fr_0.62fr_0.78fr_0.72fr]">
             <div className="border-b border-[#f2e5c6]/16 p-5 sm:p-6 lg:border-b-0 lg:border-r">
               <div className="flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
@@ -103,7 +103,7 @@ export function SiteShell({
                 Kai
               </Link>
               <p className="mt-4 max-w-sm text-xs font-light leading-5 text-[#f2e5c6]/62">
-                Software, embedded systems, design experiments, notes, and the
+                Selected projects, field notes, image-led experiments, and the
                 occasional beautiful detour.
               </p>
             </div>

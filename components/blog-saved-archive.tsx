@@ -130,9 +130,8 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
           />
         ) : null}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.92),rgba(8,8,7,0.78)_46%,rgba(8,8,7,0.96)),linear-gradient(90deg,rgba(8,8,7,0.95),rgba(8,8,7,0.62),rgba(8,8,7,0.95))]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.05)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.04)_1px,transparent_1px)] [background-size:44px_44px]" />
-        <div className="archive-scanlines absolute inset-0 opacity-30" />
-        <div className="editorial-film-grain absolute inset-0 opacity-60" />
+        <div className="absolute inset-0 bg-[#0b0b0a]/44" />
+        <div className="editorial-film-grain absolute inset-0 opacity-28" />
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
@@ -204,7 +203,7 @@ function BlogEmptyState() {
     <section className="min-h-[420px] border border-[#f2e5c6]/18 bg-[#050505]/86 p-5 text-[#f2e5c6] xl:sticky xl:top-24">
       <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
         <Bookmark aria-hidden="true" size={12} strokeWidth={2} />
-        Database Empty
+        No Notes Yet
       </div>
       <h2 className="font-display mt-6 text-[44px] font-semibold uppercase leading-[0.88] sm:text-[58px]">
         No Notes Saved

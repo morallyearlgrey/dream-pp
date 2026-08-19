@@ -11,7 +11,8 @@
     "build": "next build",
     "start": "next start",
     "test": "pnpm run build",
-    "lint": "eslint . --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern .next",
+    "db:seed:skills": "node scripts/seed-skills.mjs"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.3",

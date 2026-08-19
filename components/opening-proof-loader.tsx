@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { heroPhoto } from "@/lib/about-data";
 
-const statusLabels = ["FOCUSING", "COLOR INDEX", "ARCHIVE READY"];
+const statusLabels = ["SETTING LIGHT", "SELECTING FRAME", "ISSUE OPEN"];
 
 export function OpeningProofLoader() {
   const prefersReducedMotion = useReducedMotion();
@@ -31,8 +32,8 @@ export function OpeningProofLoader() {
       {visible ? (
         <motion.div
           aria-busy="true"
-          aria-label="Loading Kai Sprunger portfolio archive"
-          className="fixed inset-0 z-[100] isolate overflow-hidden bg-[#050505] text-[#f2e5c6]"
+          aria-label="Opening Kai Sprunger portfolio"
+          className="fixed inset-0 z-[100] isolate overflow-hidden bg-[#0b0b0a] text-[#f2e5c6]"
           exit={
             prefersReducedMotion
               ? { opacity: 0 }
@@ -41,7 +42,7 @@ export function OpeningProofLoader() {
           initial={false}
           transition={{ duration: prefersReducedMotion ? 0.3 : 0.58, ease: [0.76, 0, 0.24, 1] }}
         >
-          <div aria-hidden="true" className="absolute inset-0 bg-[#050505]" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[#0b0b0a]" />
           <motion.img
             alt=""
             aria-hidden="true"
@@ -55,25 +56,23 @@ export function OpeningProofLoader() {
             }
             className="absolute left-1/2 top-1/2 h-[78vh] w-[min(78vw,760px)] -translate-x-1/2 -translate-y-1/2 object-cover opacity-0 blur-2xl grayscale brightness-[0.42] contrast-[1.28]"
             initial={{ opacity: 0, scale: 1.12 }}
-            src="/about/hero-hq.jpeg"
+            src={heroPhoto}
             transition={{ delay: prefersReducedMotion ? 0 : 0.18, duration: 1.25, ease: "easeOut" }}
           />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(94,28,35,0.12),rgba(5,5,5,0.82)_55%,#050505_100%)]" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.055)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.045)_1px,transparent_1px)] [background-size:42px_42px]" />
-          <div className="archive-scanlines absolute inset-0 opacity-36" />
-          <div className="editorial-film-grain absolute inset-0 opacity-70" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(242,229,198,0.08),rgba(11,11,10,0.72)_58%,#0b0b0a_100%)]" />
+          <div className="editorial-film-grain absolute inset-0 opacity-28" />
 
           <div className="relative z-10 flex min-h-screen flex-col justify-between px-5 py-6 sm:px-8 sm:py-7 lg:px-12">
-            <div className="flex items-center justify-between gap-4 border-y border-[#f2e5c6]/18 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
-              <span className="text-[#8f2b35]">Loading Issue 01</span>
-              <span className="hidden sm:inline">Kai Sprunger / Portfolio Archive</span>
-              <span>Proof Sequence</span>
+            <div className="flex items-center justify-between gap-4 border-y border-[#f2e5c6]/12 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
+              <span className="text-[#8f2b35]">Opening Look 01</span>
+              <span className="hidden sm:inline">Kai Sprunger / Private Issue</span>
+              <span>Soft Proof</span>
             </div>
 
             <div className="mx-auto grid w-full max-w-5xl place-items-center">
               <motion.div
                 aria-hidden="true"
-                className="relative h-[176px] w-[min(78vw,620px)] border border-[#8f2b35]/82 bg-[#8f2b35]/[0.035] shadow-[0_0_0_1px_rgba(242,229,198,0.12)] sm:h-[220px]"
+                className="relative h-[176px] w-[min(78vw,620px)] border-y border-[#8f2b35]/72 bg-[#f2e5c6]/[0.025] sm:h-[220px]"
                 initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scaleX: 0.68 }}
                 animate={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: prefersReducedMotion ? 0.2 : 0.46, ease: [0.22, 1, 0.36, 1] }}
@@ -82,11 +81,9 @@ export function OpeningProofLoader() {
                 <span className="absolute -right-px -top-px h-8 w-8 border-r border-t border-[#f2e5c6]/58" />
                 <span className="absolute -bottom-px -left-px h-8 w-8 border-b border-l border-[#f2e5c6]/58" />
                 <span className="absolute -bottom-px -right-px h-8 w-8 border-b border-r border-[#f2e5c6]/58" />
-                <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-[#f2e5c6]/12" />
-                <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-[#f2e5c6]/12" />
                 <motion.span
                   aria-hidden="true"
-                  className="absolute inset-y-[-18px] left-0 w-[34%] border-x border-[#8f2b35]/80 bg-[#8f2b35]/12"
+                  className="absolute inset-y-[-18px] left-0 w-[34%] border-x border-[#8f2b35]/64 bg-[#8f2b35]/10"
                   initial={{ x: "-115%" }}
                   animate={prefersReducedMotion ? { x: "34%" } : { x: ["-115%", "35%", "214%"] }}
                   transition={{ delay: 0.36, duration: 1.05, ease: [0.76, 0, 0.24, 1] }}
@@ -137,10 +134,10 @@ export function OpeningProofLoader() {
               </motion.h1>
             </div>
 
-            <div className="grid gap-px border border-[#f2e5c6]/14 bg-[#f2e5c6]/14 text-[8px] font-bold uppercase leading-none text-[#080807] sm:grid-cols-3">
-              <span className="bg-[#f2e5c6] px-3 py-2">Archive Boot / Manual</span>
-              <span className="bg-[#f2e5c6] px-3 py-2">Focus Frame / Deep Red</span>
-              <span className="bg-[#f2e5c6] px-3 py-2 sm:text-right">Entry / Home Hero</span>
+            <div className="grid gap-px border-y border-[#f2e5c6]/14 bg-transparent text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/54 sm:grid-cols-3">
+              <span className="px-3 py-2">Light / Low Contrast</span>
+              <span className="px-3 py-2">Frame / Maroon Mark</span>
+              <span className="px-3 py-2 sm:text-right">Issue / Personal Edition</span>
             </div>
           </div>
         </motion.div>

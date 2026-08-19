@@ -136,11 +136,11 @@ export default async function Dashboard() {
               />
             </label>
             <label className="grid gap-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">
-              Object storage media URLs
+              Object storage media keys
               <input
                 className="border border-[#f2e5c6]/18 bg-[#f2e5c6]/8 px-3 py-2 text-sm font-light normal-case leading-6 text-[#f2e5c6] outline-none placeholder:text-[#f2e5c6]/38 focus:border-[#8f2b35]"
                 name="photos"
-                placeholder="https://..."
+                placeholder="notes/cover.png or https://..."
               />
             </label>
             <label className="grid gap-2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/62">

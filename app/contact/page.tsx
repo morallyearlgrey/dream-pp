@@ -20,10 +20,8 @@ export default function Contact() {
   return (
     <main className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[#080807] px-4 pb-16 pt-20 text-[#f2e5c6] sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0">
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.05)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.04)_1px,transparent_1px)] [background-size:44px_44px]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_24%,rgba(143,43,53,0.18),transparent_34%),linear-gradient(180deg,rgba(8,8,7,0.72),rgba(8,8,7,0.96))]" />
-        <div className="archive-scanlines absolute inset-0 opacity-30" />
-        <div className="editorial-film-grain absolute inset-0 opacity-60" />
+        <div className="editorial-film-grain absolute inset-0 opacity-26" />
       </div>
 
       <section className="relative z-10 mx-auto grid min-h-[72vh] w-full max-w-7xl gap-8 border-y border-[#f2e5c6]/20 py-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,0.58fr)] lg:items-center">
@@ -41,9 +39,9 @@ export default function Contact() {
             following up on.
           </p>
 
-          <div className="mt-8 grid gap-px border border-[#f2e5c6]/14 bg-[#f2e5c6]/14 sm:grid-cols-3">
+          <div className="mt-8 grid gap-px border-y border-[#f2e5c6]/14 bg-transparent sm:grid-cols-3">
             {contactProofRows.map((row, index) => (
-              <div className="bg-[#080807] p-4" key={row.label}>
+              <div className="bg-[#080807]/42 p-4" key={row.label}>
                 <div className="flex items-center justify-between gap-3 text-[9px] font-bold uppercase leading-none">
                   <span className="text-[#8f2b35]">{row.label}</span>
                   <span className="text-[#f2e5c6]/34">

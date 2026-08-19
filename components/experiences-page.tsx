@@ -14,6 +14,7 @@ import type {
   ExperienceRecord,
   FeaturedEndorsementRecord,
 } from "@/lib/portfolio-records";
+import { getExperienceVideoUrl, getPhotoUrl } from "@/lib/supabase-media";
 
 type FilmFrame = {
   src: string;
@@ -27,37 +28,37 @@ export type FeaturedEndorsementData = FeaturedEndorsementRecord;
 
 const filmFrames: FilmFrame[] = [
   {
-    src: "/experiences/IMG_0118.mov",
+    src: getExperienceVideoUrl("bnyvideo.mov") ?? "/experiences/IMG_0118.mov",
     label: "Campus Frame",
     meta: "Field 01",
     frameClassName: "",
   },
   {
-    src: "/experiences/IMG_4279.MOV",
+    src: getExperienceVideoUrl("ieeeexpvideo.MOV") ?? "/experiences/IMG_4279.MOV",
     label: "Team Frame",
     meta: "Field 02",
     frameClassName: "",
   },
   {
-    src: "/experiences/IMG_1143.MOV",
+    src: getExperienceVideoUrl("knighthacksexpvideo.MOV") ?? "/experiences/IMG_1143.MOV",
     label: "Briefing Frame",
     meta: "Field 03",
     frameClassName: "",
   },
   {
-    src: "/experiences/IMG_7889.MOV",
+    src: getExperienceVideoUrl("nvidiaexpvideo.mov") ?? "/experiences/IMG_7889.MOV",
     label: "Public Crowd",
     meta: "Frame 04",
     frameClassName: "",
   },
   {
-    src: "/experiences/behind1.MOV",
+    src: getExperienceVideoUrl("ieeeexpvideo.MOV") ?? "/experiences/behind1.MOV",
     label: "Motion Field One",
     meta: "Frame 05",
     frameClassName: "",
   },
   {
-    src: "/experiences/behind2.mov",
+    src: getExperienceVideoUrl("bnyvideo.mov") ?? "/experiences/behind2.mov",
     label: "Motion Field Two",
     meta: "Frame 06",
     frameClassName: "",
@@ -65,6 +66,7 @@ const filmFrames: FilmFrame[] = [
 ];
 const upperFilmFrames = filmFrames.slice(0, 3);
 const lowerFilmFrames = filmFrames.slice(3);
+const experienceSubjectPhoto = getPhotoUrl("hero.jpeg") ?? "/experiences/me.png";
 
 export function ExperiencesPage({
   experiences,
@@ -94,8 +96,8 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
         transition={{ duration: 0.65, ease: "easeOut" }}
       >
         <div className="relative z-50 mx-5 flex items-center justify-between gap-4 border-b border-[#f2e5c6]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/56 sm:mx-8 sm:text-[10px] lg:mx-12">
-          <span>Work Proof Archive</span>
-          <span className="hidden text-center sm:block">Software / Systems / Teams</span>
+          <span>Work Contact Sheet</span>
+          <span className="hidden text-center sm:block">Frames / Roles / Notes</span>
           <span>Issue 02</span>
         </div>
 
@@ -103,7 +105,7 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
           <p className="mb-3 flex items-center gap-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
             Field Work
             <span className="h-px w-12 bg-[#f2e5c6]/24" />
-            {experiences.length > 0 ? `${experiences.length} Records` : "Database Empty"}
+            {experiences.length > 0 ? `${experiences.length} Frames` : "No Frames Yet"}
           </p>
           <h1 className="font-display text-[52px] font-semibold uppercase leading-[0.9] text-[#f2e5c6] sm:text-[78px] lg:text-[104px] xl:text-[120px]">
             Experiences
@@ -111,7 +113,18 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
           <div className="mt-4 flex flex-wrap items-center gap-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/48 sm:text-[10px]">
             <span>{leadExperience?.companyName ?? "No Roles Loaded"}</span>
             <span className="h-px w-5 bg-[#f2e5c6]/24" />
-            <span>{leadExperience?.positionName ?? "Awaiting Database Rows"}</span>
+            <span>{leadExperience?.positionName ?? "Awaiting Role Frames"}</span>
+          </div>
+          <div className="mt-5 grid max-w-md grid-cols-3 gap-3 border-y border-[#f2e5c6]/12 py-3 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/44 sm:text-[9px]">
+            <span>
+              Lens <span className="text-[#8f2b35]">35mm</span>
+            </span>
+            <span>
+              ISO <span className="text-[#8f2b35]">800</span>
+            </span>
+            <span className="text-right">
+              Tone <span className="text-[#8f2b35]">Mono</span>
+            </span>
           </div>
         </div>
 
@@ -140,7 +153,7 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
           </p>
           <div className="border-t border-[#f2e5c6]/18 pt-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/42 sm:border-t-0 sm:pt-0 sm:text-right">
             <p>Looping field frames from the local archive.</p>
-            <p className="mt-2 text-[#f2e5c6]/68">Autoplay / Muted / Continuous</p>
+            <p className="mt-2 text-[#f2e5c6]/68">Looping Study / Silent</p>
           </div>
         </div>
       </motion.div>
@@ -219,7 +232,7 @@ function ExperienceSubject() {
       <img
         alt="Kai Sprunger standing portrait cutout"
         className="relative z-30 h-full w-full object-contain object-bottom drop-shadow-[0_28px_34px_rgba(0,0,0,0.48)]"
-        src="/experiences/me.png"
+        src={experienceSubjectPhoto}
       />
     </div>
   );
@@ -270,7 +283,7 @@ function ExperienceEmptyState() {
       <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
         Role Archive
         <span className="h-px flex-1 bg-[#f2e5c6]/16" />
-        Database Empty
+        No Frames Yet
       </p>
       <h3 className="font-display mt-5 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[72px]">
         No Experience Records
@@ -322,7 +335,7 @@ function MediaProofPanel({
   mainMedia: string | null;
   sequence: number;
 }) {
-  const mainMediaIsVideo = Boolean(mainMedia && /\.(mov|mp4|webm)$/i.test(mainMedia));
+  const mainMediaIsVideo = Boolean(mainMedia && /\.(mov|mp4|webm)(?:$|[?#])/i.test(mainMedia));
 
   return (
     <section className="relative z-10 overflow-visible lg:aspect-square lg:min-h-[660px]">
@@ -360,12 +373,12 @@ function MediaProofPanel({
         />
         <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
         <div className="absolute left-3 right-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/18 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/66">
-          <span>Motion Proof</span>
+          <span>Motion Plate</span>
           <span>{sequence.toString().padStart(2, "0")}</span>
         </div>
         <div className="absolute bottom-3 left-3 hidden max-w-[42%] items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54 sm:flex">
           <span className="h-px flex-1 bg-[#f2e5c6]/18" />
-          <span>Autoplay / Muted</span>
+          <span>Looping Study</span>
         </div>
       </div>
       <EndorsementPanel experience={experience} />

@@ -11,6 +11,7 @@ import {
   useTransform,
 } from "framer-motion";
 import type { SkillRecord } from "@/lib/portfolio-records";
+import { getPhotoUrl } from "@/lib/supabase-media";
 
 const skillModes = [
   { id: "languages", label: "LANGUAGES", meter: "M01" },
@@ -68,6 +69,7 @@ const floatingBlockLayouts: FloatingBlockLayout[] = [
     speed: "slow",
   },
 ];
+const fallbackSkillHeroImage = getPhotoUrl("hero.jpeg") ?? "/about/hero.jpeg";
 
 function isSkillCategory(value: string): value is SkillCategory {
   return skillModes.some((mode) => mode.id === value);
@@ -97,10 +99,10 @@ function buildFloatingBlocks(skillItems: SkillItem[]): FloatingBlock[] {
 
     return {
       ...layout,
-      image: modeSkill?.photo ?? "/about/hero-hq.jpeg",
+      image: modeSkill?.photo ?? fallbackSkillHeroImage,
       label: mode.label,
       meta: modeSkill?.name ?? "Awaiting Capture",
-      status: count > 0 ? `${count.toString().padStart(2, "0")} Saved` : "No Record",
+      status: count > 0 ? `${count.toString().padStart(2, "0")} Saved` : "No Frame",
     };
   });
 }
@@ -119,14 +121,14 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
             <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
               Viewfinder Archive
               <span className="h-px flex-1 bg-[#f2e5c6]/16" />
-              Database Empty
+              No Frames Yet
             </p>
             <h2 className="font-display mt-5 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[72px]">
               No Skills Captured
             </h2>
             <p className="mt-5 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
-              Add rows to the skills table with a name, category, and photo URL
-              to populate the viewfinder and contact sheet.
+              Add rows to the skills table with a name, category, and skills
+              bucket object key to populate the viewfinder and contact sheet.
             </p>
           </div>
         </section>
@@ -156,9 +158,8 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
           src={activeSkill.photo}
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.9),rgba(8,8,7,0.78)_48%,rgba(8,8,7,0.95)),linear-gradient(90deg,rgba(8,8,7,0.94),rgba(8,8,7,0.64),rgba(8,8,7,0.94))]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.05)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.04)_1px,transparent_1px)] [background-size:44px_44px]" />
-        <div className="archive-scanlines absolute inset-0 opacity-32" />
-        <div className="editorial-film-grain absolute inset-0 opacity-60" />
+        <div className="absolute inset-0 bg-[#0b0b0a]/42" />
+        <div className="editorial-film-grain absolute inset-0 opacity-28" />
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
@@ -224,19 +225,19 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
             <div className="grid gap-px border-t border-[#f2e5c6]/14 bg-[#f2e5c6]/12 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:grid-cols-4">
               <span className="bg-[#080807] px-3 py-2.5">Focus / {activeSkill.name}</span>
               <span className="bg-[#080807] px-3 py-2.5">Mode / {activeMode.meter}</span>
-              <span className="bg-[#080807] px-3 py-2.5">Archive / Local</span>
+              <span className="bg-[#080807] px-3 py-2.5">Light / Soft</span>
               <span className="bg-[#080807] px-3 py-2.5 sm:text-right">State / Selected</span>
             </div>
           </section>
 
-          <aside className="border border-[#f2e5c6]/18 bg-[#080807]/56 p-4 xl:p-5">
+          <aside className="border-y border-[#f2e5c6]/16 bg-[#080807]/42 p-4 xl:p-5">
             <div className="flex items-center gap-3 border-b border-[#f2e5c6]/14 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
               <span>Camera Modes</span>
               <span className="h-px flex-1 bg-[#f2e5c6]/14" />
             </div>
             <div
               aria-label="Skill category modes"
-              className="mt-4 grid gap-px border border-[#f2e5c6]/16 bg-[#f2e5c6]/16"
+              className="mt-4 grid gap-px border-y border-[#f2e5c6]/14 bg-transparent"
               role="tablist"
             >
               {skillModes.map((mode) => {
@@ -371,11 +372,10 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
         <img
           alt=""
           className="h-full w-full object-cover opacity-42 grayscale brightness-[0.5] contrast-[1.16]"
-          src="/about/hero-hq.jpeg"
+          src={fallbackSkillHeroImage}
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(8,8,7,0.12),rgba(8,8,7,0.78)_58%,rgba(8,8,7,0.96)),linear-gradient(180deg,rgba(8,8,7,0.2),rgba(8,8,7,0.86))]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.04)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.035)_1px,transparent_1px)] [background-size:46px_46px]" />
-        <div className="archive-scanlines absolute inset-0 opacity-28" />
+        <div className="absolute inset-0 bg-[#0b0b0a]/34" />
       </div>
 
       {floatingBlocks.map((block) => (

@@ -36,13 +36,41 @@ This project is set up with pnpm. Avoid mixing npm and pnpm in the same
 
 ## Database
 
-The database stores URLs and metadata for uploaded media. Store actual image and
-video files in object storage such as Vercel Blob, UploadThing, or Cloudinary.
+The database stores object keys and metadata for uploaded media. Store the
+actual image and video files in the Supabase Storage `portfoliomedia` bucket.
+
+Media folder mapping:
+
+```txt
+portfoliomedia/photos             about hero, about cards, captcha, blog/experience stills
+portfoliomedia/projects           project pictures
+portfoliomedia/project-videos     project videos
+portfoliomedia/experience-videos  experience videos
+portfoliomedia/skills             skill thumbnail/preview images
+```
+
+For database rows, store either a full URL or a bucket object key. Prefer object
+keys so the app can build the Supabase CDN URL automatically:
+
+```txt
+projects.photos        ["anr.png"]
+projects.main_video    anrvideo.mov
+experiences.photos     ["hero.jpeg"]
+experiences.main_video nvidiaexpvideo.mov
+skills.photo           01-languages-python.png
+blogs.photos           ["traveling.jpeg"]
+```
+
+The `skills` table can be seeded from the curated skill list:
+
+```bash
+pnpm run db:seed:skills
+```
 
 Generate Drizzle migrations after schema changes:
 
 ```bash
-npx drizzle-kit generate
+pnpm exec drizzle-kit generate
 ```
 
 ## Vercel
@@ -51,11 +79,19 @@ Set these environment variables in Vercel:
 
 ```txt
 DATABASE_URL
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_MEDIA_BUCKET
+NEXT_PUBLIC_SUPABASE_PHOTOS_PREFIX
+NEXT_PUBLIC_SUPABASE_PROJECTS_PREFIX
+NEXT_PUBLIC_SUPABASE_PROJECT_VIDEOS_PREFIX
+NEXT_PUBLIC_SUPABASE_EXPERIENCE_VIDEOS_PREFIX
+NEXT_PUBLIC_SUPABASE_SKILLS_PREFIX
 NEXTAUTH_URL
 NEXTAUTH_SECRET
 DISCORD_CLIENT_ID
 DISCORD_CLIENT_SECRET
 ```
 
-Add object storage variables for the provider you choose, then deploy the app to
-Vercel from the connected repository.
+Make the `portfoliomedia` bucket public if you want the site to render direct
+public media URLs from the browser. For a private bucket, add a signed URL API
+route instead of using public object URLs.
