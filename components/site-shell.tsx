@@ -160,7 +160,7 @@ export function SiteShell({
 
           <div className="grid gap-px border-t border-[#f2e5c6]/18 bg-[#f2e5c6]/18 text-[9px] font-bold uppercase leading-none text-[#111] sm:grid-cols-3">
             <span className="bg-[#f2e5c6] px-4 py-2.5">Issue 01 / July 2026</span>
-            <span className="bg-[#f2e5c6] px-4 py-2.5">Built in Next.js</span>
+            <span className="bg-[#f2e5c6] px-4 py-2.5">BUILT WITH SWEAT, TEARS, AND LOVE</span>
             <span className="bg-[#f2e5c6] px-4 py-2.5 sm:text-right">
               End Matter / Personal Edition
             </span>

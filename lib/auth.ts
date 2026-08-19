@@ -15,20 +15,9 @@ type AdminSessionUser = {
   name?: string | null;
 };
 
-const fallbackAdminDiscordUsername = "morallyearlgrey";
-
-function normalizeDiscordHandle(value: unknown) {
-  return typeof value === "string"
-    ? value.trim().replace(/^@/, "").split("#")[0].toLowerCase()
-    : "";
-}
-
 function getAllowedAdminIdentity() {
   return {
     discordId: process.env.ADMIN_DISCORD_ID?.trim() ?? "",
-    discordUsername: normalizeDiscordHandle(
-      process.env.ADMIN_DISCORD_USERNAME ?? fallbackAdminDiscordUsername,
-    ),
   };
 }
 
@@ -56,17 +45,7 @@ function getDiscordIdentity(profile: unknown, user: unknown): DiscordIdentity {
 function isAuthorizedDiscordIdentity(identity: DiscordIdentity) {
   const allowed = getAllowedAdminIdentity();
 
-  if (allowed.discordId && identity.discordId === allowed.discordId) {
-    return true;
-  }
-
-  if (!allowed.discordUsername) {
-    return false;
-  }
-
-  return [identity.discordUsername, identity.displayName].some(
-    (value) => normalizeDiscordHandle(value) === allowed.discordUsername,
-  );
+  return Boolean(allowed.discordId && identity.discordId === allowed.discordId);
 }
 
 function writeIdentityToToken(token: JWT, identity: DiscordIdentity) {

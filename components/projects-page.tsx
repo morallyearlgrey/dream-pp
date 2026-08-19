@@ -5,14 +5,13 @@ import type { CSSProperties, Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
-import { projectsSeed } from "@/lib/portfolio-data";
+import type { ProjectRecord } from "@/lib/portfolio-records";
 
-type ProjectFeature = (typeof projectsSeed)[number];
+type ProjectFeature = ProjectRecord;
 
 type ProjectVideoAsset = {
   frameClassName: string;
   meta: string;
-  src: string;
 };
 
 type ProjectMediaAsset = {
@@ -26,31 +25,31 @@ const projectVideoAssets: ProjectVideoAsset[] = [
     frameClassName:
       "left-[16%] top-[7%] h-[22%] w-[68%] rotate-[0.8deg] lg:left-[5%] lg:top-[11%] lg:h-[30%] lg:w-[35%] lg:rotate-[-1.2deg]",
     meta: "Frame 01",
-    src: "/projects/IMG_1775 2.MOV",
   },
   {
     frameClassName:
       "left-[9%] top-[34%] h-[12%] w-[47%] rotate-[-0.8deg] lg:left-[31%] lg:top-[20%] lg:h-[22%] lg:w-[26%] lg:rotate-[1.1deg]",
     meta: "Frame 02",
-    src: "/projects/IMG_1967.MOV",
   },
   {
     frameClassName:
       "right-[4%] top-[68%] h-[18%] w-[44%] rotate-[0.6deg] lg:right-[6%] lg:top-[64%] lg:h-[24%] lg:w-[25%] lg:rotate-[1.2deg]",
     meta: "Frame 03",
-    src: "/projects/IMG_2431.MOV",
   },
   {
     frameClassName:
       "left-[8%] bottom-[12%] h-[21%] w-[62%] rotate-[-0.5deg] lg:left-[14%] lg:bottom-[4%] lg:h-[28%] lg:w-[32%] lg:rotate-[-0.7deg]",
     meta: "Frame 04",
-    src: "/projects/IMG_2443.MOV",
   },
 ];
 const stripSlots = [-2, -1, 0, 1, 2] as const;
 const mobileStripSlots = [-1, 0, 1] as const;
 
-function getMediaAsset(src: string, alt: string): ProjectMediaAsset {
+function getMediaAsset(src: string | null | undefined, alt: string): ProjectMediaAsset | null {
+  if (!src) {
+    return null;
+  }
+
   return {
     alt,
     src,
@@ -58,70 +57,67 @@ function getMediaAsset(src: string, alt: string): ProjectMediaAsset {
   };
 }
 
-function getProjectCarouselMedia(project: ProjectFeature): ProjectMediaAsset {
-  const src = project.carouselMedia ?? project.mainVideo ?? project.photos[0] ?? "/references/projects.jpg";
+function getProjectCarouselMedia(project: ProjectFeature): ProjectMediaAsset | null {
+  const src = project.carouselMedia ?? project.mainVideo ?? project.photos[0];
 
   return getMediaAsset(src, `${project.name} carousel media`);
 }
 
-function getProjectBackgroundMedia(project: ProjectFeature): ProjectMediaAsset {
-  const src = project.backgroundMedia ?? project.mainVideo ?? project.photos[0] ?? "/references/projects.jpg";
+function getProjectBackgroundMedia(project: ProjectFeature): ProjectMediaAsset | null {
+  const src = project.backgroundMedia ?? project.mainVideo ?? project.photos[0];
 
   return getMediaAsset(src, `${project.name} background media`);
 }
 
 function formatDateRange(project: ProjectFeature) {
   if (project.fromDate && project.toDate) {
-    return `${project.fromDate} - ${project.toDate}`;
+    return `${formatProjectDate(project.fromDate)} - ${formatProjectDate(project.toDate)}`;
   }
 
-  return project.fromDate || project.toDate || "Date pending";
+  return formatProjectDate(project.fromDate || project.toDate) || "Date pending";
 }
 
-function getWrappedProjectIndex(index: number) {
-  return (index + projectsSeed.length) % projectsSeed.length;
+function formatProjectDate(value: string | null) {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(`${value}T00:00:00`);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    year: "numeric",
+  }).format(date);
 }
 
-function getDesktopStripItems(selected: number) {
-  const items = stripSlots.map((slot) => {
-    const projectIndex = getWrappedProjectIndex(selected + slot);
+function getWrappedProjectIndex(index: number, projectCount: number) {
+  return (index + projectCount) % projectCount;
+}
+
+function getDesktopStripItems(selected: number, projects: ProjectFeature[]) {
+  return stripSlots.map((slot) => {
+    const projectIndex = getWrappedProjectIndex(selected + slot, projects.length);
 
     return {
-      project: projectsSeed[projectIndex],
+      key: `desktop-slot-${slot}`,
+      project: projects[projectIndex],
       projectIndex,
       slot,
     };
   });
-  const stableSlots = new Map<number, (typeof stripSlots)[number]>();
-
-  for (const item of items) {
-    const previousSlot = stableSlots.get(item.projectIndex);
-
-    if (
-      previousSlot === undefined ||
-      Math.abs(item.slot) < Math.abs(previousSlot) ||
-      (Math.abs(item.slot) === Math.abs(previousSlot) && item.slot > previousSlot)
-    ) {
-      stableSlots.set(item.projectIndex, item.slot);
-    }
-  }
-
-  return items.map((item) => ({
-    ...item,
-    key:
-      stableSlots.get(item.projectIndex) === item.slot
-        ? item.project.id
-        : `${item.project.id}-${item.slot}`,
-  }));
 }
 
-function getMobileStripItems(selected: number) {
+function getMobileStripItems(selected: number, projects: ProjectFeature[]) {
   return mobileStripSlots.map((slot) => {
-    const projectIndex = getWrappedProjectIndex(selected + slot);
+    const projectIndex = getWrappedProjectIndex(selected + slot, projects.length);
 
     return {
-      key: `${projectsSeed[projectIndex].id}-mobile-${slot}`,
-      project: projectsSeed[projectIndex],
+      key: `mobile-slot-${slot}`,
+      project: projects[projectIndex],
       projectIndex,
       slot,
     };
@@ -132,30 +128,63 @@ function hasProjectLink(project: ProjectFeature) {
   return Boolean(project.projectLink && project.projectLink !== "#");
 }
 
-export function ProjectsPage() {
+export function ProjectsPage({ projects }: { projects: ProjectFeature[] }) {
   const [selected, setSelected] = useState(0);
+  const safeSelected = projects[selected] ? selected : 0;
+
+  if (projects.length === 0) {
+    return <ProjectsEmptyState />;
+  }
 
   return (
     <main className="overflow-x-clip bg-[#0b0b0a] text-[#f2e5c6]">
-      <ProjectHero selected={selected} setSelected={setSelected} />
-      <EditorialSpreadSection selected={selected} setSelected={setSelected} />
+      <ProjectHero projects={projects} selected={safeSelected} setSelected={setSelected} />
+      <EditorialSpreadSection
+        projects={projects}
+        selected={safeSelected}
+        setSelected={setSelected}
+      />
+    </main>
+  );
+}
+
+function ProjectsEmptyState() {
+  return (
+    <main className="editorial-shell flex min-h-[calc(100svh-72px)] w-full items-center px-5 py-20 text-[#f2e5c6] sm:px-8 lg:px-12">
+      <section className="mx-auto w-full max-w-6xl border-y border-[#f2e5c6]/18 py-12">
+        <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+          Project Archive
+          <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+          Database Empty
+        </p>
+        <h1 className="font-display mt-5 text-[64px] font-semibold uppercase leading-[0.84] text-[#f2e5c6] sm:text-[112px] lg:text-[148px]">
+          Projects
+        </h1>
+        <p className="mt-6 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66">
+          No project records are published from the database yet. Add rows to
+          the projects table with media URLs to populate this spread.
+        </p>
+      </section>
     </main>
   );
 }
 
 function ProjectHero({
+  projects,
   selected,
   setSelected,
 }: {
+  projects: ProjectFeature[];
   selected: number;
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
   const { scrollY } = useScroll();
   const coverY = useTransform(scrollY, [0, 900], [0, -30]);
+  const accentProject = projects[getWrappedProjectIndex(selected + 1, projects.length)];
 
   return (
     <section className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[#0b0b0a] px-5 pb-12 pt-6 text-[#f2e5c6] sm:px-8 lg:min-h-screen lg:px-12">
-      <ProjectBackgroundTexture selected={selected} />
+      <ProjectBackgroundTexture project={projects[selected]} projects={projects} />
 
       <div className="relative z-30 mx-auto flex max-w-7xl items-center justify-between gap-4 border-b border-[#f2e5c6]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
         <span>Project Cover Archive</span>
@@ -187,25 +216,24 @@ function ProjectHero({
           Projects
         </h1>
 
-        <div className="absolute left-[6%] top-[24%] z-10 h-[46%] w-[72%] rotate-[-4deg] opacity-25 blur-[1px] lg:left-[26%] lg:top-[16%] lg:h-[58%] lg:w-[36%]">
-          <video
-            aria-hidden="true"
-            autoPlay
-            className="h-full w-full object-cover grayscale brightness-[0.42] contrast-[1.28]"
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            src={projectVideoAssets[(selected + 1) % projectVideoAssets.length].src}
-          />
-        </div>
+        {accentProject ? (
+          <div className="absolute left-[6%] top-[24%] z-10 h-[46%] w-[72%] rotate-[-4deg] opacity-25 blur-[1px] lg:left-[26%] lg:top-[16%] lg:h-[58%] lg:w-[36%]">
+            <ProjectMedia
+              className="h-full w-full object-cover grayscale brightness-[0.42] contrast-[1.28]"
+              decorative
+              project={accentProject}
+            />
+          </div>
+        ) : null}
 
         {projectVideoAssets.map((asset, index) => (
           <ProjectVideoFrame
             asset={asset}
+            active={getWrappedProjectIndex(selected + index - 1, projects.length) === selected}
             index={index}
-            key={asset.src}
-            selected={selected}
+            key={asset.meta}
+            project={projects[getWrappedProjectIndex(selected + index - 1, projects.length)]}
+            projectIndex={getWrappedProjectIndex(selected + index - 1, projects.length)}
             setSelected={setSelected}
           />
         ))}
@@ -221,31 +249,29 @@ function ProjectHero({
   );
 }
 
-function ProjectBackgroundTexture({ selected }: { selected: number }) {
-  const activeVideo = projectVideoAssets[selected % projectVideoAssets.length];
-
+function ProjectBackgroundTexture({
+  project,
+  projects,
+}: {
+  project: ProjectFeature;
+  projects: ProjectFeature[];
+}) {
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-      <video
-        autoPlay
-        className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-70 blur-2xl grayscale brightness-[0.42] contrast-[1.25]"
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        src={activeVideo.src}
-      />
+      <div className="absolute inset-[-12%]">
+        <ProjectMedia
+          className="h-full w-full object-cover opacity-70 blur-2xl grayscale brightness-[0.42] contrast-[1.25]"
+          decorative
+          project={project}
+        />
+      </div>
       <div className="absolute inset-0 grid grid-cols-2 opacity-[0.18] blur-[1.5px] grayscale">
-        {projectVideoAssets.map((asset) => (
-          <video
-            autoPlay
+        {projects.slice(0, 4).map((item) => (
+          <ProjectMedia
             className="h-full w-full object-cover brightness-[0.58] contrast-[1.2]"
-            key={asset.src}
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            src={asset.src}
+            decorative
+            key={item.id}
+            project={item}
           />
         ))}
       </div>
@@ -258,26 +284,27 @@ function ProjectBackgroundTexture({ selected }: { selected: number }) {
 }
 
 function ProjectVideoFrame({
+  active,
   asset,
   index,
-  selected,
+  project,
+  projectIndex,
   setSelected,
 }: {
+  active: boolean;
   asset: ProjectVideoAsset;
   index: number;
-  selected: number;
+  project: ProjectFeature;
+  projectIndex: number;
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
-  const project = projectsSeed[index % projectsSeed.length];
-  const active = selected === index;
-
   return (
     <motion.button
       animate={{ y: index % 2 ? [0, -4, 0] : [0, 4, 0] }}
       aria-label={`Select ${project.name}`}
       aria-pressed={active}
       className={`absolute z-20 overflow-visible text-left transition ${asset.frameClassName}`}
-      onClick={() => setSelected(index)}
+      onClick={() => setSelected(projectIndex)}
       transition={{
         duration: 5.8 + index,
         ease: "easeInOut",
@@ -293,18 +320,14 @@ function ProjectVideoFrame({
             : "border-[#f2e5c6]/36 hover:border-[#f2e5c6]/72"
         }`}
       >
-        <video
-          autoPlay
+        <ProjectMedia
           className={`h-full w-full object-cover transition duration-500 ${
             active
               ? "brightness-[0.88] contrast-[1.14] saturate-[0.85]"
               : "grayscale brightness-[0.62] contrast-[1.2] saturate-[0.55]"
           }`}
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          src={asset.src}
+          decorative
+          project={project}
         />
         <span
           aria-hidden="true"
@@ -329,37 +352,42 @@ function ProjectVideoFrame({
 }
 
 function EditorialSpreadSection({
+  projects,
   selected,
   setSelected,
 }: {
+  projects: ProjectFeature[];
   selected: number;
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
-  const project = projectsSeed[selected];
+  const project = projects[selected];
 
   return (
     <section className="relative isolate overflow-visible bg-[#080807] px-5 pb-14 pt-8 text-[#f2e5c6] sm:px-8 sm:pb-16 sm:pt-10 lg:px-10 lg:pb-20 lg:pt-12 xl:px-12">
       <ProjectSpreadBackground project={project} />
 
-      <div className="relative z-20 mx-auto w-full max-w-[1180px] overflow-visible">
-        <div className="grid min-w-0 overflow-visible border-y border-[#f2e5c6]/22 bg-[#080807]/48 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.72fr)]">
+      <div className="relative z-20 mx-auto w-full max-w-[1120px] overflow-visible">
+        <DesktopProjectStrip
+          projects={projects}
+          selected={selected}
+          setSelected={setSelected}
+        />
+
+        <MobileProjectStrip
+          projects={projects}
+          selected={selected}
+          setSelected={setSelected}
+        />
+
+        <div className="mt-4 grid min-w-0 overflow-visible border-y border-[#f2e5c6]/22 bg-[#080807]/48 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.72fr)]">
           <ProjectInfoPanel
+            projectCount={projects.length}
             project={project}
             selected={selected}
           />
 
           <ProjectWorkPanel project={project} />
         </div>
-
-        <DesktopProjectStrip
-          selected={selected}
-          setSelected={setSelected}
-        />
-
-        <MobileProjectStrip
-          selected={selected}
-          setSelected={setSelected}
-        />
       </div>
     </section>
   );
@@ -387,9 +415,11 @@ function ProjectSpreadBackground({ project }: { project: ProjectFeature }) {
 }
 
 function ProjectInfoPanel({
+  projectCount,
   project,
   selected,
 }: {
+  projectCount: number;
   project: ProjectFeature;
   selected: number;
 }) {
@@ -403,7 +433,7 @@ function ProjectInfoPanel({
     >
       <div className="flex items-center justify-between gap-4 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
         <span>Project {String(selected + 1).padStart(2, "0")}</span>
-        <span>{projectsSeed.length} Works</span>
+        <span>{projectCount} Works</span>
       </div>
       <h3 className="mt-5 max-w-full break-words font-display text-[52px] font-semibold uppercase leading-[0.82] text-[#f2e5c6] sm:text-[72px] lg:text-[82px] xl:text-[100px]">
         {project.name}
@@ -438,12 +468,13 @@ function ProjectLink({ project }: { project: ProjectFeature }) {
     );
   }
 
-  const external = /^https?:\/\//i.test(project.projectLink);
+  const projectLink = project.projectLink ?? "";
+  const external = /^https?:\/\//i.test(projectLink);
 
   return (
     <a
       className="mt-5 inline-flex min-h-10 max-w-full items-center gap-2 border border-[#f2e5c6]/28 bg-[#f2e5c6] px-3 py-2 text-[10px] font-bold uppercase leading-4 text-[#080807] transition hover:border-[#8f2b35] hover:bg-[#8f2b35] hover:text-[#f2e5c6] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35]"
-      href={project.projectLink}
+      href={projectLink}
       rel={external ? "noreferrer" : undefined}
       target={external ? "_blank" : undefined}
     >
@@ -472,20 +503,22 @@ function ProjectWorkPanel({ project }: { project: ProjectFeature }) {
 }
 
 function DesktopProjectStrip({
+  projects,
   selected,
   setSelected,
 }: {
+  projects: ProjectFeature[];
   selected: number;
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
-  const project = projectsSeed[selected];
+  const project = projects[selected];
 
   return (
-    <div className="relative z-20 mt-5 hidden w-full overflow-visible lg:block xl:mt-6">
-      <div className="mx-auto w-full max-w-[1120px] overflow-visible">
-        <div className="relative min-h-[500px] overflow-visible pb-16 pt-4 xl:min-h-[540px] xl:pb-20">
-          <div className="relative z-20 mx-auto flex min-h-[410px] w-full max-w-[1120px] min-w-0 items-end justify-center overflow-visible xl:min-h-[450px]">
-            {getDesktopStripItems(selected).map((item) => (
+    <div className="relative z-20 hidden w-full overflow-visible lg:block">
+      <div className="mx-auto w-full overflow-visible">
+        <div className="relative min-h-[410px] overflow-visible pb-10 pt-1 xl:min-h-[450px] xl:pb-12">
+          <div className="relative z-20 mx-auto flex min-h-[330px] w-full max-w-[1120px] min-w-0 items-end justify-center overflow-visible xl:min-h-[365px]">
+            {getDesktopStripItems(selected, projects).map((item) => (
               <DesktopStripFrame
                 key={item.key}
                 project={item.project}
@@ -497,6 +530,7 @@ function DesktopProjectStrip({
             <ProjectArrowControls
               className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-[700px] -translate-x-1/2 -translate-y-1/2 justify-between"
               controlClassName="pointer-events-auto border-[#f2e5c6]/42 bg-[#050505]/92 backdrop-blur"
+              projectCount={projects.length}
               setSelected={setSelected}
             />
           </div>
@@ -506,9 +540,9 @@ function DesktopProjectStrip({
           />
           <div
             aria-hidden="true"
-            className="relative z-30 mx-auto mt-7 h-px w-[90%] bg-[#5E1C23]/70"
+            className="relative z-30 mx-auto mt-5 h-px w-[90%] bg-[#5E1C23]/70"
           />
-          <div className="relative z-40 mx-auto mt-9 flex w-[min(86vw,1040px)] items-center justify-between border-y border-[#f2e5c6]/16 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/48">
+          <div className="relative z-40 mx-auto mt-6 flex w-[min(86vw,1040px)] items-center justify-between border-y border-[#f2e5c6]/16 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/48">
             <span>{project.id}</span>
             <span>{project.toolsUsed?.slice(0, 2).join(" / ") ?? "Project Media"}</span>
           </div>
@@ -578,20 +612,14 @@ function DesktopStripFrame({
 
   return (
     <motion.button
-      layout
-      animate={{
-        opacity: frame.opacity,
-        width: frame.width,
-      }}
       aria-label={`Select ${project.name}`}
       aria-pressed={active}
-      className="group relative h-[360px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#8f2b35] xl:h-[400px]"
+      className="group relative h-[300px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-50 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#8f2b35] xl:h-[340px]"
       onClick={() => setSelected(projectIndex)}
       style={frameStyle}
       transition={{
         duration: 0.55,
         ease: [0.22, 1, 0.36, 1],
-        layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
       }}
       type="button"
     >
@@ -693,11 +721,6 @@ function MobileStripFrame({
 
   return (
     <motion.button
-      layout
-      animate={{
-        opacity: frame.opacity,
-        width: frame.width,
-      }}
       aria-label={`Select ${project.name}`}
       aria-pressed={active}
       className="group relative h-[260px] shrink-0 overflow-visible text-left transition-[filter] duration-500 ease-out hover:opacity-100 hover:z-40 focus-visible:z-50 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:h-[320px]"
@@ -706,7 +729,6 @@ function MobileStripFrame({
       transition={{
         duration: 0.55,
         ease: [0.22, 1, 0.36, 1],
-        layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
       }}
       type="button"
     >
@@ -751,16 +773,18 @@ function MobileStripFrame({
 }
 
 function MobileProjectStrip({
+  projects,
   selected,
   setSelected,
 }: {
+  projects: ProjectFeature[];
   selected: number;
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
-  const project = projectsSeed[selected];
+  const project = projects[selected];
 
   return (
-    <div className="relative z-30 mt-4 overflow-visible lg:hidden">
+    <div className="relative z-30 overflow-visible lg:hidden">
       <div className="flex items-center justify-between gap-3 border-y border-[#f2e5c6]/18 py-2">
         <span className="text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
           Project {String(selected + 1).padStart(2, "0")}
@@ -772,7 +796,7 @@ function MobileProjectStrip({
 
       <div className="relative mx-auto mt-3 w-full max-w-[560px] overflow-visible pb-10 pt-3">
         <div className="relative z-20 mx-auto flex min-h-[288px] w-full min-w-0 items-end justify-center overflow-visible sm:min-h-[348px]">
-          {getMobileStripItems(selected).map((item) => (
+          {getMobileStripItems(selected, projects).map((item) => (
             <MobileStripFrame
               key={item.key}
               project={item.project}
@@ -784,6 +808,7 @@ function MobileProjectStrip({
           <ProjectArrowControls
             className="pointer-events-none absolute left-1/2 top-1/2 z-50 w-[calc(100%-0.75rem)] -translate-x-1/2 -translate-y-1/2 justify-between"
             controlClassName="pointer-events-auto h-9 w-9 border-[#f2e5c6]/42 bg-[#050505]/90 backdrop-blur"
+            projectCount={projects.length}
             setSelected={setSelected}
           />
         </div>
@@ -809,12 +834,18 @@ function MobileProjectStrip({
 function ProjectArrowControls({
   className = "",
   controlClassName = "",
+  projectCount,
   setSelected,
 }: {
   className?: string;
   controlClassName?: string;
+  projectCount: number;
   setSelected: Dispatch<SetStateAction<number>>;
 }) {
+  if (projectCount < 2) {
+    return null;
+  }
+
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <button
@@ -822,7 +853,7 @@ function ProjectArrowControls({
         className={`inline-flex h-11 w-11 items-center justify-center border border-[#f2e5c6]/30 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#8f2b35] hover:text-[#8f2b35] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${controlClassName}`}
         onClick={() =>
           setSelected((current) =>
-            current === 0 ? projectsSeed.length - 1 : current - 1,
+            current === 0 ? projectCount - 1 : current - 1,
           )
         }
         type="button"
@@ -832,7 +863,7 @@ function ProjectArrowControls({
       <button
         aria-label="Next project"
         className={`inline-flex h-11 w-11 items-center justify-center border border-[#f2e5c6]/30 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#8f2b35] hover:text-[#8f2b35] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${controlClassName}`}
-        onClick={() => setSelected((current) => (current + 1) % projectsSeed.length)}
+        onClick={() => setSelected((current) => (current + 1) % projectCount)}
         type="button"
       >
         <ArrowRight aria-hidden="true" size={18} strokeWidth={1.8} />
@@ -849,10 +880,23 @@ function ProjectMedia({
 }: {
   className: string;
   decorative?: boolean;
-  media?: ProjectMediaAsset;
+  media?: ProjectMediaAsset | null;
   project: ProjectFeature;
 }) {
   const resolvedMedia = media ?? getProjectCarouselMedia(project);
+
+  if (!resolvedMedia) {
+    return (
+      <span
+        aria-hidden={decorative ? "true" : undefined}
+        className={`${className} grid place-items-center bg-[#050505]`}
+      >
+        <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
+          Media Pending
+        </span>
+      </span>
+    );
+  }
 
   if (resolvedMedia.type === "video") {
     return decorative ? (

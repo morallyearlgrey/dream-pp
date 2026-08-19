@@ -10,7 +10,10 @@ import {
   useTransform,
 } from "framer-motion";
 import { AlertCircle, CheckCircle2, Images, RefreshCw, Send } from "lucide-react";
-import { endorsementsSeed, experiencesSeed } from "@/lib/portfolio-data";
+import type {
+  ExperienceRecord,
+  FeaturedEndorsementRecord,
+} from "@/lib/portfolio-records";
 
 type FilmFrame = {
   src: string;
@@ -19,42 +22,25 @@ type FilmFrame = {
   frameClassName: string;
 };
 
-export type ExperienceFeatureData = {
-  id: string;
-  companyName: string;
-  positionName: string;
-  fromDate: string;
-  toDate: string | null;
-  summary: string;
-  responsibilities: string[];
-  photos: string[];
-  mainVideo: string | null;
-  endorsements?: FeaturedEndorsementData[];
-};
-
-export type FeaturedEndorsementData = {
-  id: string;
-  authorName: string;
-  note: string;
-  createdAt?: string;
-};
+export type ExperienceFeatureData = ExperienceRecord;
+export type FeaturedEndorsementData = FeaturedEndorsementRecord;
 
 const filmFrames: FilmFrame[] = [
   {
     src: "/experiences/IMG_0118.mov",
-    label: "NVIDIA Campus",
+    label: "Campus Frame",
     meta: "Field 01",
     frameClassName: "",
   },
   {
     src: "/experiences/IMG_4279.MOV",
-    label: "Team Signal",
+    label: "Team Frame",
     meta: "Field 02",
     frameClassName: "",
   },
   {
     src: "/experiences/IMG_1143.MOV",
-    label: "Briefing Room",
+    label: "Briefing Frame",
     meta: "Field 03",
     frameClassName: "",
   },
@@ -79,34 +65,24 @@ const filmFrames: FilmFrame[] = [
 ];
 const upperFilmFrames = filmFrames.slice(0, 3);
 const lowerFilmFrames = filmFrames.slice(3);
-const fallbackExperiences = experiencesSeed.map((experience) => ({
-  ...experience,
-  endorsements: endorsementsSeed
-    .filter(
-      (endorsement) =>
-        endorsement.experienceId === experience.id &&
-        endorsement.approved &&
-        endorsement.featured,
-    )
-    .slice(0, 3),
-}));
 
 export function ExperiencesPage({
-  experiences = fallbackExperiences,
+  experiences,
 }: {
-  experiences?: ExperienceFeatureData[];
+  experiences: ExperienceFeatureData[];
 }) {
   return (
     <main className="overflow-hidden bg-[#0b0b0a] text-[#f2e5c6]">
-      <ExperienceCoverHero />
+      <ExperienceCoverHero experiences={experiences} />
       <ExperienceRoleArchive experiences={experiences} />
     </main>
   );
 }
 
-function ExperienceCoverHero() {
+function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureData[] }) {
   const { scrollY } = useScroll();
   const coverY = useTransform(scrollY, [0, 900], [0, -28]);
+  const leadExperience = experiences[0];
 
   return (
     <section className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[radial-gradient(ellipse_at_76%_8%,rgba(242,229,198,0.12),transparent_34%),linear-gradient(180deg,#11100f_0%,#050505_100%)] text-[#f2e5c6] lg:min-h-screen">
@@ -127,15 +103,15 @@ function ExperienceCoverHero() {
           <p className="mb-3 flex items-center gap-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
             Field Work
             <span className="h-px w-12 bg-[#f2e5c6]/24" />
-            2024-2026
+            {experiences.length > 0 ? `${experiences.length} Records` : "Database Empty"}
           </p>
           <h1 className="font-display text-[52px] font-semibold uppercase leading-[0.9] text-[#f2e5c6] sm:text-[78px] lg:text-[104px] xl:text-[120px]">
             Experiences
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/48 sm:text-[10px]">
-            <span>Current @ NVIDIA</span>
+            <span>{leadExperience?.companyName ?? "No Roles Loaded"}</span>
             <span className="h-px w-5 bg-[#f2e5c6]/24" />
-            <span>Returning @ BNY</span>
+            <span>{leadExperience?.positionName ?? "Awaiting Database Rows"}</span>
           </div>
         </div>
 
@@ -158,10 +134,9 @@ function ExperienceCoverHero() {
 
         <div className="relative z-40 mx-5 mt-8 grid gap-5 border-t border-[#f2e5c6]/18 pt-4 text-[10px] font-light leading-5 text-[#f2e5c6]/62 sm:mx-8 sm:grid-cols-[minmax(0,0.62fr)_minmax(190px,0.28fr)] sm:items-start sm:text-xs sm:leading-6 lg:mx-12 lg:mt-9">
           <p>
-            A cover note for the rooms, prototypes, releases, and handoffs that
-            sharpened my engineering practice. I care about the field texture of
-            work: the messy first signal, the calm debugging pass, and the team
-            rhythm that makes something real ship.
+            {leadExperience
+              ? `A cover note for ${leadExperience.companyName}: ${leadExperience.summary}`
+              : "A database-backed role archive. Add experience rows with media URLs, responsibilities, and summaries to populate the work notes below."}
           </p>
           <div className="border-t border-[#f2e5c6]/18 pt-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/42 sm:border-t-0 sm:pt-0 sm:text-right">
             <p>Looping field frames from the local archive.</p>
@@ -271,16 +246,39 @@ function ExperienceRoleArchive({ experiences }: { experiences: ExperienceFeature
             changing the interface.
           </p>
         </div>
-        <div className="grid gap-12 lg:gap-16">
-          {experiences.map((experience, index) => (
-            <ExperienceFeature
-              experience={experience}
-              key={experience.id}
-              sequence={index + 1}
-            />
-          ))}
-        </div>
+        {experiences.length > 0 ? (
+          <div className="grid gap-12 lg:gap-16">
+            {experiences.map((experience, index) => (
+              <ExperienceFeature
+                experience={experience}
+                key={experience.id}
+                sequence={index + 1}
+              />
+            ))}
+          </div>
+        ) : (
+          <ExperienceEmptyState />
+        )}
       </div>
+    </section>
+  );
+}
+
+function ExperienceEmptyState() {
+  return (
+    <section className="border-y border-[#f2e5c6]/18 py-12">
+      <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+        Role Archive
+        <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+        Database Empty
+      </p>
+      <h3 className="font-display mt-5 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[72px]">
+        No Experience Records
+      </h3>
+      <p className="mt-5 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
+        Add rows to the experiences table to populate this work archive.
+        Approved featured endorsements will attach automatically.
+      </p>
     </section>
   );
 }
@@ -293,7 +291,7 @@ function ExperienceFeature({
   sequence: number;
 }) {
   const displayRange = formatDateRange(experience.fromDate, experience.toDate);
-  const mainVideo = experience.mainVideo ?? filmFrames[(sequence - 1) % filmFrames.length].src;
+  const mainMedia = experience.mainVideo ?? experience.photos[0] ?? null;
 
   return (
     <article className="group relative isolate overflow-visible border-t border-[#f2e5c6]/14 pt-10 first:border-t-0 first:pt-0">
@@ -309,7 +307,7 @@ function ExperienceFeature({
           sequence={sequence}
         />
 
-        <MediaProofPanel experience={experience} mainVideo={mainVideo} sequence={sequence} />
+        <MediaProofPanel experience={experience} mainMedia={mainMedia} sequence={sequence} />
       </div>
     </article>
   );
@@ -317,26 +315,45 @@ function ExperienceFeature({
 
 function MediaProofPanel({
   experience,
-  mainVideo,
+  mainMedia,
   sequence,
 }: {
   experience: ExperienceFeatureData;
-  mainVideo: string;
+  mainMedia: string | null;
   sequence: number;
 }) {
+  const mainMediaIsVideo = Boolean(mainMedia && /\.(mov|mp4|webm)$/i.test(mainMedia));
+
   return (
     <section className="relative z-10 overflow-visible lg:aspect-square lg:min-h-[660px]">
       <div className="relative aspect-square min-h-[460px] overflow-hidden border border-[#f2e5c6]/18 bg-[#050505] sm:min-h-[540px] lg:h-full lg:min-h-0">
-        <video
-          aria-label={`${experience.companyName} feature motion`}
-          autoPlay
-          className="h-full w-full object-cover brightness-[0.74] contrast-[1.16] saturate-[0.72]"
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          src={mainVideo}
-        />
+        {mainMedia ? (
+          mainMediaIsVideo ? (
+            <video
+              aria-label={`${experience.companyName} feature motion`}
+              autoPlay
+              className="h-full w-full object-cover brightness-[0.74] contrast-[1.16] saturate-[0.72]"
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              src={mainMedia}
+            />
+          ) : (
+            <img
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-cover brightness-[0.74] contrast-[1.16] saturate-[0.72]"
+              src={mainMedia}
+            />
+          )
+        ) : (
+          <div className="grid h-full w-full place-items-center bg-[#080807]">
+            <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
+              Media Pending
+            </span>
+          </div>
+        )}
         <span
           aria-hidden="true"
           className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.5)),radial-gradient(circle_at_22%_18%,rgba(143,43,53,0.1),transparent_30%)]"
@@ -408,7 +425,7 @@ function PhotoFlipPanel({
 }: {
   experience: ExperienceFeatureData;
 }) {
-  const photos = experience.photos.length > 0 ? experience.photos : ["/references/experiences.jpg"];
+  const photos = experience.photos;
   const [photoIndex, setPhotoIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
 
@@ -457,7 +474,7 @@ function PhotoFlipPanel({
               Click to return
             </span>
           </motion.div>
-        ) : (
+        ) : photos.length > 0 ? (
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
             className="absolute inset-0"
@@ -489,6 +506,19 @@ function PhotoFlipPanel({
               <span className="min-w-0 flex-1">Click to flip</span>
               <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
             </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            animate={{ opacity: 1, scale: 1 }}
+            className="absolute inset-0 grid place-items-center bg-[#080807]"
+            exit={{ opacity: 0, scale: 1.015 }}
+            initial={{ opacity: 0, scale: 1.015 }}
+            key="empty-photo-index"
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          >
+            <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
+              Photo Pending
+            </span>
           </motion.div>
         )}
       </AnimatePresence>

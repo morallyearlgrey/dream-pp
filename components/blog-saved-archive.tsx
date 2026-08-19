@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo, useState } from "react";
 import { Bookmark, X } from "lucide-react";
-import { blogSeed } from "@/lib/portfolio-data";
+import type { BlogRecord } from "@/lib/portfolio-records";
 
 const filters = ["ALL", "FIELD NOTES", "BUILD LOGS", "READING", "VISUAL"] as const;
 
@@ -15,95 +15,23 @@ type SavedNote = {
   featured?: boolean;
   heightClassName: string;
   id: string;
-  image: string;
+  image: string | null;
   readTime: string;
   title: string;
 };
 
-const savedNotes: SavedNote[] = [
-  {
-    id: blogSeed[0]?.id ?? "hello-archive",
-    title: blogSeed[0]?.title ?? "Hello, Archive",
-    category: "FIELD NOTES",
-    content:
-      blogSeed[0]?.content ??
-      "A starter entry for future essays, project notes, and visual process writing.",
-    date: formatDate(blogSeed[0]?.createdAt ?? "2026-07-22"),
-    featured: true,
-    heightClassName: "h-[430px] sm:h-[520px]",
-    image: blogSeed[0]?.photos[0] ?? "/references/aboutme.jpg",
-    readTime: "03 min read",
-  },
-  {
-    id: "motion-without-noise",
-    title: "Motion Without Noise",
-    category: "BUILD LOGS",
-    content:
-      "A note on keeping Framer Motion subtle: small shifts, clear hierarchy, and animation that behaves like editorial pacing instead of decoration.",
-    date: "Jul 18, 2026",
-    heightClassName: "h-[340px] sm:h-[390px]",
-    image: "/references/projects.jpg",
-    readTime: "05 min read",
-  },
-  {
-    id: "reading-the-interface",
-    title: "Reading The Interface",
-    category: "READING",
-    content:
-      "Fragments from books, tools, and screens that changed how I think about software as a composed visual system.",
-    date: "Jun 30, 2026",
-    heightClassName: "h-[390px] sm:h-[470px]",
-    image: "/about/whoami.jpeg",
-    readTime: "04 min read",
-  },
-  {
-    id: "lab-light",
-    title: "Lab Light",
-    category: "VISUAL",
-    content:
-      "A saved-board study of dim rooms, prototype tables, reflective surfaces, and the way technical work can still feel cinematic.",
-    date: "May 24, 2026",
-    heightClassName: "h-[300px] sm:h-[350px]",
-    image: "/references/experiences.jpg",
-    readTime: "02 min read",
-  },
-  {
-    id: "archive-as-instrument",
-    title: "Archive As Instrument",
-    category: "FIELD NOTES",
-    content:
-      "The portfolio as a working instrument: part proof cabinet, part control surface, part place to keep process visible.",
-    date: "Apr 12, 2026",
-    heightClassName: "h-[380px] sm:h-[440px]",
-    image: "/about/hero-hq.jpeg",
-    readTime: "06 min read",
-  },
-  {
-    id: "contact-sheet-systems",
-    title: "Contact Sheet Systems",
-    category: "VISUAL",
-    content:
-      "Why contact sheets, proof frames, and saved folders make sense for dense technical portfolios with image-led work.",
-    date: "Mar 09, 2026",
-    heightClassName: "h-[320px] sm:h-[410px]",
-    image: "/captcha/hackathons.jpeg",
-    readTime: "04 min read",
-  },
-  {
-    id: "debugging-after-dark",
-    title: "Debugging After Dark",
-    category: "BUILD LOGS",
-    content:
-      "Notes from the quiet part of building: narrowing a bug, trusting the trace, and making the interface feel calm again.",
-    date: "Feb 21, 2026",
-    heightClassName: "h-[350px] sm:h-[460px]",
-    image: "/captcha/ieee.jpeg",
-    readTime: "05 min read",
-  },
-];
+const noteHeightClassNames = [
+  "h-[430px] sm:h-[520px]",
+  "h-[340px] sm:h-[390px]",
+  "h-[390px] sm:h-[470px]",
+  "h-[300px] sm:h-[350px]",
+  "h-[380px] sm:h-[440px]",
+  "h-[320px] sm:h-[410px]",
+  "h-[350px] sm:h-[460px]",
+] as const;
 
 function formatDate(value: string) {
-  const date = new Date(`${value}T00:00:00`);
+  const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
     return value;
@@ -116,7 +44,47 @@ function formatDate(value: string) {
   }).format(date);
 }
 
-export function BlogSavedArchive() {
+function getReadTime(content: string) {
+  const words = content.trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(words / 220));
+
+  return `${minutes.toString().padStart(2, "0")} min read`;
+}
+
+function getBlogCategory(blog: BlogRecord): SavedNote["category"] {
+  const searchable = `${blog.title} ${blog.slug} ${blog.content}`.toLowerCase();
+
+  if (/\b(build|debug|ship|motion|code|dev|stack)\b/.test(searchable)) {
+    return "BUILD LOGS";
+  }
+
+  if (/\b(read|book|essay|annotation|library)\b/.test(searchable)) {
+    return "READING";
+  }
+
+  if (/\b(visual|image|photo|mood|camera|film)\b/.test(searchable)) {
+    return "VISUAL";
+  }
+
+  return "FIELD NOTES";
+}
+
+function mapBlogsToSavedNotes(blogs: BlogRecord[]): SavedNote[] {
+  return blogs.map((blog, index) => ({
+    category: getBlogCategory(blog),
+    content: blog.content,
+    date: formatDate(blog.createdAt),
+    featured: index === 0,
+    heightClassName: noteHeightClassNames[index % noteHeightClassNames.length],
+    id: blog.slug || blog.id,
+    image: blog.photos[0] ?? null,
+    readTime: getReadTime(blog.content),
+    title: blog.title,
+  }));
+}
+
+export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
+  const savedNotes = useMemo(() => mapBlogsToSavedNotes(blogs), [blogs]);
   const [selectedFilter, setSelectedFilter] = useState<BlogFilter>("ALL");
   const [openNoteId, setOpenNoteId] = useState<string | null>(null);
   const openNote = savedNotes.find((note) => note.id === openNoteId) ?? null;
@@ -125,7 +93,7 @@ export function BlogSavedArchive() {
       savedNotes.filter(
         (note) => !note.featured && (selectedFilter === "ALL" || note.category === selectedFilter),
       ),
-    [selectedFilter],
+    [savedNotes, selectedFilter],
   );
   const featuredNote = savedNotes.find((note) => note.featured) ?? savedNotes[0];
 
@@ -154,11 +122,13 @@ export function BlogSavedArchive() {
   return (
     <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[#080807] px-4 pb-16 pt-20 text-[#f2e5c6] sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-        <img
-          alt=""
-          className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-[0.16] blur-2xl grayscale brightness-[0.28] contrast-[1.28]"
-          src={featuredNote.image}
-        />
+        {featuredNote?.image ? (
+          <img
+            alt=""
+            className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-[0.16] blur-2xl grayscale brightness-[0.28] contrast-[1.28]"
+            src={featuredNote.image}
+          />
+        ) : null}
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.92),rgba(8,8,7,0.78)_46%,rgba(8,8,7,0.96)),linear-gradient(90deg,rgba(8,8,7,0.95),rgba(8,8,7,0.62),rgba(8,8,7,0.95))]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.05)_1px,transparent_1px),linear-gradient(180deg,rgba(242,229,198,0.04)_1px,transparent_1px)] [background-size:44px_44px]" />
         <div className="archive-scanlines absolute inset-0 opacity-30" />
@@ -210,7 +180,11 @@ export function BlogSavedArchive() {
         </div>
 
         <section className="mt-6 grid gap-5 xl:grid-cols-[minmax(300px,0.42fr)_minmax(0,1fr)]">
-          <FeaturedNote note={featuredNote} onOpen={setOpenNoteId} />
+          {featuredNote ? (
+            <FeaturedNote note={featuredNote} onOpen={setOpenNoteId} />
+          ) : (
+            <BlogEmptyState />
+          )}
 
           <div className="columns-1 gap-5 sm:columns-2 xl:columns-3">
             {visibleNotes.map((note) => (
@@ -222,6 +196,51 @@ export function BlogSavedArchive() {
 
       {openNote ? <ReadingDrawer note={openNote} onClose={() => setOpenNoteId(null)} /> : null}
     </main>
+  );
+}
+
+function BlogEmptyState() {
+  return (
+    <section className="min-h-[420px] border border-[#f2e5c6]/18 bg-[#050505]/86 p-5 text-[#f2e5c6] xl:sticky xl:top-24">
+      <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
+        <Bookmark aria-hidden="true" size={12} strokeWidth={2} />
+        Database Empty
+      </div>
+      <h2 className="font-display mt-6 text-[44px] font-semibold uppercase leading-[0.88] sm:text-[58px]">
+        No Notes Saved
+      </h2>
+      <p className="mt-5 max-w-sm border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
+        Add published rows to the blogs table to populate this reading room.
+        Drafts remain hidden until their published flag is enabled.
+      </p>
+    </section>
+  );
+}
+
+function NoteImage({
+  className,
+  image,
+}: {
+  className: string;
+  image: string | null;
+}) {
+  if (!image) {
+    return (
+      <div className={`${className} grid place-items-center bg-[#080807]`}>
+        <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
+          Media Pending
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      alt=""
+      aria-hidden="true"
+      className={className}
+      src={image}
+    />
   );
 }
 
@@ -239,11 +258,9 @@ function FeaturedNote({
       onClick={() => onOpen(note.id)}
       type="button"
     >
-      <img
-        alt=""
-        aria-hidden="true"
+      <NoteImage
         className="absolute inset-0 h-full w-full object-cover brightness-[0.72] contrast-[1.16] saturate-[0.72] transition duration-500 group-hover:scale-[1.025] group-hover:brightness-[0.48]"
-        src={note.image}
+        image={note.image}
       />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.12),rgba(8,8,7,0.38)_44%,rgba(8,8,7,0.88))]" />
       <div className="archive-scanlines absolute inset-0 opacity-20" />
@@ -287,11 +304,9 @@ function BlogTile({
       type="button"
     >
       <div className="relative h-full">
-        <img
-          alt=""
-          aria-hidden="true"
+        <NoteImage
           className="h-full w-full object-cover brightness-[0.68] contrast-[1.18] saturate-[0.62] transition duration-500 group-hover:scale-[1.03] group-hover:brightness-[0.44]"
-          src={note.image}
+          image={note.image}
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.06),rgba(8,8,7,0.28)_46%,rgba(8,8,7,0.84))]" />
         <div className="archive-scanlines absolute inset-0 opacity-[0.18]" />
@@ -348,11 +363,9 @@ function ReadingDrawer({
         </div>
 
         <div className="relative h-[46vh] min-h-[320px] overflow-hidden border-b border-[#f2e5c6]/16">
-          <img
-            alt=""
-            aria-hidden="true"
+          <NoteImage
             className="h-full w-full object-cover brightness-[0.72] contrast-[1.16] saturate-[0.7]"
-            src={note.image}
+            image={note.image}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.68))]" />
           <div className="absolute bottom-4 left-4 right-4">

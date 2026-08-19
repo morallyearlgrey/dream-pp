@@ -1,40 +1,9 @@
-import { desc } from "drizzle-orm";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { getDb } from "@/db";
-import {
-  endorsements as endorsementsTable,
-  experiences as experiencesTable,
-} from "@/db/schema";
 import { EndorsementControls } from "@/components/endorsement-controls";
 import { authOptions, isAuthorizedAdminSession } from "@/lib/auth";
-import {
-  blogSeed,
-  endorsementsSeed,
-  experiencesSeed,
-  projectsSeed,
-} from "@/lib/portfolio-data";
-
-type DashboardExperience = {
-  id: string;
-  companyName: string;
-};
-
-type DashboardEndorsement = {
-  id: string;
-  experienceId: string;
-  authorName: string;
-  note: string;
-  approved: boolean;
-  featured: boolean;
-  createdAt: string;
-};
-
-type DashboardData = {
-  databaseBacked: boolean;
-  endorsements: DashboardEndorsement[];
-  experiences: DashboardExperience[];
-};
+import { getDashboardPortfolioData } from "@/lib/portfolio-db";
+import type { DashboardPortfolioData } from "@/lib/portfolio-records";
 
 export const dynamic = "force-dynamic";
 
@@ -54,7 +23,8 @@ export default async function Dashboard() {
               Sign in with Discord
             </h1>
             <p className="mt-5 max-w-xl border-l border-[#8f2b35]/40 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
-              The admin surface is locked to the Discord account morallyearlgrey.
+              The admin surface is locked to the exact Discord user ID configured
+              in <span className="font-bold text-[#f2e5c6]">ADMIN_DISCORD_ID</span>.
               Add the Discord client secret, then register{" "}
               <span className="font-bold text-[#f2e5c6]">
                 {process.env.NEXTAUTH_URL ?? "http://localhost:3000"}/api/auth/callback/discord
@@ -76,7 +46,7 @@ export default async function Dashboard() {
               <li>Create and publish blog posts.</li>
               <li>Upload media to object storage and save URLs.</li>
               <li>Review endorsements and feature the top three.</li>
-              <li>Manage seed data for portfolio sections.</li>
+              <li>Manage database records for portfolio sections.</li>
             </ul>
           </div>
         </section>
@@ -97,7 +67,8 @@ export default async function Dashboard() {
               Access denied
             </h1>
             <p className="mt-5 max-w-xl border-l border-[#8f2b35]/40 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
-              This dashboard only accepts the configured admin Discord account.
+              This dashboard only accepts the Discord account whose numeric user
+              ID matches <span className="font-bold text-[#f2e5c6]">ADMIN_DISCORD_ID</span>.
             </p>
             <Link
               className="mt-8 inline-flex items-center justify-center border border-[#f2e5c6]/22 px-5 py-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35]"
@@ -144,9 +115,9 @@ export default async function Dashboard() {
       </div>
 
       <section className="mx-auto grid w-full max-w-7xl gap-5 md:grid-cols-4">
-        <Metric label="Experiences" value={dashboardData.experiences.length} />
-        <Metric label="Projects" value={projectsSeed.length} />
-        <Metric label="Blogs" value={blogSeed.length} />
+        <Metric label="Experiences" value={dashboardData.counts.experiences} />
+        <Metric label="Projects" value={dashboardData.counts.projects} />
+        <Metric label="Blogs" value={dashboardData.counts.blogs} />
         <Metric label="Top endorsements" value={featuredCount} />
       </section>
 
@@ -200,7 +171,7 @@ export default async function Dashboard() {
               </p>
             </div>
             <span className="border border-[#8f2b35]/35 px-2 py-1 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
-              {dashboardData.databaseBacked ? "Live DB" : "Seed preview"}
+              {dashboardData.databaseBacked ? "Live DB" : "DB unavailable"}
             </span>
           </div>
           <div className="mt-5 space-y-6">
@@ -281,60 +252,11 @@ function Metric({ label, value }: { label: string; value: number }) {
   );
 }
 
-async function getDashboardData(): Promise<DashboardData> {
-  if (!process.env.DATABASE_URL) {
-    return getSeedDashboardData();
-  }
-
-  try {
-    const db = getDb();
-    const experienceRows = await db.select().from(experiencesTable).orderBy(desc(experiencesTable.fromDate));
-    const endorsementRows = await db
-      .select()
-      .from(endorsementsTable)
-      .orderBy(desc(endorsementsTable.createdAt));
-
-    return {
-      databaseBacked: true,
-      endorsements: endorsementRows.map((endorsement) => ({
-        approved: endorsement.approved,
-        authorName: endorsement.authorName,
-        createdAt: formatDashboardDate(endorsement.createdAt),
-        experienceId: endorsement.experienceId,
-        featured: endorsement.featured,
-        id: endorsement.id,
-        note: endorsement.note,
-      })),
-      experiences: experienceRows.map((experience) => ({
-        companyName: experience.companyName,
-        id: experience.id,
-      })),
-    };
-  } catch {
-    return getSeedDashboardData();
-  }
+async function getDashboardData(): Promise<DashboardPortfolioData> {
+  return getDashboardPortfolioData();
 }
 
-function getSeedDashboardData(): DashboardData {
-  return {
-    databaseBacked: false,
-    endorsements: endorsementsSeed.map((endorsement) => ({
-      approved: endorsement.approved,
-      authorName: endorsement.authorName,
-      createdAt: endorsement.createdAt,
-      experienceId: endorsement.experienceId,
-      featured: endorsement.featured,
-      id: endorsement.id,
-      note: endorsement.note,
-    })),
-    experiences: experiencesSeed.map((experience) => ({
-      companyName: experience.companyName,
-      id: experience.id,
-    })),
-  };
-}
-
-function groupEndorsementsByExperience({ endorsements, experiences }: DashboardData) {
+function groupEndorsementsByExperience({ endorsements, experiences }: DashboardPortfolioData) {
   const grouped = experiences.map((experience) => ({
     endorsements: endorsements.filter((endorsement) => endorsement.experienceId === experience.id),
     experience,
@@ -355,12 +277,4 @@ function groupEndorsementsByExperience({ endorsements, experiences }: DashboardD
   }
 
   return grouped;
-}
-
-function formatDashboardDate(value: Date) {
-  return new Intl.DateTimeFormat("en", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(value);
 }

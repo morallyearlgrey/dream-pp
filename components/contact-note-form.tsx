@@ -7,18 +7,18 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type FormState = {
   authorName: string;
+  contactSignal: string;
   note: string;
   replyToEmail: string;
-  website: string;
 };
 
 type SubmitStatus = "idle" | "submitting" | "success" | "error";
 
 const initialForm: FormState = {
   authorName: "",
+  contactSignal: "",
   note: "",
   replyToEmail: "",
-  website: "",
 };
 
 export function ContactNoteForm() {
@@ -90,16 +90,16 @@ export function ContactNoteForm() {
           aria-hidden="true"
           className="pointer-events-none absolute -left-[9999px] top-auto h-px w-px overflow-hidden"
         >
-          <label htmlFor="contact-website">Website</label>
+          <label htmlFor="contact-signal">Leave this field blank</label>
           <input
-            autoComplete="off"
-            id="contact-website"
-            name="website"
+            autoComplete="new-password"
+            id="contact-signal"
+            name="contactSignal"
             onChange={(event) =>
-              setForm((current) => ({ ...current, website: event.target.value }))
+              setForm((current) => ({ ...current, contactSignal: event.target.value }))
             }
             tabIndex={-1}
-            value={form.website}
+            value={form.contactSignal}
           />
         </div>
 

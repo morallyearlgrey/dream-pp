@@ -4,7 +4,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { GripVertical, RotateCcw, ShieldCheck, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { aboutCards, captchaTiles } from "@/lib/portfolio-data";
+import { aboutCards, captchaTiles } from "@/lib/about-data";
 
 const titles = [
   "Software Engineer",

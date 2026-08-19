@@ -26,6 +26,7 @@ export async function POST(request: Request) {
   }
 
   if (hasHoneypotValue(payload)) {
+    console.info("Contact note ignored after honeypot field was filled.");
     return NextResponse.json({ message: "Note received." });
   }
 
@@ -61,21 +62,37 @@ export async function POST(request: Request) {
       headers: {
         Authorization: `Bearer ${emailConfig.apiKey}`,
         "Content-Type": "application/json",
+        "User-Agent": "dream-pp-contact/1.0",
       },
       method: "POST",
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+
+      console.error("Resend contact email failed.", {
+        body: errorText.slice(0, 500),
+        status: response.status,
+      });
+
       return NextResponse.json(
         { error: "Note could not be sent. Please try again later." },
         { status: 502 },
       );
     }
 
+    const resendPayload = (await response.json().catch(() => null)) as { id?: string } | null;
+
+    console.info("Resend accepted contact email.", {
+      id: resendPayload?.id ?? "unknown",
+    });
+
     return NextResponse.json({
       message: "Note sent. I will follow up from your reply-to email.",
     });
-  } catch {
+  } catch (error) {
+    console.error("Contact email request failed.", error);
+
     return NextResponse.json(
       { error: "Note could not be sent. Please try again later." },
       { status: 502 },
@@ -118,7 +135,7 @@ function hasHoneypotValue(payload: unknown) {
   }
 
   const body = payload as Record<string, unknown>;
-  return typeof body.website === "string" && body.website.trim().length > 0;
+  return typeof body.contactSignal === "string" && body.contactSignal.trim().length > 0;
 }
 
 function getEmailConfig() {

@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import { useState, type PointerEvent } from "react";
+import { useMemo, useState, type PointerEvent } from "react";
 import {
   motion,
   type MotionValue,
@@ -10,7 +10,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { skillsSeed } from "@/lib/portfolio-data";
+import type { SkillRecord } from "@/lib/portfolio-records";
 
 const skillModes = [
   { id: "languages", label: "LANGUAGES", meter: "M01" },
@@ -28,62 +28,44 @@ type SkillItem = {
   photo: string;
 };
 
-type FloatingBlock = {
+type FloatingBlockLayout = {
   className: string;
   depth: number;
+  rotate: number;
+  speed: "slow" | "fast";
+};
+
+type FloatingBlock = FloatingBlockLayout & {
   image: string;
   label: string;
   meta: string;
-  rotate: number;
-  speed: "slow" | "fast";
   status: string;
 };
 
-const skillItems: SkillItem[] = skillsSeed.map((skill) => ({
-  ...skill,
-  category: isSkillCategory(skill.category) ? skill.category : "tools",
-}));
-
-const floatingBlocks: FloatingBlock[] = [
+const floatingBlockLayouts: FloatingBlockLayout[] = [
   {
     className: "left-[3%] top-[14%] w-[188px] sm:w-[220px] md:left-[4%] md:top-[18%] md:w-[310px]",
     depth: 30,
-    image: "/references/projects.jpg",
-    label: "Frameworks",
-    meta: "Next.js / React",
     rotate: -13,
     speed: "slow",
-    status: "Pinned Skill",
   },
   {
     className: "right-[2%] top-[25%] w-[178px] sm:w-[215px] md:right-[6%] md:top-[15%] md:w-[300px]",
     depth: 42,
-    image: "/references/aboutme.jpg",
-    label: "Languages",
-    meta: "TypeScript / Systems",
     rotate: 10,
     speed: "fast",
-    status: "Saved Mode",
   },
   {
     className: "left-[4%] bottom-[14%] w-[190px] sm:w-[232px] md:left-[10%] md:bottom-[18%] md:w-[350px]",
     depth: 52,
-    image: "/references/experiences.jpg",
-    label: "Tools",
-    meta: "Drizzle / Postgres",
     rotate: 8,
     speed: "fast",
-    status: "Live Stack",
   },
   {
     className: "right-[3%] bottom-[23%] w-[180px] sm:w-[224px] md:right-[10%] md:bottom-[12%] md:w-[330px]",
     depth: 36,
-    image: "/captcha/hackathons.jpeg",
-    label: "Libraries",
-    meta: "Motion / UI State",
     rotate: -10,
     speed: "slow",
-    status: "Focus Set",
   },
 ];
 
@@ -95,21 +77,58 @@ function getSkillMode(category: SkillCategory) {
   return skillModes.find((mode) => mode.id === category) ?? skillModes[0];
 }
 
-function getModeCount(category: SkillCategory) {
+function getModeCount(skillItems: SkillItem[], category: SkillCategory) {
   return skillItems.filter((skill) => skill.category === category).length;
 }
 
-export function SkillsViewfinder() {
+function normalizeSkillItems(skills: SkillRecord[]): SkillItem[] {
+  return skills.map((skill) => ({
+    ...skill,
+    category: isSkillCategory(skill.category) ? skill.category : "tools",
+  }));
+}
+
+function buildFloatingBlocks(skillItems: SkillItem[]): FloatingBlock[] {
+  return floatingBlockLayouts.map((layout, index) => {
+    const mode = skillModes[index % skillModes.length];
+    const modeSkill =
+      skillItems.find((skill) => skill.category === mode.id) ?? skillItems[index % skillItems.length];
+    const count = getModeCount(skillItems, mode.id);
+
+    return {
+      ...layout,
+      image: modeSkill?.photo ?? "/about/hero-hq.jpeg",
+      label: mode.label,
+      meta: modeSkill?.name ?? "Awaiting Capture",
+      status: count > 0 ? `${count.toString().padStart(2, "0")} Saved` : "No Record",
+    };
+  });
+}
+
+export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
+  const skillItems = useMemo(() => normalizeSkillItems(skills), [skills]);
   const [selectedId, setSelectedId] = useState(skillItems[0]?.id ?? "");
   const activeSkill = skillItems.find((skill) => skill.id === selectedId) ?? skillItems[0];
 
   if (!activeSkill) {
     return (
-      <main className="editorial-shell flex min-h-[72vh] w-full items-center px-4 py-20 text-[#f2e5c6] sm:px-6 lg:px-8">
-        <section className="mx-auto w-full max-w-6xl border-y border-[#f2e5c6]/18 py-14">
-          <h1 className="font-display text-[64px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[104px]">
-            Skills
-          </h1>
+      <main className="overflow-x-clip bg-[#080807] text-[#f2e5c6]">
+        <SkillsHero skillItems={skillItems} />
+        <section className="px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-6xl border-y border-[#f2e5c6]/18 py-12">
+            <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+              Viewfinder Archive
+              <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+              Database Empty
+            </p>
+            <h2 className="font-display mt-5 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[72px]">
+              No Skills Captured
+            </h2>
+            <p className="mt-5 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
+              Add rows to the skills table with a name, category, and photo URL
+              to populate the viewfinder and contact sheet.
+            </p>
+          </div>
         </section>
       </main>
     );
@@ -128,7 +147,7 @@ export function SkillsViewfinder() {
 
   return (
     <main className="overflow-x-clip bg-[#080807] text-[#f2e5c6]">
-      <SkillsHero />
+      <SkillsHero skillItems={skillItems} />
       <section className="relative isolate px-4 pb-16 pt-10 sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         <img
@@ -222,7 +241,7 @@ export function SkillsViewfinder() {
             >
               {skillModes.map((mode) => {
                 const active = activeMode.id === mode.id;
-                const count = getModeCount(mode.id);
+                const count = getModeCount(skillItems, mode.id);
 
                 return (
                   <button
@@ -321,10 +340,11 @@ export function SkillsViewfinder() {
   );
 }
 
-function SkillsHero() {
+function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
   const { scrollYProgress } = useScroll();
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
+  const floatingBlocks = useMemo(() => buildFloatingBlocks(skillItems), [skillItems]);
   const slowY = useTransform(scrollYProgress, [0, 0.28], [0, -52]);
   const fastY = useTransform(scrollYProgress, [0, 0.28], [0, -92]);
   const titleY = useTransform(scrollYProgress, [0, 0.28], [0, -36]);
