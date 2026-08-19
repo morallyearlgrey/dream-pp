@@ -4,7 +4,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { GripVertical, RotateCcw, ShieldCheck, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { NowPlayingModule } from "@/components/audio-player";
 import { aboutCards, captchaTiles } from "@/lib/portfolio-data";
 
 const titles = [
@@ -267,9 +266,6 @@ function HeroSection() {
       <p className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/64 [writing-mode:vertical-rl] sm:block lg:right-14">
         Move the lens. Reveal the next detail.
       </p>
-      <div className="absolute bottom-4 right-4 z-30 w-[136px] border-t border-[#f2e5c6]/24 bg-[#080807]/54 px-2 py-2 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/66 backdrop-blur-sm sm:bottom-[21%] sm:w-[160px] sm:bg-transparent sm:px-0 sm:py-0 sm:pt-3 sm:text-[10px] lg:right-14">
-        <NowPlayingModule />
-      </div>
       <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#0b0b0a] to-transparent" />
 
       <motion.div

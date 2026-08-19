@@ -1,6 +1,6 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import {
   createContext,
   useCallback,
@@ -27,6 +27,8 @@ type AudioPlayerContextValue = {
   currentTrack: AudioTrack | undefined;
   hasTracks: boolean;
   isPlaying: boolean;
+  playNextTrack: () => void;
+  playPreviousTrack: () => void;
   trackNumber: number;
   totalTracks: number;
   togglePlayback: () => void;
@@ -179,6 +181,44 @@ export function PersistentAudioProvider({
     setIsPlaying(true);
   }, [tracks.length]);
 
+  const playNextTrack = useCallback(() => {
+    if (!tracks.length) {
+      return;
+    }
+
+    if (tracks.length === 1) {
+      const audio = audioRef.current;
+
+      if (audio) {
+        audio.currentTime = 0;
+      }
+
+      return;
+    }
+
+    pendingSeekRef.current = 0;
+    setCurrentIndex((index) => (index + 1) % tracks.length);
+  }, [tracks.length]);
+
+  const playPreviousTrack = useCallback(() => {
+    if (!tracks.length) {
+      return;
+    }
+
+    if (tracks.length === 1) {
+      const audio = audioRef.current;
+
+      if (audio) {
+        audio.currentTime = 0;
+      }
+
+      return;
+    }
+
+    pendingSeekRef.current = 0;
+    setCurrentIndex((index) => (index - 1 + tracks.length) % tracks.length);
+  }, [tracks.length]);
+
   const togglePlayback = useCallback(() => {
     if (!tracks.length) {
       return;
@@ -192,11 +232,21 @@ export function PersistentAudioProvider({
       currentTrack,
       hasTracks: tracks.length > 0,
       isPlaying,
+      playNextTrack,
+      playPreviousTrack,
       trackNumber: tracks.length ? safeCurrentIndex + 1 : 0,
       totalTracks: tracks.length,
       togglePlayback,
     }),
-    [currentTrack, isPlaying, safeCurrentIndex, togglePlayback, tracks.length],
+    [
+      currentTrack,
+      isPlaying,
+      playNextTrack,
+      playPreviousTrack,
+      safeCurrentIndex,
+      togglePlayback,
+      tracks.length,
+    ],
   );
 
   return (
@@ -224,8 +274,16 @@ function useAudioPlayer() {
 }
 
 export function NowPlayingModule() {
-  const { currentTrack, hasTracks, isPlaying, togglePlayback, trackNumber, totalTracks } =
-    useAudioPlayer();
+  const {
+    currentTrack,
+    hasTracks,
+    isPlaying,
+    playNextTrack,
+    playPreviousTrack,
+    togglePlayback,
+    trackNumber,
+    totalTracks,
+  } = useAudioPlayer();
   const title = currentTrack?.title ?? "No MP3s in /audio";
   const status = hasTracks ? (isPlaying ? "Playing" : "Paused") : "Add tracks";
   const Icon = isPlaying ? Pause : Play;
@@ -239,6 +297,15 @@ export function NowPlayingModule() {
       </div>
       <div className="flex min-w-0 items-center gap-2">
         <button
+          aria-label="Previous track"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/20 bg-[#080807]/72 text-[#f2e5c6]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
+          disabled={!hasTracks}
+          onClick={playPreviousTrack}
+          type="button"
+        >
+          <SkipBack aria-hidden="true" size={13} strokeWidth={2} />
+        </button>
+        <button
           aria-label={isPlaying ? "Pause track" : "Play track"}
           aria-pressed={isPlaying}
           className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/28 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
@@ -248,7 +315,7 @@ export function NowPlayingModule() {
         >
           <Icon aria-hidden="true" size={14} strokeWidth={2} />
         </button>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate text-[9px] font-bold uppercase leading-none text-[#f2e5c6] sm:text-[10px]">
             {title}
           </p>
@@ -256,6 +323,15 @@ export function NowPlayingModule() {
             {status}
           </p>
         </div>
+        <button
+          aria-label="Next track"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/20 bg-[#080807]/72 text-[#f2e5c6]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
+          disabled={!hasTracks}
+          onClick={playNextTrack}
+          type="button"
+        >
+          <SkipForward aria-hidden="true" size={13} strokeWidth={2} />
+        </button>
       </div>
     </div>
   );

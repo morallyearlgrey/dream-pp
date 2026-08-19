@@ -13,7 +13,8 @@ export function getDb() {
 
   client ??= postgres(databaseUrl, {
     max: 1,
-    ssl: process.env.NODE_ENV === "production" ? "require" : false,
+    prepare: false,
+    ssl: "require",
   });
 
   return drizzle(client, { schema });

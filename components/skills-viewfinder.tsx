@@ -46,7 +46,7 @@ const skillItems: SkillItem[] = skillsSeed.map((skill) => ({
 
 const floatingBlocks: FloatingBlock[] = [
   {
-    className: "left-[4%] top-[18%] w-[250px] sm:w-[310px]",
+    className: "left-[3%] top-[14%] w-[188px] sm:w-[220px] md:left-[4%] md:top-[18%] md:w-[310px]",
     depth: 30,
     image: "/references/projects.jpg",
     label: "Frameworks",
@@ -56,7 +56,7 @@ const floatingBlocks: FloatingBlock[] = [
     status: "Pinned Skill",
   },
   {
-    className: "right-[6%] top-[15%] w-[230px] sm:w-[300px]",
+    className: "right-[2%] top-[25%] w-[178px] sm:w-[215px] md:right-[6%] md:top-[15%] md:w-[300px]",
     depth: 42,
     image: "/references/aboutme.jpg",
     label: "Languages",
@@ -66,7 +66,7 @@ const floatingBlocks: FloatingBlock[] = [
     status: "Saved Mode",
   },
   {
-    className: "left-[10%] bottom-[18%] w-[260px] sm:w-[350px]",
+    className: "left-[4%] bottom-[14%] w-[190px] sm:w-[232px] md:left-[10%] md:bottom-[18%] md:w-[350px]",
     depth: 52,
     image: "/references/experiences.jpg",
     label: "Tools",
@@ -76,7 +76,7 @@ const floatingBlocks: FloatingBlock[] = [
     status: "Live Stack",
   },
   {
-    className: "right-[10%] bottom-[12%] w-[250px] sm:w-[330px]",
+    className: "right-[3%] bottom-[23%] w-[180px] sm:w-[224px] md:right-[10%] md:bottom-[12%] md:w-[330px]",
     depth: 36,
     image: "/captcha/hackathons.jpeg",
     label: "Libraries",
@@ -413,14 +413,14 @@ function FloatingSkillBlock({
   return (
     <motion.div
       aria-hidden="true"
-      className={`pointer-events-none absolute hidden md:block ${block.className}`}
+      className={`pointer-events-none absolute block ${block.className}`}
       style={{ y: scrollY }}
     >
       <motion.div
         animate={{
           scale: [1, 1.018, 1],
         }}
-        className="relative overflow-hidden rounded-[28px] border border-white/70 bg-white/90 p-2.5 text-[#080807] shadow-[0_24px_70px_rgba(0,0,0,0.32)] ring-1 ring-[#080807]/8 backdrop-blur-xl"
+        className="relative overflow-hidden rounded-[22px] border border-white/70 bg-white/90 p-2 text-[#080807] opacity-[0.92] shadow-[0_18px_48px_rgba(0,0,0,0.28)] ring-1 ring-[#080807]/8 backdrop-blur-xl md:rounded-[28px] md:p-2.5 md:opacity-100 md:shadow-[0_24px_70px_rgba(0,0,0,0.32)]"
         style={{ rotate, x, y }}
         transition={{ duration: 7.5, ease: "easeInOut", repeat: Infinity }}
       >
@@ -428,7 +428,7 @@ function FloatingSkillBlock({
         <div className="absolute inset-x-0 top-0 h-px bg-white/90" />
 
         <div className="relative">
-          <div className="flex items-center justify-between gap-3 border-b border-[#080807]/10 pb-2 text-[8px] font-bold uppercase leading-none text-[#080807]/44">
+          <div className="flex items-center justify-between gap-2 border-b border-[#080807]/10 pb-1.5 text-[7px] font-bold uppercase leading-none text-[#080807]/44 md:gap-3 md:pb-2 md:text-[8px]">
             <span className="inline-flex items-center gap-1.5 text-[#8f2b35]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#8f2b35]" />
               {block.status}
@@ -436,39 +436,39 @@ function FloatingSkillBlock({
             <span>Skill Mix</span>
           </div>
 
-          <div className="mt-2.5 grid grid-cols-[58px_1fr] items-center gap-3">
+          <div className="mt-2 grid grid-cols-[42px_1fr] items-center gap-2 md:mt-2.5 md:grid-cols-[58px_1fr] md:gap-3">
             <img
               alt=""
-              className="h-[58px] w-[58px] rounded-[17px] object-cover grayscale brightness-[0.82] contrast-[1.14]"
+              className="h-[42px] w-[42px] rounded-[14px] object-cover grayscale brightness-[0.82] contrast-[1.14] md:h-[58px] md:w-[58px] md:rounded-[17px]"
               src={block.image}
             />
             <div className="min-w-0">
-              <p className="truncate text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
+              <p className="truncate text-[7px] font-bold uppercase leading-none text-[#8f2b35] md:text-[9px]">
                 {block.label}
               </p>
-              <p className="font-display mt-1 truncate text-[22px] font-semibold uppercase leading-none text-[#080807] sm:text-2xl">
+              <p className="font-display mt-1 truncate text-[15px] font-semibold uppercase leading-none text-[#080807] sm:text-[18px] md:text-2xl">
                 {block.meta}
               </p>
-              <p className="mt-1 truncate text-[9px] font-bold uppercase leading-none text-[#080807]/42">
+              <p className="mt-1 truncate text-[7px] font-bold uppercase leading-none text-[#080807]/42 md:text-[9px]">
                 Portfolio Capture / Saved
               </p>
             </div>
           </div>
 
-          <div className="mt-3.5 grid grid-cols-[28px_1fr_28px] items-center gap-3">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-[#080807]">
+          <div className="mt-2.5 grid grid-cols-[22px_1fr_22px] items-center gap-2 md:mt-3.5 md:grid-cols-[28px_1fr_28px] md:gap-3">
+            <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-[#080807] md:h-7 md:w-7">
               <span className="ml-0.5 h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-white" />
             </span>
             <span className="relative h-[3px] overflow-hidden rounded-full bg-[#080807]/14">
               <span className="absolute inset-y-0 left-0 w-[54%] rounded-full bg-[#8f2b35]" />
               <span className="absolute left-[54%] top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full border border-white bg-[#8f2b35]" />
             </span>
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-[#080807]/8">
+            <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-[#080807]/8 md:h-7 md:w-7">
               <span className="h-3 w-3 rounded-full border border-[#080807]/46" />
             </span>
           </div>
 
-          <div className="mt-3 flex items-center justify-between border-t border-[#080807]/10 pt-2 text-[8px] font-bold uppercase leading-none text-[#080807]/42">
+          <div className="mt-2 flex items-center justify-between border-t border-[#080807]/10 pt-1.5 text-[7px] font-bold uppercase leading-none text-[#080807]/42 md:mt-3 md:pt-2 md:text-[8px]">
             <span>00:15</span>
             <span className="inline-flex items-center gap-1">
               <span className="h-1 w-1 rounded-full bg-[#8f2b35]" />
