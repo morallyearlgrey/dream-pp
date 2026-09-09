@@ -1,5 +1,6 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -7,7 +8,6 @@ import {
   PersistentAudioProvider,
   type AudioTrack,
 } from "@/components/audio-player";
-import { OpeningProofLoader } from "@/components/opening-proof-loader";
 import {
   BadgeCheck,
   BookOpen,
@@ -18,6 +18,7 @@ import {
   LayoutDashboard,
   Mail,
 } from "lucide-react";
+import { portfolioLogoUrl } from "@/lib/site-assets";
 
 const primaryLinks = [
   { href: "/", label: "Home", icon: Home },
@@ -44,13 +45,25 @@ export function SiteShell({
 
   return (
     <PersistentAudioProvider tracks={audioTracks}>
-      <OpeningProofLoader />
       <div className="min-h-screen">
       <header className="sticky top-5 z-50 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8">
         <nav
           aria-label="Primary navigation"
-          className="mx-auto flex max-w-[56rem] items-center justify-between gap-0.5 border-y border-[#f2e5c6]/20 bg-[#080807]/64 px-1.5 py-1 text-[#f2e5c6] backdrop-blur-md sm:px-2"
+          className="mx-auto flex max-w-[62rem] items-center justify-between gap-0.5 border-y border-[#f2e5c6]/20 bg-[#080807]/64 px-1.5 py-1 text-[#f2e5c6] backdrop-blur-md sm:px-2"
         >
+          <Link
+            aria-label="Kai Sprunger home"
+            className="mr-1 inline-flex h-8 w-8 shrink-0 items-center justify-center border border-[#f2e5c6]/22 bg-[#f2e5c6]/8 p-1 transition hover:border-[#8f2b35]/70"
+            href="/"
+            title="Kai Sprunger"
+          >
+            <img
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-contain"
+              src={portfolioLogoUrl}
+            />
+          </Link>
           {primaryLinks.map((link) => {
             const active =
               pathname === link.href ||

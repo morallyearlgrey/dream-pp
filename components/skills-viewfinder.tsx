@@ -10,8 +10,9 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
+import { handleImageFallback } from "@/components/media-placeholder";
 import type { SkillRecord } from "@/lib/portfolio-records";
-import { getPhotoUrl } from "@/lib/supabase-media";
+import { getPhotoUrl, withMediaPlaceholder } from "@/lib/supabase-media";
 
 const skillModes = [
   { id: "languages", label: "LANGUAGES", meter: "M01" },
@@ -69,7 +70,7 @@ const floatingBlockLayouts: FloatingBlockLayout[] = [
     speed: "slow",
   },
 ];
-const fallbackSkillHeroImage = getPhotoUrl("hero.jpeg") ?? "/about/hero.jpeg";
+const fallbackSkillHeroImage = withMediaPlaceholder(getPhotoUrl("hero.jpeg"));
 
 function isSkillCategory(value: string): value is SkillCategory {
   return skillModes.some((mode) => mode.id === value);
@@ -155,6 +156,9 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
         <img
           alt=""
           className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-20 blur-2xl grayscale brightness-[0.3] contrast-[1.25]"
+          decoding="async"
+          loading="lazy"
+          onError={handleImageFallback}
           src={activeSkill.photo}
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.9),rgba(8,8,7,0.78)_48%,rgba(8,8,7,0.95)),linear-gradient(90deg,rgba(8,8,7,0.94),rgba(8,8,7,0.64),rgba(8,8,7,0.94))]" />
@@ -187,6 +191,9 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
               <img
                 alt={`${activeSkill.name} skill reference`}
                 className="h-full w-full object-cover brightness-[0.82] contrast-[1.16] saturate-[0.72]"
+                decoding="async"
+                loading="lazy"
+                onError={handleImageFallback}
                 src={activeSkill.photo}
               />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.16)_45%,rgba(8,8,7,0.72)),linear-gradient(90deg,rgba(8,8,7,0.28),transparent_24%,transparent_76%,rgba(8,8,7,0.32))]" />
@@ -318,6 +325,9 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                         ? "brightness-[0.84] contrast-[1.12] saturate-[0.8]"
                         : "brightness-[0.56] contrast-[1.2] saturate-[0.24] group-hover:brightness-[0.7]"
                     }`}
+                    decoding="async"
+                    loading="lazy"
+                    onError={handleImageFallback}
                     src={skill.photo}
                   />
                   <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.04),rgba(8,8,7,0.72))]" />
@@ -372,6 +382,7 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
         <img
           alt=""
           className="h-full w-full object-cover opacity-42 grayscale brightness-[0.5] contrast-[1.16]"
+          onError={handleImageFallback}
           src={fallbackSkillHeroImage}
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(8,8,7,0.12),rgba(8,8,7,0.78)_58%,rgba(8,8,7,0.96)),linear-gradient(180deg,rgba(8,8,7,0.2),rgba(8,8,7,0.86))]" />
@@ -401,8 +412,10 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
           Skills
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-sm font-light leading-7 text-[#f2e5c6]/72 sm:text-base">
-          A moving technical playlist: languages, frameworks, libraries, and
-          tools arranged like saved tracks from the build archive.
+          My skills are less of a checklist and more of a record of the questions I
+          have followed. They span low-level systems, AI, full-stack engineering,
+          hardware, and design, with each one developed through something I
+          genuinely wanted to build.
         </p>
       </motion.div>
     </section>
@@ -460,6 +473,7 @@ function FloatingSkillBlock({
             <img
               alt=""
               className="h-[42px] w-[42px] rounded-[14px] object-cover grayscale brightness-[0.82] contrast-[1.14] md:h-[58px] md:w-[58px] md:rounded-[17px]"
+              onError={handleImageFallback}
               src={block.image}
             />
             <div className="min-w-0">

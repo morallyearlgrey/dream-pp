@@ -67,6 +67,12 @@ The `skills` table can be seeded from the curated skill list:
 pnpm run db:seed:skills
 ```
 
+Seed the selected project and experience records:
+
+```bash
+pnpm run db:seed:portfolio
+```
+
 Generate Drizzle migrations after schema changes:
 
 ```bash
@@ -79,6 +85,7 @@ Set these environment variables in Vercel:
 
 ```txt
 DATABASE_URL
+NEXT_PUBLIC_SITE_URL
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_MEDIA_BUCKET
 NEXT_PUBLIC_SUPABASE_PHOTOS_PREFIX

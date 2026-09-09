@@ -2,10 +2,12 @@
 
 /* eslint-disable @next/next/no-img-element */
 import type { CSSProperties, Dispatch, SetStateAction } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
+import { handleImageFallback, PlaceholderMediaImage } from "@/components/media-placeholder";
 import type { ProjectRecord } from "@/lib/portfolio-records";
+import { isVideoMediaUrl } from "@/lib/supabase-media";
 
 type ProjectFeature = ProjectRecord;
 
@@ -53,18 +55,18 @@ function getMediaAsset(src: string | null | undefined, alt: string): ProjectMedi
   return {
     alt,
     src,
-    type: /\.(mov|mp4|webm)(?:$|[?#])/i.test(src) ? "video" : "image",
+    type: isVideoMediaUrl(src) ? "video" : "image",
   };
 }
 
 function getProjectCarouselMedia(project: ProjectFeature): ProjectMediaAsset | null {
-  const src = project.carouselMedia ?? project.mainVideo ?? project.photos[0];
+  const src = project.carouselMedia ?? project.photos[0] ?? project.mainVideo;
 
   return getMediaAsset(src, `${project.name} carousel media`);
 }
 
 function getProjectBackgroundMedia(project: ProjectFeature): ProjectMediaAsset | null {
-  const src = project.backgroundMedia ?? project.mainVideo ?? project.photos[0];
+  const src = project.backgroundMedia ?? project.photos[0] ?? project.mainVideo;
 
   return getMediaAsset(src, `${project.name} background media`);
 }
@@ -132,6 +134,29 @@ export function ProjectsPage({ projects }: { projects: ProjectFeature[] }) {
   const [selected, setSelected] = useState(0);
   const safeSelected = projects[selected] ? selected : 0;
 
+  useEffect(() => {
+    const imageSources = new Set<string>();
+
+    for (const project of projects) {
+      const carouselMedia = getProjectCarouselMedia(project);
+      const backgroundMedia = getProjectBackgroundMedia(project);
+
+      if (carouselMedia?.type === "image") {
+        imageSources.add(carouselMedia.src);
+      }
+
+      if (backgroundMedia?.type === "image") {
+        imageSources.add(backgroundMedia.src);
+      }
+    }
+
+    for (const src of imageSources) {
+      const image = new window.Image();
+      image.decoding = "async";
+      image.src = src;
+    }
+  }, [projects]);
+
   if (projects.length === 0) {
     return <ProjectsEmptyState />;
   }
@@ -184,13 +209,19 @@ function ProjectHero({
 
   return (
     <section className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[#0b0b0a] px-5 pb-12 pt-6 text-[#f2e5c6] sm:px-8 lg:min-h-screen lg:px-12">
-      <ProjectBackgroundTexture project={projects[selected]} projects={projects} />
+      <ProjectBackgroundTexture projects={projects} selected={selected} />
 
       <div className="relative z-30 mx-auto flex max-w-7xl items-center justify-between gap-4 border-b border-[#f2e5c6]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
         <span>Project Cover Archive</span>
         <span className="hidden text-center sm:block">Projects / Contact Sheet / Notes</span>
         <span>Issue 03</span>
       </div>
+
+      <p className="relative z-30 mx-auto mt-5 max-w-2xl border-l border-[#8f2b35]/48 pl-4 text-sm font-light leading-6 text-[#f2e5c6]/70 sm:text-base sm:leading-7">
+        I build projects because I like seeing strange ideas become real. From an
+        agentic nuclear reactor to an ASL rhythm game and a pipelined RISC-V
+        processor, each one records what I was curious enough to learn next.
+      </p>
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
@@ -231,7 +262,11 @@ function ProjectHero({
             asset={asset}
             active={getWrappedProjectIndex(selected + index - 1, projects.length) === selected}
             index={index}
-            key={asset.meta}
+            key={
+              projects.length >= projectVideoAssets.length
+                ? projects[getWrappedProjectIndex(selected + index - 1, projects.length)].id
+                : asset.meta
+            }
             project={projects[getWrappedProjectIndex(selected + index - 1, projects.length)]}
             projectIndex={getWrappedProjectIndex(selected + index - 1, projects.length)}
             setSelected={setSelected}
@@ -250,20 +285,30 @@ function ProjectHero({
 }
 
 function ProjectBackgroundTexture({
-  project,
   projects,
+  selected,
 }: {
-  project: ProjectFeature;
   projects: ProjectFeature[];
+  selected: number;
 }) {
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
       <div className="absolute inset-[-12%]">
-        <ProjectMedia
-          className="h-full w-full object-cover opacity-70 blur-2xl grayscale brightness-[0.42] contrast-[1.25]"
-          decorative
-          project={project}
-        />
+        {projects.map((project, index) => (
+          <div
+            className={`absolute inset-0 transition-opacity duration-500 ${
+              index === selected ? "opacity-70" : "pointer-events-none opacity-0"
+            }`}
+            key={project.id}
+          >
+            <ProjectMedia
+              className="h-full w-full object-cover blur-2xl grayscale brightness-[0.42] contrast-[1.25]"
+              decorative
+              media={getProjectBackgroundMedia(project)}
+              project={project}
+            />
+          </div>
+        ))}
       </div>
       <div className="absolute inset-0 grid grid-cols-2 opacity-[0.18] blur-[1.5px] grayscale">
         {projects.slice(0, 4).map((item) => (
@@ -363,7 +408,7 @@ function EditorialSpreadSection({
 
   return (
     <section className="relative isolate overflow-visible bg-[#080807] px-5 pb-14 pt-8 text-[#f2e5c6] sm:px-8 sm:pb-16 sm:pt-10 lg:px-10 lg:pb-20 lg:pt-12 xl:px-12">
-      <ProjectSpreadBackground project={project} />
+      <ProjectSpreadBackground projects={projects} selected={selected} />
 
       <div className="relative z-20 mx-auto w-full max-w-[1120px] overflow-visible">
         <DesktopProjectStrip
@@ -392,18 +437,31 @@ function EditorialSpreadSection({
   );
 }
 
-function ProjectSpreadBackground({ project }: { project: ProjectFeature }) {
-  const media = getProjectBackgroundMedia(project);
-
+function ProjectSpreadBackground({
+  projects,
+  selected,
+}: {
+  projects: ProjectFeature[];
+  selected: number;
+}) {
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
       <div className="absolute inset-[-12%]">
-        <ProjectMedia
-          className="h-full w-full scale-110 object-cover opacity-30 blur-2xl grayscale brightness-[0.3] contrast-[1.28]"
-          decorative
-          media={media}
-          project={project}
-        />
+        {projects.map((project, index) => (
+          <div
+            className={`absolute inset-0 transition-opacity duration-500 ${
+              index === selected ? "opacity-30" : "pointer-events-none opacity-0"
+            }`}
+            key={project.id}
+          >
+            <ProjectMedia
+              className="h-full w-full scale-110 object-cover blur-2xl grayscale brightness-[0.3] contrast-[1.28]"
+              decorative
+              media={getProjectBackgroundMedia(project)}
+              project={project}
+            />
+          </div>
+        ))}
       </div>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.76)_48%,rgba(8,8,7,0.94)_100%),linear-gradient(90deg,rgba(8,8,7,0.9)_0%,rgba(8,8,7,0.6)_48%,rgba(8,8,7,0.9)_100%)]" />
       <div className="absolute inset-0 bg-[#0b0b0a]/36" />
@@ -529,7 +587,7 @@ function DesktopProjectStrip({
           <div className="relative z-20 mx-auto flex min-h-[330px] w-full max-w-[1120px] min-w-0 items-end justify-center overflow-visible xl:min-h-[365px]">
             {getDesktopStripItems(selected, projects).map((item) => (
               <DesktopStripFrame
-                key={item.key}
+                key={projects.length >= stripSlots.length ? item.project.id : item.key}
                 project={item.project}
                 projectIndex={item.projectIndex}
                 setSelected={setSelected}
@@ -807,7 +865,7 @@ function MobileProjectStrip({
         <div className="relative z-20 mx-auto flex min-h-[288px] w-full min-w-0 items-end justify-center overflow-visible sm:min-h-[348px]">
           {getMobileStripItems(selected, projects).map((item) => (
             <MobileStripFrame
-              key={item.key}
+              key={projects.length >= mobileStripSlots.length ? item.project.id : item.key}
               project={item.project}
               projectIndex={item.projectIndex}
               setSelected={setSelected}
@@ -881,6 +939,47 @@ function ProjectArrowControls({
   );
 }
 
+function ProjectVideoMedia({
+  alt,
+  className,
+  decorative,
+  onError,
+  src,
+}: {
+  alt: string;
+  className: string;
+  decorative: boolean;
+  onError: () => void;
+  src: string;
+}) {
+  const [ready, setReady] = useState(false);
+
+  return (
+    <span className="relative block h-full w-full overflow-hidden bg-[#080807]">
+      <PlaceholderMediaImage
+        alt={decorative ? undefined : alt}
+        className={`absolute inset-0 ${className}`}
+        decorative={decorative}
+      />
+      <video
+        aria-hidden={decorative ? "true" : undefined}
+        aria-label={decorative ? undefined : alt}
+        autoPlay
+        className={`${className} absolute inset-0 transition-opacity duration-300 ${
+          ready ? "opacity-100" : "opacity-0"
+        }`}
+        loop
+        muted
+        onError={onError}
+        onLoadedData={() => setReady(true)}
+        playsInline
+        preload="auto"
+        src={src}
+      />
+    </span>
+  );
+}
+
 function ProjectMedia({
   className,
   decorative = false,
@@ -893,41 +992,27 @@ function ProjectMedia({
   project: ProjectFeature;
 }) {
   const resolvedMedia = media ?? getProjectCarouselMedia(project);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const loadFailed = failedSrc === resolvedMedia?.src;
 
-  if (!resolvedMedia) {
+  if (!resolvedMedia || loadFailed) {
     return (
-      <span
-        aria-hidden={decorative ? "true" : undefined}
-        className={`${className} grid place-items-center bg-[#050505]`}
-      >
-        <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
-          Media Pending
-        </span>
-      </span>
+      <PlaceholderMediaImage
+        alt={resolvedMedia?.alt}
+        className={className}
+        decorative={decorative}
+      />
     );
   }
 
   if (resolvedMedia.type === "video") {
-    return decorative ? (
-      <video
-        aria-hidden="true"
-        autoPlay
+    return (
+      <ProjectVideoMedia
+        alt={resolvedMedia.alt}
         className={className}
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        src={resolvedMedia.src}
-      />
-    ) : (
-      <video
-        aria-label={resolvedMedia.alt}
-        autoPlay
-        className={className}
-        loop
-        muted
-        playsInline
-        preload="metadata"
+        decorative={decorative}
+        key={resolvedMedia.src}
+        onError={() => setFailedSrc(resolvedMedia.src)}
         src={resolvedMedia.src}
       />
     );
@@ -938,6 +1023,8 @@ function ProjectMedia({
       alt={decorative ? "" : resolvedMedia.alt}
       aria-hidden={decorative ? "true" : undefined}
       className={className}
+      decoding="async"
+      onError={handleImageFallback}
       src={resolvedMedia.src}
     />
   );

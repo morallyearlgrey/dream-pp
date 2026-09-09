@@ -1,4 +1,5 @@
 import { and, asc, count, desc, eq } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import { getDb } from "@/db";
 import {
   blogs as blogsTable,
@@ -134,6 +135,30 @@ export async function getExperiencesFromDb(): Promise<ExperienceRecord[]> {
     toDate: serializeNullableDateOnly(experience.toDate),
   }));
 }
+
+export const getCachedProjectsFromDb = unstable_cache(
+  getProjectsFromDb,
+  ["portfolio-projects"],
+  { revalidate: 300, tags: ["portfolio-projects"] },
+);
+
+export const getCachedSkillsFromDb = unstable_cache(
+  getSkillsFromDb,
+  ["portfolio-skills"],
+  { revalidate: 300, tags: ["portfolio-skills"] },
+);
+
+export const getCachedPublishedBlogsFromDb = unstable_cache(
+  getPublishedBlogsFromDb,
+  ["portfolio-blogs"],
+  { revalidate: 300, tags: ["portfolio-blogs"] },
+);
+
+export const getCachedExperiencesFromDb = unstable_cache(
+  getExperiencesFromDb,
+  ["portfolio-experiences"],
+  { revalidate: 300, tags: ["portfolio-experiences"] },
+);
 
 export async function getDashboardPortfolioData(): Promise<DashboardPortfolioData> {
   try {

@@ -88,6 +88,24 @@ a {
   color: var(--cream);
 }
 
+.experience-responsibilities-scroll {
+  scrollbar-color: rgba(94, 28, 35, 0.68) rgba(23, 19, 17, 0.08);
+  scrollbar-width: thin;
+}
+
+.experience-responsibilities-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+
+.experience-responsibilities-scroll::-webkit-scrollbar-thumb {
+  background: rgba(94, 28, 35, 0.68);
+  border-radius: 999px;
+}
+
+.experience-responsibilities-scroll::-webkit-scrollbar-track {
+  background: rgba(23, 19, 17, 0.08);
+}
+
 .font-display {
   font-family: "Libre Bodoni", Georgia, "Times New Roman", serif;
 }
@@ -417,7 +435,7 @@ a {
 .who-mask-text {
   background:
     linear-gradient(120deg, rgba(242, 229, 198, 0.2), rgba(143, 43, 53, 0.18)),
-    var(--who-mask-image, url("/about/whoami.jpeg"));
+    var(--who-mask-image, linear-gradient(135deg, #5E1C23, #8f2b35));
   background-clip: text;
   background-position:
     center 42%,

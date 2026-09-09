@@ -12,7 +12,9 @@ export function getDb() {
   }
 
   client ??= postgres(databaseUrl, {
-    max: 1,
+    connect_timeout: 10,
+    idle_timeout: 20,
+    max: 4,
     prepare: false,
     ssl: "require",
   });

@@ -1,5 +1,13 @@
 import { MessageCircle, Send } from "lucide-react";
 import { ContactNoteForm } from "@/components/contact-note-form";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  description:
+    "Send Kai Sprunger a note for collaboration, software engineering opportunities, technical questions, or follow-up conversations.",
+  path: "/contact",
+  title: "Contact",
+});
 
 const contactProofRows = [
   {

@@ -2,22 +2,30 @@
 
 /* eslint-disable @next/next/no-img-element */
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
+  useInView,
   useScroll,
   useTransform,
 } from "framer-motion";
 import { AlertCircle, CheckCircle2, Images, RefreshCw, Send } from "lucide-react";
+import { handleImageFallback, PlaceholderMediaImage } from "@/components/media-placeholder";
 import type {
   ExperienceRecord,
   FeaturedEndorsementRecord,
 } from "@/lib/portfolio-records";
-import { getExperienceVideoUrl, getPhotoUrl } from "@/lib/supabase-media";
+import {
+  getExperienceVideoUrl,
+  getPhotoUrl,
+  isVideoMediaUrl,
+  mediaPlaceholderImageUrl,
+  withMediaPlaceholder,
+} from "@/lib/supabase-media";
 
 type FilmFrame = {
-  src: string;
+  src: string | null;
   label: string;
   meta: string;
   frameClassName: string;
@@ -28,37 +36,37 @@ export type FeaturedEndorsementData = FeaturedEndorsementRecord;
 
 const filmFrames: FilmFrame[] = [
   {
-    src: getExperienceVideoUrl("bnyvideo.mov") ?? "/experiences/IMG_0118.mov",
+    src: getExperienceVideoUrl("bnyvideo.mov"),
     label: "Campus Frame",
     meta: "Field 01",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("ieeeexpvideo.MOV") ?? "/experiences/IMG_4279.MOV",
+    src: getExperienceVideoUrl("ieeeexpvideo.MOV"),
     label: "Team Frame",
     meta: "Field 02",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("knighthacksexpvideo.MOV") ?? "/experiences/IMG_1143.MOV",
+    src: getExperienceVideoUrl("knighthacksexpvideo.MOV"),
     label: "Briefing Frame",
     meta: "Field 03",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("nvidiaexpvideo.mov") ?? "/experiences/IMG_7889.MOV",
+    src: getExperienceVideoUrl("nvidiaexpvideo.mov"),
     label: "Public Crowd",
     meta: "Frame 04",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("ieeeexpvideo.MOV") ?? "/experiences/behind1.MOV",
+    src: getExperienceVideoUrl("ieeeexpvideo.MOV"),
     label: "Motion Field One",
     meta: "Frame 05",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("bnyvideo.mov") ?? "/experiences/behind2.mov",
+    src: getExperienceVideoUrl("bnyvideo.mov"),
     label: "Motion Field Two",
     meta: "Frame 06",
     frameClassName: "",
@@ -66,17 +74,25 @@ const filmFrames: FilmFrame[] = [
 ];
 const upperFilmFrames = filmFrames.slice(0, 3);
 const lowerFilmFrames = filmFrames.slice(3);
-const experienceSubjectPhoto = getPhotoUrl("hero.jpeg") ?? "/experiences/me.png";
+const experienceSubjectPhoto = withMediaPlaceholder(getPhotoUrl("/photos/experiences.png"));
 
 export function ExperiencesPage({
   experiences,
 }: {
   experiences: ExperienceFeatureData[];
 }) {
+  const uniqueExperiences = useMemo(
+    () =>
+      Array.from(
+        new Map(experiences.map((experience) => [experience.id, experience])).values(),
+      ),
+    [experiences],
+  );
+
   return (
     <main className="overflow-hidden bg-[#0b0b0a] text-[#f2e5c6]">
-      <ExperienceCoverHero experiences={experiences} />
-      <ExperienceRoleArchive experiences={experiences} />
+      <ExperienceCoverHero experiences={uniqueExperiences} />
+      <ExperienceRoleArchive experiences={uniqueExperiences} />
     </main>
   );
 }
@@ -152,7 +168,7 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
               : "A database-backed role archive. Add experience rows with media URLs, responsibilities, and summaries to populate the work notes below."}
           </p>
           <div className="border-t border-[#f2e5c6]/18 pt-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/42 sm:border-t-0 sm:pt-0 sm:text-right">
-            <p>Looping field frames from the local archive.</p>
+            <p>Looping field frames from the media bucket.</p>
             <p className="mt-2 text-[#f2e5c6]/68">Looping Study / Silent</p>
           </div>
         </div>
@@ -187,20 +203,7 @@ function FilmStrip({
               className={`relative aspect-[4/3] min-w-0 overflow-hidden bg-[#080807] ring-1 ring-inset ring-[#f2e5c6]/10 sm:aspect-[16/7] lg:aspect-[3/1] ${frame.frameClassName}`}
               key={`${frame.src}-${frame.meta}`}
             >
-              <video
-                aria-label={frame.label}
-                autoPlay
-                className={`h-full w-full object-cover ${
-                  mutedTone
-                    ? "grayscale contrast-[1.18] brightness-[0.68]"
-                    : "contrast-[1.1] saturate-[0.82] brightness-[0.88]"
-                }`}
-                loop
-                muted
-                playsInline
-                preload="metadata"
-                src={frame.src}
-              />
+              <FilmFrameMedia frame={frame} mutedTone={mutedTone} />
               <span
                 aria-hidden="true"
                 className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(8,8,7,0.16)_0%,rgba(8,8,7,0.04)_48%,rgba(8,8,7,0.44)_100%)]"
@@ -222,6 +225,85 @@ function FilmStrip({
   );
 }
 
+function FilmFrameMedia({
+  frame,
+  mutedTone,
+}: {
+  frame: FilmFrame;
+  mutedTone: boolean;
+}) {
+  const [loadFailed, setLoadFailed] = useState(false);
+  const className = `h-full w-full object-cover ${
+    mutedTone
+      ? "grayscale contrast-[1.18] brightness-[0.68]"
+      : "contrast-[1.1] saturate-[0.82] brightness-[0.88]"
+  }`;
+
+  if (!loadFailed && isVideoMediaUrl(frame.src)) {
+    return (
+      <DeferredExperienceVideo
+        className={className}
+        label={frame.label}
+        onError={() => setLoadFailed(true)}
+        src={frame.src ?? ""}
+      />
+    );
+  }
+
+  return (
+    <img
+      alt=""
+      aria-hidden="true"
+      className={className}
+      decoding="async"
+      loading="lazy"
+      onError={handleImageFallback}
+      src={loadFailed || !frame.src ? mediaPlaceholderImageUrl : frame.src}
+    />
+  );
+}
+
+function DeferredExperienceVideo({
+  className,
+  label,
+  onError,
+  src,
+}: {
+  className: string;
+  label: string;
+  onError: () => void;
+  src: string;
+}) {
+  const containerRef = useRef<HTMLSpanElement>(null);
+  const shouldLoad = useInView(containerRef, { margin: "240px 0px", once: true });
+  const [ready, setReady] = useState(false);
+
+  return (
+    <span className="relative block h-full w-full overflow-hidden bg-[#080807]" ref={containerRef}>
+      <PlaceholderMediaImage
+        className={`absolute inset-0 ${className}`}
+        decorative
+      />
+      {shouldLoad ? (
+        <video
+          aria-label={label}
+          autoPlay
+          className={`${className} absolute inset-0 transition-opacity duration-300 ${
+            ready ? "opacity-100" : "opacity-0"
+          }`}
+          loop
+          muted
+          onError={onError}
+          onLoadedData={() => setReady(true)}
+          playsInline
+          preload="metadata"
+          src={src}
+        />
+      ) : null}
+    </span>
+  );
+}
+
 function ExperienceSubject() {
   return (
     <div className="pointer-events-none absolute bottom-0 right-[-34%] z-30 h-[104%] w-[112%] sm:right-[-21%] sm:h-[112%] sm:w-[80%] md:right-[-12%] md:h-[116%] md:w-[68%] lg:right-[-1%] lg:h-[122%] lg:w-[46%] xl:right-[1%] xl:w-[44%]">
@@ -232,6 +314,7 @@ function ExperienceSubject() {
       <img
         alt="Kai Sprunger standing portrait cutout"
         className="relative z-30 h-full w-full object-contain object-bottom drop-shadow-[0_28px_34px_rgba(0,0,0,0.48)]"
+        onError={handleImageFallback}
         src={experienceSubjectPhoto}
       />
     </div>
@@ -253,10 +336,10 @@ function ExperienceRoleArchive({ experiences }: { experiences: ExperienceFeature
             </h2>
           </div>
           <p className="max-w-xl text-sm font-light leading-6 text-[#f2e5c6]/58 md:justify-self-end">
-            Each feature pairs role context with moving proof, rotating stills,
-            selected endorsements, and a submission box. Media remains URL-driven
-            so the archive can move from local files to stored records without
-            changing the interface.
+            My experiences are the places where curiosity became responsibility.
+            Across NVIDIA, BNY, IEEE @ UCF, and Knight Hacks, I have learned how to
+            build reliable systems, ask better questions, and help teams turn
+            ambitious ideas into work people can depend on.
           </p>
         </div>
         {experiences.length > 0 ? (
@@ -335,37 +418,35 @@ function MediaProofPanel({
   mainMedia: string | null;
   sequence: number;
 }) {
-  const mainMediaIsVideo = Boolean(mainMedia && /\.(mov|mp4|webm)(?:$|[?#])/i.test(mainMedia));
+  const [loadFailed, setLoadFailed] = useState(false);
+  const mainMediaIsVideo = !loadFailed && isVideoMediaUrl(mainMedia);
+  const mediaClassName =
+    "h-full w-full object-cover brightness-[0.74] contrast-[1.16] saturate-[0.72]";
 
   return (
     <section className="relative z-10 overflow-visible lg:aspect-square lg:min-h-[660px]">
       <div className="relative aspect-square min-h-[460px] overflow-hidden border border-[#f2e5c6]/18 bg-[#050505] sm:min-h-[540px] lg:h-full lg:min-h-0">
-        {mainMedia ? (
+        {mainMedia && !loadFailed ? (
           mainMediaIsVideo ? (
-            <video
-              aria-label={`${experience.companyName} feature motion`}
-              autoPlay
-              className="h-full w-full object-cover brightness-[0.74] contrast-[1.16] saturate-[0.72]"
-              loop
-              muted
-              playsInline
-              preload="metadata"
+            <DeferredExperienceVideo
+              className={mediaClassName}
+              label={`${experience.companyName} feature motion`}
+              onError={() => setLoadFailed(true)}
               src={mainMedia}
             />
           ) : (
             <img
               alt=""
               aria-hidden="true"
-              className="h-full w-full object-cover brightness-[0.74] contrast-[1.16] saturate-[0.72]"
+              className={mediaClassName}
+              decoding="async"
+              loading="lazy"
+              onError={handleImageFallback}
               src={mainMedia}
             />
           )
         ) : (
-          <div className="grid h-full w-full place-items-center bg-[#080807]">
-            <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
-              Media Pending
-            </span>
-          </div>
+          <PlaceholderMediaImage className={mediaClassName} decorative />
         )}
         <span
           aria-hidden="true"
@@ -455,51 +536,59 @@ function PhotoFlipPanel({
   }, [flipped, photos.length]);
 
   return (
-    <button
-      aria-label={`Flip ${experience.companyName} media panel to responsibilities`}
-      aria-pressed={flipped}
-      className="group/panel relative block h-[220px] w-full overflow-hidden border border-[#f2e5c6]/20 bg-[#080807] text-left transition hover:border-[#8f2b35]/75 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:h-[250px] lg:h-[280px] xl:h-[300px]"
-      onClick={() => setFlipped((current) => !current)}
-      type="button"
-    >
-      <AnimatePresence mode="wait">
+    <div className="group/panel relative block h-[220px] w-full overflow-hidden border border-[#f2e5c6]/20 bg-[#080807] text-left transition hover:border-[#8f2b35]/75 sm:h-[250px] lg:h-[280px] xl:h-[300px]">
+      <AnimatePresence initial={false} mode="wait">
         {flipped ? (
           <motion.div
             animate={{ opacity: 1, rotateY: 0 }}
-            className="absolute inset-0 overflow-y-auto bg-[#f2e5c6] p-5 text-[#171311]"
+            className="absolute inset-0 flex min-h-0 flex-col overflow-hidden bg-[#f2e5c6] p-4 text-[#171311] sm:p-5"
             exit={{ opacity: 0, rotateY: -8 }}
             initial={{ opacity: 0, rotateY: 8 }}
             key="responsibilities"
             transition={{ duration: 0.24, ease: "easeOut" }}
           >
-            <div className="flex items-center justify-between border-b border-[#171311]/14 pb-3 text-[9px] font-bold uppercase leading-none text-[#5E1C23]">
+            <div className="flex shrink-0 items-center justify-between border-b border-[#171311]/14 pb-3 text-[9px] font-bold uppercase leading-none text-[#5E1C23]">
               <span>Responsibilities</span>
               <RefreshCw aria-hidden="true" size={14} strokeWidth={1.8} />
             </div>
-            <ul className="mt-5 grid gap-3 text-xs font-light leading-5 text-[#171311]/72 sm:text-sm sm:leading-6">
+            <ul
+              aria-label={`${experience.companyName} responsibilities`}
+              className="experience-responsibilities-scroll mt-3 min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-y-auto pr-3 text-xs font-light leading-5 text-[#171311]/72 sm:mt-4 sm:text-sm sm:leading-6"
+            >
               {experience.responsibilities.map((item) => (
-                <li className="border-l border-[#5E1C23]/60 pl-3" key={item}>
+                <li className="mb-3 border-l border-[#5E1C23]/60 pl-3 last:mb-0" key={item}>
                   {item}
                 </li>
               ))}
             </ul>
-            <span className="absolute bottom-4 left-5 text-[9px] font-bold uppercase leading-none text-[#171311]/42">
-              Click to return
-            </span>
+            <button
+              className="mt-3 inline-flex min-h-9 shrink-0 items-center justify-center gap-2 border border-[#171311]/16 bg-white/55 px-3 text-[9px] font-bold uppercase leading-none text-[#5E1C23] transition hover:border-[#5E1C23]/55 hover:bg-white focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#5E1C23]"
+              onClick={() => setFlipped(false)}
+              type="button"
+            >
+              <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
+              Return to photo
+            </button>
           </motion.div>
         ) : photos.length > 0 ? (
-          <motion.div
+          <motion.button
             animate={{ opacity: 1, scale: 1 }}
-            className="absolute inset-0"
+            aria-label={`Flip ${experience.companyName} card for responsibilities`}
+            className="absolute inset-0 w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#8f2b35]"
             exit={{ opacity: 0, scale: 1.015 }}
             initial={{ opacity: 0, scale: 1.015 }}
             key={photos[photoIndex]}
+            onClick={() => setFlipped(true)}
             transition={{ duration: 0.35, ease: "easeOut" }}
+            type="button"
           >
             <img
               alt=""
               aria-hidden="true"
               className="h-full w-full object-cover brightness-[0.84] contrast-[1.08] saturate-[0.72] transition duration-500 group-hover/panel:scale-[1.03]"
+              decoding="async"
+              loading="lazy"
+              onError={handleImageFallback}
               src={photos[photoIndex]}
             />
             <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-25" />
@@ -516,33 +605,39 @@ function PhotoFlipPanel({
             </div>
             <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2 border border-[#f2e5c6]/24 bg-[#080807]/70 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/76 backdrop-blur-sm">
               <Images aria-hidden="true" size={14} strokeWidth={1.8} />
-              <span className="min-w-0 flex-1">Click to flip</span>
+              <span className="min-w-0 flex-1">Flip for responsibilities</span>
               <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
             </div>
-          </motion.div>
+          </motion.button>
         ) : (
-          <motion.div
+          <motion.button
             animate={{ opacity: 1, scale: 1 }}
-            className="absolute inset-0 grid place-items-center bg-[#080807]"
+            aria-label={`Flip ${experience.companyName} card for responsibilities`}
+            className="absolute inset-0 w-full bg-[#080807] text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#8f2b35]"
             exit={{ opacity: 0, scale: 1.015 }}
             initial={{ opacity: 0, scale: 1.015 }}
             key="empty-photo-index"
+            onClick={() => setFlipped(true)}
             transition={{ duration: 0.35, ease: "easeOut" }}
+            type="button"
           >
-            <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
-              Photo Pending
-            </span>
-          </motion.div>
+            <PlaceholderMediaImage className="h-full w-full object-cover brightness-[0.84] contrast-[1.08] saturate-[0.72]" decorative />
+            <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2 border border-[#f2e5c6]/24 bg-[#080807]/70 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/76 backdrop-blur-sm">
+              <Images aria-hidden="true" size={14} strokeWidth={1.8} />
+              <span className="min-w-0 flex-1">Flip for responsibilities</span>
+              <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
+            </div>
+          </motion.button>
         )}
       </AnimatePresence>
       <span
         aria-hidden="true"
-        className="absolute inset-2 border border-[#f2e5c6]/0 transition group-hover/panel:border-[#f2e5c6]/35"
+        className="pointer-events-none absolute inset-2 border border-[#f2e5c6]/0 transition group-hover/panel:border-[#f2e5c6]/35"
       />
-      <span className="sr-only">
+      <span aria-live="polite" className="sr-only">
         {flipped ? "Showing responsibilities" : `Showing photo ${photoIndex + 1} of ${photos.length}`}
       </span>
-    </button>
+    </div>
   );
 }
 

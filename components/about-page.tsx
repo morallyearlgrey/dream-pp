@@ -15,9 +15,13 @@ import {
   aboutCards,
   captchaTiles,
   heroPhoto,
+  myInterestsText,
   visualArchiveVideo,
+  whoIAmText,
   whoAmIPhoto,
 } from "@/lib/about-data";
+import { handleImageFallback, PlaceholderMediaImage } from "@/components/media-placeholder";
+import { isVideoMediaUrl } from "@/lib/supabase-media";
 
 const titles = [
   "Software Engineer",
@@ -143,6 +147,7 @@ export function AboutPage() {
       <HeroSection />
       <WhoAmI />
       <ImageCarousel />
+      <WhoIReallyAm />
       <WonderCaptcha />
     </main>
   );
@@ -251,12 +256,17 @@ function HeroSection() {
       <img
         alt="Black-and-white portrait of Kai Sprunger"
         className="absolute inset-0 h-full w-full scale-[1.02] object-cover object-[center_45%] opacity-90 blur-[1.5px] brightness-[0.92] contrast-[1.08] grayscale"
+        decoding="async"
+        fetchPriority="high"
+        onError={handleImageFallback}
         src={heroPhoto}
       />
       <img
         alt=""
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover object-[center_45%] contrast-[1.04] saturate-[1.16]"
+        decoding="async"
+        onError={handleImageFallback}
         src={heroPhoto}
         style={{ clipPath }}
       />
@@ -416,6 +426,9 @@ function WhoAmI() {
         alt=""
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover object-[center_46%] opacity-[0.24] grayscale saturate-[0.78] contrast-[1.05]"
+        decoding="async"
+        loading="lazy"
+        onError={handleImageFallback}
         src={whoAmIPhoto}
       />
       <div
@@ -433,6 +446,9 @@ function WhoAmI() {
             alt=""
             aria-hidden="true"
             className="absolute inset-x-[-8%] top-1/2 h-[130%] w-[116%] -translate-y-1/2 object-cover object-[center_46%] opacity-20 grayscale saturate-[0.76] contrast-[1.08]"
+            decoding="async"
+            loading="lazy"
+            onError={handleImageFallback}
             src={whoAmIPhoto}
           />
           <div
@@ -440,7 +456,7 @@ function WhoAmI() {
             className="absolute inset-x-[-8%] top-1/2 h-[130%] w-[116%] -translate-y-1/2 bg-[#080807]/54"
           />
           <h2 className="who-mask-heading relative z-10 font-headline text-[54px] font-bold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[86px] lg:text-[118px]">
-            <span>Who Am I</span>
+            <span>Who I Am</span>
             <motion.span
               aria-hidden="true"
               className="who-mask-text absolute inset-0"
@@ -449,10 +465,10 @@ function WhoAmI() {
               viewport={{ amount: 0.7, once: true }}
               whileInView={{ opacity: 0.68 }}
             >
-              Who Am I
+              Who I Am
             </motion.span>
             <span aria-hidden="true" className="who-mask-text who-mask-hover absolute inset-0">
-              Who Am I
+              Who I Am
             </span>
           </h2>
         </div>
@@ -464,10 +480,7 @@ function WhoAmI() {
           <span className="h-px flex-1 bg-[#f2e5c6]/16" />
         </div>
         <p className="relative z-10 mt-9 max-w-3xl text-xl font-light leading-9 text-[#f2e5c6]/70 sm:text-2xl sm:leading-10">
-          I build thoughtful systems where code, hardware, and design can meet.
-          This placeholder text leaves room for the fuller story about process,
-          curiosity, and craft. I am happiest when a question turns into something
-          people can hold, use, or revisit.
+          {whoIAmText}
         </p>
       </div>
     </motion.section>
@@ -488,6 +501,9 @@ function ImageCarousel() {
       index === carouselMiddleCopy * aboutCards.length + 1 ? centerCardMotion : sideCardMotion,
     ),
   );
+  const [visualArchiveFailed, setVisualArchiveFailed] = useState(false);
+  const showVisualArchiveVideo =
+    !visualArchiveFailed && isVideoMediaUrl(visualArchiveVideo);
   const activeCardIndex = useMemo(
     () =>
       cardMotion.reduce(
@@ -708,16 +724,24 @@ function ImageCarousel() {
         </div>
         <div className="editorial-proof-frame relative overflow-hidden p-2 md:justify-self-end md:w-full md:max-w-[420px]">
           <div className="relative aspect-square overflow-hidden border border-[#f2e5c6]/20 bg-[#11100f]">
-            <video
-              aria-label="Looping visual archive preview"
-              autoPlay
-              className="h-full w-full object-cover brightness-[0.82] contrast-[1.12] grayscale saturate-[0.62]"
-              loop
-              muted
-              playsInline
-              preload="metadata"
-              src={visualArchiveVideo}
-            />
+            {showVisualArchiveVideo ? (
+              <video
+                aria-label="Looping visual archive preview"
+                autoPlay
+                className="h-full w-full object-cover brightness-[0.82] contrast-[1.12] grayscale saturate-[0.62]"
+                loop
+                muted
+                onError={() => setVisualArchiveFailed(true)}
+                playsInline
+                preload="metadata"
+                src={visualArchiveVideo}
+              />
+            ) : (
+              <PlaceholderMediaImage
+                alt="Visual archive preview"
+                className="h-full w-full object-cover brightness-[0.82] contrast-[1.12] grayscale saturate-[0.62]"
+              />
+            )}
             <span
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_22%,rgba(143,43,53,0.16),transparent_34%),linear-gradient(180deg,rgba(8,8,7,0)_52%,rgba(8,8,7,0.62))]"
@@ -797,6 +821,9 @@ function ImageCarousel() {
                         aria-hidden="true"
                         className="absolute inset-x-0 bottom-0 z-10 h-[112%] w-full max-w-none object-contain object-bottom transition-[filter] duration-150 ease-out sm:h-[116%]"
                         data-carousel-image
+                        decoding="async"
+                        loading="lazy"
+                        onError={handleImageFallback}
                         src={card.image}
                         style={{
                           filter: `grayscale(${inactiveEmphasis}) brightness(${
@@ -840,6 +867,39 @@ function ImageCarousel() {
             </span>
           ))}
         </div>
+      </div>
+    </motion.section>
+  );
+}
+
+function WhoIReallyAm() {
+  return (
+    <motion.section
+      className="relative overflow-hidden border-y border-[#f2e5c6]/14 bg-[#080807] px-5 py-20 text-[#f2e5c6] sm:px-8 sm:py-24 lg:px-12"
+      initial={{ opacity: 0, y: 36 }}
+      transition={{ duration: 0.65, ease: "easeOut" }}
+      viewport={{ amount: 0.28, once: true }}
+      whileInView={{ opacity: 1, y: 0 }}
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_36%,rgba(143,43,53,0.14),transparent_38%),linear-gradient(180deg,#0b0b0a,#070707)]"
+      />
+      <div aria-hidden="true" className="editorial-film-grain absolute inset-0 opacity-20" />
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-8 border-y border-[#f2e5c6]/16 py-8 lg:grid-cols-[minmax(280px,0.58fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
+        <div>
+          <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+            <span>My Interests</span>
+            <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+            <span>04</span>
+          </div>
+          <h2 className="font-display mt-5 text-[54px] font-semibold uppercase leading-[0.84] text-[#f2e5c6] sm:text-[78px] lg:text-[92px]">
+            Who I Really Am
+          </h2>
+        </div>
+        <p className="border-l border-[#8f2b35]/48 pl-5 text-base font-light leading-8 text-[#f2e5c6]/72 sm:text-lg sm:leading-9">
+          {myInterestsText}
+        </p>
       </div>
     </motion.section>
   );
@@ -934,6 +994,9 @@ function WonderCaptcha() {
                       ? "scale-[1.02] opacity-[0.76] saturate-[0.78]"
                       : "opacity-95 group-hover:scale-[1.02] group-hover:opacity-[0.72]"
                   }`}
+                  decoding="async"
+                  loading="lazy"
+                  onError={handleImageFallback}
                   src={tile.image}
                   style={{ objectPosition: captchaPositions[index % captchaPositions.length] }}
                 />

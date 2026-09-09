@@ -126,6 +126,7 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
           <img
             alt=""
             className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-[0.16] blur-2xl grayscale brightness-[0.28] contrast-[1.28]"
+            decoding="async"
             src={featuredNote.image}
           />
         ) : null}
@@ -147,8 +148,9 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
             </h1>
           </div>
           <p className="max-w-2xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base lg:justify-self-end">
-            A high-contrast reading room for process notes, visual references,
-            and saved fragments from the build archive.
+            I used to write for my school newspaper, and I still return to writing
+            whenever I want to understand an idea more fully. This is where I save
+            what I am learning, building, reading, and noticing along the way.
           </p>
         </div>
 
@@ -238,6 +240,8 @@ function NoteImage({
       alt=""
       aria-hidden="true"
       className={className}
+      decoding="async"
+      loading="lazy"
       src={image}
     />
   );
