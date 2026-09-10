@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import type { NextAuthOptions } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import DiscordProvider from "next-auth/providers/discord";
@@ -14,6 +15,30 @@ type AdminSessionUser = {
   isAdmin?: boolean;
   name?: string | null;
 };
+
+const discordClientId =
+  process.env.DISCORD_CLIENT_ID?.trim() || process.env.AUTH_DISCORD_ID?.trim() || "";
+const discordClientSecret =
+  process.env.DISCORD_CLIENT_SECRET?.trim() ||
+  process.env.AUTH_DISCORD_SECRET?.trim() ||
+  "";
+
+function getAuthSecret() {
+  const configuredSecret =
+    process.env.NEXTAUTH_SECRET?.trim() || process.env.AUTH_SECRET?.trim();
+
+  if (configuredSecret) {
+    return configuredSecret;
+  }
+
+  if (discordClientSecret) {
+    return createHash("sha256")
+      .update(`dream-pp:next-auth:${discordClientSecret}`)
+      .digest("hex");
+  }
+
+  return undefined;
+}
 
 function getAllowedAdminIdentity() {
   return {
@@ -73,8 +98,8 @@ export const authOptions: NextAuthOptions = {
           scope: "identify email",
         },
       },
-      clientId: process.env.DISCORD_CLIENT_ID ?? "",
-      clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
+      clientId: discordClientId,
+      clientSecret: discordClientSecret,
     }),
   ],
   callbacks: {
@@ -106,5 +131,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: getAuthSecret(),
 };

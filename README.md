@@ -97,7 +97,13 @@ NEXTAUTH_URL
 NEXTAUTH_SECRET
 DISCORD_CLIENT_ID
 DISCORD_CLIENT_SECRET
+ADMIN_DISCORD_ID
 ```
+
+`AUTH_SECRET`, `AUTH_DISCORD_ID`, and `AUTH_DISCORD_SECRET` are accepted as
+Auth.js-compatible aliases. If no standalone auth secret is configured, the
+server derives a stable signing secret from `DISCORD_CLIENT_SECRET`; the raw
+Discord secret is never stored in the session.
 
 When the Supabase Vercel integration provides `POSTGRES_URL` instead of
 `DATABASE_URL`, the application uses it automatically. `POSTGRES_PRISMA_URL`

@@ -424,7 +424,7 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
       ))}
 
       <motion.div
-        className="relative z-10 mx-auto max-w-5xl text-center"
+        className="relative z-20 mx-auto max-w-5xl text-center"
         style={{ y: titleY }}
       >
         <div className="mx-auto mb-5 flex max-w-xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
@@ -435,7 +435,7 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
         <h1 className="font-display text-[78px] font-semibold uppercase leading-[0.76] text-[var(--color-text)] sm:text-[132px] lg:text-[168px]">
           Skills
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-sm font-light leading-7 text-[var(--color-text)]/72 sm:text-base">
+        <p className="mx-auto mt-8 max-w-2xl border-y border-[var(--color-text)]/18 bg-[var(--color-deep)]/88 px-5 py-4 text-sm font-light leading-7 text-[var(--color-text)] shadow-[0_18px_48px_rgba(0,0,0,0.28)] backdrop-blur-md sm:px-7 sm:text-base">
           My skills are less of a checklist and more of a record of the questions I
           have followed. They span low-level systems, AI, full-stack engineering,
           hardware, and design, with each one developed through something I
@@ -470,7 +470,7 @@ function FloatingSkillBlock({
   return (
     <motion.div
       aria-hidden="true"
-      className={`pointer-events-none absolute block ${block.className}`}
+      className={`pointer-events-none absolute hidden md:block ${block.className}`}
       style={{ y: scrollY }}
     >
       <motion.div
