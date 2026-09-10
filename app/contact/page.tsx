@@ -1,5 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import { ContactNoteForm } from "@/components/contact-note-form";
 import { createPageMetadata } from "@/lib/seo";
+import { getPhotoUrl, withMediaPlaceholder } from "@/lib/supabase-media";
+
+const contactBackgroundImage = withMediaPlaceholder(
+  getPhotoUrl("public/portfoliomedia/photos/contact.jpg"),
+);
 
 export const metadata = createPageMetadata({
   description:
@@ -12,6 +18,11 @@ export default function Contact() {
   return (
     <main className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[var(--color-deep)] px-4 pb-16 pt-20 text-[var(--color-text)] sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0">
+        <img
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover object-center brightness-[0.52] contrast-[1.12] saturate-[0.72]"
+          src={contactBackgroundImage}
+        />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_24%,rgba(143,43,53,0.18),transparent_34%),linear-gradient(180deg,rgba(var(--color-deep-rgb),0.72),rgba(var(--color-deep-rgb),0.96))]" />
         <div className="editorial-film-grain absolute inset-0 opacity-26" />
       </div>

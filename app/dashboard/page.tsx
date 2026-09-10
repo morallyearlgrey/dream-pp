@@ -1,14 +1,19 @@
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { EndorsementControls } from "@/components/endorsement-controls";
-import { authOptions, isAuthorizedAdminSession } from "@/lib/auth";
+import {
+  authOptions,
+  hasDiscordAuthConfiguration,
+  isAuthorizedAdminSession,
+} from "@/lib/auth";
 import { getDashboardPortfolioData } from "@/lib/portfolio-db";
 import type { DashboardPortfolioData } from "@/lib/portfolio-records";
 
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
-  const session = await getServerSession(authOptions);
+  const authConfigured = hasDiscordAuthConfiguration();
+  const session = authConfigured ? await getServerSession(authOptions) : null;
 
   if (!session) {
     return (
@@ -20,23 +25,27 @@ export default async function Dashboard() {
               <span className="h-px flex-1 bg-[var(--color-text)]/16" />
             </p>
             <h1 className="font-display mt-4 text-[52px] font-semibold uppercase leading-[0.88] text-[var(--color-text)] sm:text-[76px]">
-              Sign in with Discord
+              {authConfigured ? "Sign in with Discord" : "Discord setup required"}
             </h1>
             <p className="mt-5 max-w-xl border-l border-[#8f2b35]/40 pl-4 text-sm font-light leading-7 text-[var(--color-text)]/66 sm:text-base">
-              The admin surface is locked to the exact Discord user ID configured
-              in <span className="font-bold text-[var(--color-text)]">ADMIN_DISCORD_ID</span>.
-              Add the Discord client secret, then register{" "}
-              <span className="font-bold text-[var(--color-text)]">
-                {process.env.NEXTAUTH_URL ?? "http://localhost:3000"}/api/auth/callback/discord
-              </span>{" "}
-              as the redirect URI.
+              {authConfigured ? (
+                <>The admin surface requires a fresh Discord authorization and only accepts the configured admin account.</>
+              ) : (
+                <>
+                  Add <span className="font-bold text-[var(--color-text)]">DISCORD_CLIENT_ID</span>,{" "}
+                  <span className="font-bold text-[var(--color-text)]">DISCORD_CLIENT_SECRET</span>, and{" "}
+                  <span className="font-bold text-[var(--color-text)]">ADMIN_DISCORD_ID</span> to the Vercel production environment, then redeploy.
+                </>
+              )}
             </p>
-            <Link
-              className="mt-8 inline-flex items-center justify-center border border-[#8f2b35]/55 px-5 py-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[var(--color-text)]"
-              href="/api/auth/signin/discord?callbackUrl=%2Fdashboard"
-            >
-              Continue with Discord
-            </Link>
+            {authConfigured ? (
+              <Link
+                className="mt-8 inline-flex items-center justify-center border border-[#8f2b35]/55 px-5 py-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[var(--color-text)]"
+                href="/api/auth/signin/discord?callbackUrl=%2Fdashboard"
+              >
+                Continue with Discord
+              </Link>
+            ) : null}
           </div>
           <div className="border border-[var(--color-text)]/18 bg-[var(--color-text)]/8 p-5">
             <p className="font-display text-3xl font-semibold uppercase leading-none text-[var(--color-text)]">

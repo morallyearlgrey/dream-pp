@@ -89,6 +89,15 @@ export function isAuthorizedAdminSession(session: { user?: AdminSessionUser } | 
   return session?.user?.isAdmin === true;
 }
 
+export function hasDiscordAuthConfiguration() {
+  return Boolean(
+    discordClientId &&
+      discordClientSecret &&
+      getAuthSecret() &&
+      getAllowedAdminIdentity().discordId,
+  );
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     DiscordProvider({

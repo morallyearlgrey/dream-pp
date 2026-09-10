@@ -42,7 +42,7 @@ type FocusZone = {
 };
 
 const desktopRevealBox: RevealBox = { x: 35, y: 18, width: 44, height: 24 };
-const mobileRevealBox: RevealBox = { x: 7, y: 27, width: 86, height: 11 };
+const mobileRevealBox: RevealBox = { x: 18, y: 25, width: 64, height: 30 };
 const focusZones: FocusZone[] = [
   { label: "EYES", xMin: 49, xMax: 69, yMin: 27, yMax: 38 },
   { label: "FACE", xMin: 43, xMax: 72, yMin: 20, yMax: 55 },
@@ -160,6 +160,19 @@ function getInitialRevealBox() {
   return desktopRevealBox;
 }
 
+function getMobileRevealBox(rect: DOMRect): RevealBox {
+  const height = Math.min(
+    mobileRevealBox.width,
+    (mobileRevealBox.width * rect.width) / rect.height,
+  );
+
+  return {
+    ...mobileRevealBox,
+    height,
+    y: Math.min(mobileRevealBox.y, 100 - height),
+  };
+}
+
 function getFocusRegionLabel(box: RevealBox): FocusRegionLabel {
   const centerX = box.x + box.width / 2;
   const centerY = box.y + box.height / 2;
@@ -193,7 +206,8 @@ function HeroSection() {
     const query = window.matchMedia("(max-width: 639px)");
 
     function syncRevealBox() {
-      const nextBox = query.matches ? mobileRevealBox : desktopRevealBox;
+      const rect = heroRef.current?.getBoundingClientRect();
+      const nextBox = query.matches && rect ? getMobileRevealBox(rect) : desktopRevealBox;
 
       dragOffsetRef.current = {
         x: nextBox.width / 2,
@@ -204,8 +218,12 @@ function HeroSection() {
 
     syncRevealBox();
     query.addEventListener("change", syncRevealBox);
+    window.addEventListener("resize", syncRevealBox);
 
-    return () => query.removeEventListener("change", syncRevealBox);
+    return () => {
+      query.removeEventListener("change", syncRevealBox);
+      window.removeEventListener("resize", syncRevealBox);
+    };
   }, []);
 
   function moveBox(clientX: number, clientY: number) {
@@ -219,12 +237,13 @@ function HeroSection() {
     const pointerY = ((clientY - rect.top) / rect.height) * 100;
 
     setBox((current) => {
+      const sizedBox = getIsMobileViewport() ? getMobileRevealBox(rect) : current;
       const nextX = pointerX - dragOffsetRef.current.x;
       const nextY = pointerY - dragOffsetRef.current.y;
 
       return {
-        ...current,
-        ...constrainRevealBox(nextX, nextY, current.width, current.height),
+        ...sizedBox,
+        ...constrainRevealBox(nextX, nextY, sizedBox.width, sizedBox.height),
       };
     });
   }

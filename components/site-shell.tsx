@@ -113,7 +113,7 @@ export function SiteShell({
                 className="font-display mt-4 block text-[62px] font-semibold uppercase leading-[0.78] text-[var(--color-text)] sm:text-[88px] lg:text-[112px]"
                 href="/"
               >
-                Kai
+                Kai Sprunger
               </Link>
               <p className="mt-4 max-w-sm text-xs font-light leading-5 text-[var(--color-text)]/62">
                 Selected projects, field notes, image-led experiments, and the
@@ -158,7 +158,7 @@ export function SiteShell({
                 Social
               </p>
               <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[10px] font-bold uppercase leading-none text-[var(--color-text)]/62">
-                {["GitHub", "LinkedIn", "Dribbble", "CV"].map((item) => (
+                {["GitHub", "LinkedIn", "CV"].map((item) => (
                   <a className="transition hover:text-[#8f2b35]" href="#" key={item}>
                     {item}
                   </a>

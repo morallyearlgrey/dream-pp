@@ -7,7 +7,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { handleImageFallback, PlaceholderMediaImage } from "@/components/media-placeholder";
 import type { ProjectRecord } from "@/lib/portfolio-records";
-import { isVideoMediaUrl } from "@/lib/supabase-media";
+import { getPhotoUrl, isVideoMediaUrl, withMediaPlaceholder } from "@/lib/supabase-media";
 
 type ProjectFeature = ProjectRecord;
 
@@ -52,6 +52,9 @@ const highlightedProjectNames = [
 ] as const;
 const stripSlots = [-2, -1, 0, 1, 2] as const;
 const mobileStripSlots = [-1, 0, 1] as const;
+const projectsBackgroundImage = withMediaPlaceholder(
+  getPhotoUrl("public/portfoliomedia/photos/projects.jpg"),
+);
 
 function getMediaAsset(src: string | null | undefined, alt: string): ProjectMediaAsset | null {
   if (!src) {
@@ -232,11 +235,7 @@ function ProjectHero({
 
   return (
     <section className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[var(--color-base)] px-5 pb-12 pt-6 text-[var(--color-text)] sm:px-8 lg:min-h-screen lg:px-12">
-      <ProjectBackgroundTexture
-        highlightedProjects={highlightedProjects.map(({ project }) => project)}
-        projects={projects}
-        selected={selected}
-      />
+      <ProjectBackgroundTexture />
 
       <div className="relative z-30 mx-auto flex max-w-7xl items-center justify-between gap-4 border-b border-[var(--color-text)]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/58 sm:text-[10px]">
         <span>Project Cover Archive</span>
@@ -246,7 +245,36 @@ function ProjectHero({
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-20 mx-auto mt-5 h-[760px] max-w-[440px] overflow-visible sm:h-[860px] lg:mt-8 lg:h-[650px] lg:max-w-7xl"
+        className="relative z-20 mx-auto mt-10 max-w-xl lg:hidden"
+        initial={{ opacity: 0, y: 18 }}
+        style={{ y: coverY }}
+        transition={{ duration: 0.65, ease: "easeOut" }}
+      >
+        <h1 className="project-title font-display text-[64px] font-semibold uppercase leading-[0.82] text-[var(--color-text)] sm:text-[104px]">
+          Projects
+        </h1>
+        <p className="mt-7 border-l border-[#8f2b35]/48 bg-[var(--color-deep)]/72 px-4 py-3 text-sm font-light leading-6 text-[var(--color-text)]/82 backdrop-blur-sm sm:text-base sm:leading-7">
+          I build projects because I like seeing strange ideas become real. From an
+          agentic nuclear reactor to an ASL rhythm game and a pipelined RISC-V
+          processor, each one records what I was curious enough to learn next.
+        </p>
+        <div className="mt-7 grid grid-cols-2 gap-3 border-t border-[#5E1C23]/70 pt-5 sm:gap-4">
+          {highlightedProjects.map(({ project, projectIndex }, index) => (
+            <MobileHeroProject
+              active={projectIndex === selected}
+              index={index}
+              key={project.id}
+              project={project}
+              projectIndex={projectIndex}
+              setSelected={setSelected}
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-20 mx-auto mt-8 hidden h-[650px] max-w-7xl overflow-visible lg:block"
         initial={{ opacity: 0, y: 18 }}
         style={{ y: coverY }}
         transition={{ duration: 0.65, ease: "easeOut" }}
@@ -315,48 +343,64 @@ function ProjectHero({
   );
 }
 
-function ProjectBackgroundTexture({
-  highlightedProjects,
-  projects,
-  selected,
-}: {
-  highlightedProjects: ProjectFeature[];
-  projects: ProjectFeature[];
-  selected: number;
-}) {
+function ProjectBackgroundTexture() {
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-      <div className="absolute inset-[-12%]">
-        {projects.map((project, index) => (
-          <div
-            className={`absolute inset-0 transition-opacity duration-500 ${
-              index === selected ? "opacity-70" : "pointer-events-none opacity-0"
-            }`}
-            key={project.id}
-          >
-            <ProjectMedia
-              className="h-full w-full object-cover blur-2xl grayscale brightness-[0.42] contrast-[1.25]"
-              decorative
-              media={getProjectBackgroundMedia(project)}
-              project={project}
-            />
-          </div>
-        ))}
-      </div>
-      <div className="absolute inset-0 grid grid-cols-2 opacity-[0.18] blur-[1.5px] grayscale">
-        {highlightedProjects.map((item) => (
-          <ProjectMedia
-            className="h-full w-full object-cover brightness-[0.58] contrast-[1.2]"
-            decorative
-            key={item.id}
-            project={item}
-          />
-        ))}
-      </div>
+      <img
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-center brightness-[0.52] contrast-[1.16] saturate-[0.72]"
+        onError={handleImageFallback}
+        src={projectsBackgroundImage}
+      />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.58)_0%,rgba(var(--color-deep-rgb),0.2)_44%,rgba(var(--color-deep-rgb),0.74)_100%),radial-gradient(ellipse_at_50%_42%,rgba(var(--color-text-rgb),0.18),transparent_44%),linear-gradient(90deg,rgba(var(--color-deep-rgb),0.74),rgba(var(--color-deep-rgb),0.12),rgba(var(--color-deep-rgb),0.72))]" />
       <div className="absolute inset-0 bg-[var(--color-base)]/42" />
       <div className="editorial-film-grain absolute inset-0 opacity-34" />
     </div>
+  );
+}
+
+function MobileHeroProject({
+  active,
+  index,
+  project,
+  projectIndex,
+  setSelected,
+}: {
+  active: boolean;
+  index: number;
+  project: ProjectFeature;
+  projectIndex: number;
+  setSelected: Dispatch<SetStateAction<number>>;
+}) {
+  return (
+    <button
+      aria-label={`Select ${project.name}`}
+      aria-pressed={active}
+      className={`min-w-0 border bg-[var(--color-panel)] p-1.5 text-left transition ${
+        active ? "border-[#8f2b35]" : "border-[var(--color-text)]/28"
+      }`}
+      onClick={() => setSelected(projectIndex)}
+      type="button"
+    >
+      <span className="relative block aspect-[4/3] overflow-hidden bg-[var(--color-deep)]">
+        <ProjectMedia
+          className={`h-full w-full object-cover transition ${
+            active
+              ? "brightness-[0.9] contrast-[1.12] saturate-[0.88]"
+              : "grayscale brightness-[0.62] contrast-[1.18]"
+          }`}
+          decorative
+          project={project}
+        />
+        <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
+        <span className="absolute right-2 top-2 border-t border-[var(--color-text)]/40 pt-1 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/70">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+      </span>
+      <span className="mt-2 block break-words border-t border-[#5E1C23]/70 pt-2 text-[9px] font-bold uppercase leading-3 text-[var(--color-text)]">
+        {project.name}
+      </span>
+    </button>
   );
 }
 
@@ -444,7 +488,7 @@ function EditorialSpreadSection({
 
   return (
     <section className="relative isolate overflow-visible bg-[var(--color-deep)] px-5 pb-14 pt-8 text-[var(--color-text)] sm:px-8 sm:pb-16 sm:pt-10 lg:px-10 lg:pb-20 lg:pt-12 xl:px-12">
-      <ProjectSpreadBackground projects={projects} selected={selected} />
+      <ProjectSpreadBackground />
 
       <div className="relative z-20 mx-auto w-full max-w-[1120px] overflow-visible">
         <DesktopProjectStrip
@@ -473,32 +517,15 @@ function EditorialSpreadSection({
   );
 }
 
-function ProjectSpreadBackground({
-  projects,
-  selected,
-}: {
-  projects: ProjectFeature[];
-  selected: number;
-}) {
+function ProjectSpreadBackground() {
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-      <div className="absolute inset-[-12%]">
-        {projects.map((project, index) => (
-          <div
-            className={`absolute inset-0 transition-opacity duration-500 ${
-              index === selected ? "opacity-30" : "pointer-events-none opacity-0"
-            }`}
-            key={project.id}
-          >
-            <ProjectMedia
-              className="h-full w-full scale-110 object-cover blur-2xl grayscale brightness-[0.3] contrast-[1.28]"
-              decorative
-              media={getProjectBackgroundMedia(project)}
-              project={project}
-            />
-          </div>
-        ))}
-      </div>
+      <img
+        alt=""
+        className="absolute inset-0 h-full w-full scale-105 object-cover object-center blur-sm grayscale brightness-[0.3] contrast-[1.2]"
+        onError={handleImageFallback}
+        src={projectsBackgroundImage}
+      />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.9)_0%,rgba(var(--color-deep-rgb),0.76)_48%,rgba(var(--color-deep-rgb),0.94)_100%),linear-gradient(90deg,rgba(var(--color-deep-rgb),0.9)_0%,rgba(var(--color-deep-rgb),0.6)_48%,rgba(var(--color-deep-rgb),0.9)_100%)]" />
       <div className="absolute inset-0 bg-[var(--color-base)]/36" />
       <div className="editorial-film-grain absolute inset-0 opacity-30" />
@@ -822,9 +849,6 @@ function MobileStripFrame({
 }) {
   const active = slot === 0;
   const frame = getMobileStripGeometry(slot);
-  const labelBottom = active
-    ? 22
-    : `${100 - Math.min(frame.bottomLeft, frame.bottomRight) + 6}%`;
   const frameStyle: CSSProperties = {
     marginLeft: slot === mobileStripSlots[0] ? 0 : -1,
     opacity: frame.opacity,
@@ -871,16 +895,6 @@ function MobileStripFrame({
         />
         <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
       </span>
-      <span
-        className={`absolute left-2 right-2 z-20 border-t pt-2 text-[8px] font-bold uppercase leading-3 transition sm:text-[9px] ${
-          active
-            ? "border-[#8f2b35]/74 text-[#8f2b35]"
-            : "border-[var(--color-text)]/24 text-[var(--color-text)]/56"
-        }`}
-        style={{ bottom: labelBottom }}
-      >
-        {project.name}
-      </span>
     </motion.button>
   );
 }
@@ -902,9 +916,7 @@ function MobileProjectStrip({
         <span className="text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/52">
           Project {String(selected + 1).padStart(2, "0")}
         </span>
-        <span className="max-w-[48vw] truncate text-right text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
-          {project.name}
-        </span>
+        <span className="text-right text-[9px] font-bold uppercase leading-none text-[#8f2b35]">Selected frame</span>
       </div>
 
       <div className="relative mx-auto mt-3 w-full max-w-[560px] overflow-visible pb-10 pt-3">
@@ -933,6 +945,9 @@ function MobileProjectStrip({
           aria-hidden="true"
           className="relative z-30 mx-auto mt-5 h-px w-[88%] bg-[#5E1C23]/70"
         />
+        <h2 className="relative z-40 mx-auto mt-5 max-w-full break-words font-display text-[38px] font-semibold uppercase leading-[0.88] text-[var(--color-text)] sm:text-[52px]">
+          {project.name}
+        </h2>
         <div className="relative z-40 mx-auto mt-6 flex w-full items-center justify-between gap-3 border-y border-[var(--color-text)]/16 py-2 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/48">
           <span>{project.id}</span>
           <span className="min-w-0 truncate text-right">

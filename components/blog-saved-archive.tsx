@@ -3,9 +3,14 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useMemo, useState } from "react";
 import { Bookmark, X } from "lucide-react";
+import { handleImageFallback } from "@/components/media-placeholder";
 import type { BlogRecord } from "@/lib/portfolio-records";
+import { getPhotoUrl, withMediaPlaceholder } from "@/lib/supabase-media";
 
 const filters = ["ALL", "CAREER", "ENTERTAINMENT", "OPINION"] as const;
+const blogBackgroundImage = withMediaPlaceholder(
+  getPhotoUrl("public/portfoliomedia/photos/blog.png"),
+);
 
 type BlogFilter = (typeof filters)[number];
 type SavedNote = {
@@ -118,14 +123,13 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
   return (
     <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[var(--color-deep)] px-4 pb-16 pt-20 text-[var(--color-text)] sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-        {featuredNote?.image ? (
-          <img
-            alt=""
-            className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-[0.16] blur-2xl grayscale brightness-[0.28] contrast-[1.28]"
-            decoding="async"
-            src={featuredNote.image}
-          />
-        ) : null}
+        <img
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-[0.38] grayscale brightness-[0.42] contrast-[1.18]"
+          decoding="async"
+          onError={handleImageFallback}
+          src={blogBackgroundImage}
+        />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.92),rgba(var(--color-deep-rgb),0.78)_46%,rgba(var(--color-deep-rgb),0.96)),linear-gradient(90deg,rgba(var(--color-deep-rgb),0.95),rgba(var(--color-deep-rgb),0.62),rgba(var(--color-deep-rgb),0.95))]" />
         <div className="absolute inset-0 bg-[var(--color-base)]/44" />
         <div className="editorial-film-grain absolute inset-0 opacity-28" />

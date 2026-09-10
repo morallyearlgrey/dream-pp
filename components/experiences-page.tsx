@@ -308,8 +308,8 @@ function ExperienceSubject() {
 
 function ExperienceRoleArchive({ experiences }: { experiences: ExperienceFeatureData[] }) {
   return (
-    <section className="relative px-5 py-16 sm:px-8 lg:px-12">
-      <div className="mx-auto max-w-7xl border-t border-[var(--color-text)]/16 pt-8">
+    <section className="relative min-w-0 overflow-x-clip px-5 py-16 sm:px-8 lg:px-12">
+      <div className="mx-auto min-w-0 max-w-7xl border-t border-[var(--color-text)]/16 pt-8">
         {experiences.length > 0 ? (
           <div className="grid gap-12 lg:gap-16">
             {experiences.map((experience, index) => (
@@ -353,8 +353,8 @@ function ExperienceFeature({
   const mainMedia = experience.mainVideo ?? experience.photos[0] ?? null;
 
   return (
-    <article className="group relative isolate overflow-visible border-t border-[var(--color-text)]/14 pt-10 first:border-t-0 first:pt-0">
-      <div className="relative grid gap-5 lg:grid-cols-[minmax(280px,0.44fr)_minmax(0,0.86fr)] lg:items-center lg:gap-0 lg:pr-[150px] xl:pr-[170px]">
+    <article className="group relative isolate min-w-0 max-w-full overflow-hidden border-t border-[var(--color-text)]/14 pt-10 first:border-t-0 first:pt-0 lg:overflow-visible">
+      <div className="relative grid min-w-0 gap-5 lg:grid-cols-[minmax(280px,0.44fr)_minmax(0,0.86fr)] lg:items-center lg:gap-0 lg:pr-[150px] xl:pr-[170px]">
         <InfoPanel
           className="lg:w-[116%]"
           displayRange={displayRange}
@@ -383,8 +383,8 @@ function MediaProofPanel({
     "h-full w-full object-cover brightness-[0.74] contrast-[1.16] saturate-[0.72]";
 
   return (
-    <section className="relative z-10 overflow-visible lg:aspect-square lg:min-h-[660px]">
-      <div className="relative aspect-square min-h-[460px] overflow-hidden border border-[var(--color-text)]/18 bg-[var(--color-panel)] sm:min-h-[540px] lg:h-full lg:min-h-0">
+    <section className="relative z-10 min-w-0 max-w-full overflow-visible lg:aspect-square lg:min-h-[660px]">
+      <div className="relative aspect-[4/5] w-full min-w-0 overflow-hidden border border-[var(--color-text)]/18 bg-[var(--color-panel)] sm:aspect-square sm:min-h-[540px] lg:h-full lg:min-h-0">
         {mainMedia && !loadFailed ? (
           mainMediaIsVideo ? (
             <DeferredExperienceVideo
@@ -439,7 +439,7 @@ function InfoPanel({
 }) {
   return (
     <section
-      className={`editorial-panel relative z-30 overflow-visible p-4 text-[var(--color-text)] sm:p-5 ${className}`}
+      className={`editorial-panel relative z-30 min-w-0 max-w-full overflow-hidden p-4 text-[var(--color-text)] sm:p-5 lg:overflow-visible ${className}`}
     >
       <div className="relative z-10 flex flex-col lg:pr-[16%]">
         <div className="flex items-center justify-between gap-4 border-b border-[var(--color-text)]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/50">
@@ -667,7 +667,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
   }
 
   return (
-    <section className="relative z-40 mt-3 w-full overflow-hidden rounded-[26px] border border-[var(--color-text)]/18 bg-[var(--color-card-surface)]/96 p-2 text-[var(--color-text)] shadow-none backdrop-blur-xl sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
+    <section className="relative z-40 mt-3 w-full min-w-0 max-w-full overflow-hidden rounded-[26px] border border-[var(--color-text)]/18 bg-[var(--color-card-surface)]/96 p-2 text-[var(--color-text)] shadow-none backdrop-blur-xl sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
       <div className="rounded-[22px] border border-white/16 bg-[var(--color-paper)]/92 p-2 text-[var(--color-ink)]">
         <div className="flex items-center gap-2 border-b border-[var(--color-ink)]/10 pb-2">
           <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--color-ink),#5E1C23)] text-[9px] font-bold uppercase leading-none text-[var(--color-paper)]">
@@ -745,7 +745,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
           <div className="mt-2 flex items-end gap-2 rounded-[22px] border border-[var(--color-ink)]/8 bg-white/70 px-2 py-2">
             <textarea
               aria-label={`Message ${experience.companyName} - ${experience.positionName}`}
-              className="experience-responsibilities-scroll max-h-24 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-1 text-[9px] font-light leading-4 text-[var(--color-ink)] outline-none placeholder:text-[7px] placeholder:text-[var(--color-ink)]/36"
+              className="experience-responsibilities-scroll max-h-24 min-h-10 min-w-0 flex-1 resize-none overflow-y-auto bg-transparent px-1 text-[9px] font-light leading-4 text-[var(--color-ink)] outline-none placeholder:text-[7px] placeholder:text-[var(--color-ink)]/36"
               maxLength={500}
               minLength={1}
               onChange={(event) => setForm((current) => ({ ...current, note: event.target.value }))}
