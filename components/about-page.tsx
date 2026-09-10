@@ -76,13 +76,13 @@ const aboutEditorialCards = [
   {
     issue: "Archive 01",
     date: "Profile Index",
-    category: "Systems",
+    category: "LEARNING hardware and electronics",
     spine: "Builder / Systems / Interfaces",
     kicker: "I design. I code. I ship.",
     quote: "Ideas should leave the notebook.",
-    focus: "Product + systems",
+    focus: "FOCUSING on making projects",
     currently: "Building in public",
-    location: "Orlando, FL",
+    location: "CURRENTLY picking up jewelry-making",
     crop: "center bottom",
     accent: "#5E1C23",
     backing: "#8f2b35",
@@ -90,13 +90,13 @@ const aboutEditorialCards = [
   {
     issue: "Archive 02",
     date: "People Index",
-    category: "Care",
+    category: "LEARNING new faces",
     spine: "Friend / People / Trust",
     kicker: "I value people, always.",
     quote: "The best work keeps people close.",
-    focus: "Teams + care",
+    focus: "FOCUSING on planning events",
     currently: "Listening first",
-    location: "Wherever the table is",
+    location: "CURRENTLY hanging out in Mills",
     crop: "center bottom",
     accent: "#605246",
     backing: "#8f2b35",
@@ -104,13 +104,13 @@ const aboutEditorialCards = [
   {
     issue: "Archive 03",
     date: "Field Index",
-    category: "Motion",
+    category: "LEARNING how to hike",
     spine: "Explorer / Questions / Motion",
     kicker: "I seek new places and perspectives.",
     quote: "New places reset perspective.",
-    focus: "Research + range",
+    focus: "FOCUSING on attending hackathons",
     currently: "Following questions",
-    location: "In ",
+    location: "CURRENTLY exploring Orlando, Florida",
     crop: "center bottom",
     accent: "#8f2b35",
     backing: "#8f2b35",
@@ -147,7 +147,6 @@ export function AboutPage() {
       <HeroSection />
       <WhoAmI />
       <ImageCarousel />
-      <WhoIReallyAm />
       <WonderCaptcha />
     </main>
   );
@@ -472,14 +471,14 @@ function WhoAmI() {
             </span>
           </h2>
         </div>
-        <div className="relative z-10 mt-6 flex w-full max-w-2xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/66 sm:text-[11px]">
+        <div className="relative z-10 mt-6 flex w-full max-w-5xl items-center gap-3 text-xs font-bold uppercase leading-5 text-[#f2e5c6]/66 sm:text-base sm:leading-6">
           <span className="h-px flex-1 bg-[#f2e5c6]/16" />
-          <span className="tracking-[0.18em]">
-            Current @ NVIDIA <span className="text-[#8f2b35]">•</span> Returning @ BNY
+          <span className="text-center tracking-[0.18em]">
+            2x @ NVIDIA <span className="text-[#8f2b35]">•</span> 2x @ BNY <span className="text-[#8f2b35]">•</span> Hack Lead @ Knight Hacks <span className="text-[#8f2b35]">•</span> Prev Software Chair @ IEEE
           </span>
           <span className="h-px flex-1 bg-[#f2e5c6]/16" />
         </div>
-        <p className="relative z-10 mt-9 max-w-3xl text-xl font-light leading-9 text-[#f2e5c6]/70 sm:text-2xl sm:leading-10">
+        <p className="relative z-10 mt-9 max-w-3xl text-lg font-light leading-9 text-[#f2e5c6]/70 sm:text-xl sm:leading-10">
           {whoIAmText}
         </p>
       </div>
@@ -715,7 +714,7 @@ function ImageCarousel() {
           <h2 className="mt-4 font-headline text-[38px] font-bold leading-[0.9] text-[#f5efe6] sm:text-[48px] md:text-[56px]">
             Me in Three Lenses
           </h2>
-          <p className="mt-4 max-w-[36rem] text-sm font-light leading-6 text-white/68">
+          <p className="mt-4 max-w-[40rem] text-base font-light leading-7 text-white/68 sm:text-lg sm:leading-8">
             The same story can be told an infinite amount of ways – it&apos;s all about the perspective that you look at it through. My journalism instructor taught me this lesson five years ago and despite the fact I no longer write stories, it&apos;s never left me. To fully understand the why and what behind a person, event, or place, you need to look at it through different lenses. 
             <br />
             <br />
@@ -749,7 +748,7 @@ function ImageCarousel() {
             <span aria-hidden="true" className="archive-scanlines pointer-events-none absolute inset-0 opacity-[0.22]" />
             <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/18 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/72">
               <span>Motion Plate</span>
-              <span>01 / 03</span>
+              <span>01 / {aboutCards.length.toString().padStart(2, "0")}</span>
             </div>
             <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-end gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/70">
               <span>Auto Loop</span>
@@ -847,10 +846,12 @@ function ImageCarousel() {
           })}
         </div>
       </div>
-      <div className="relative z-10 mx-auto mt-5 grid max-w-[1500px] gap-4 border-t border-[#f2e5c6]/14 pt-5 md:grid-cols-[minmax(110px,0.24fr)_minmax(0,1fr)_minmax(160px,0.34fr)] md:items-end">
-        <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/52 md:grid md:gap-2">
+      <div className="relative z-10 mx-auto mt-5 grid max-w-[1200px] gap-4 border-t border-[#f2e5c6]/14 pt-5 md:grid-cols-[minmax(140px,0.3fr)_minmax(0,1fr)_minmax(140px,0.3fr)] md:items-center">
+        <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/52 md:grid md:justify-items-center md:gap-2 md:text-center">
           <span className="text-[#8f2b35]">Active Plate</span>
-          <span>{activeImageNumber} / 03</span>
+          <span>
+            {activeImageNumber} / {aboutCards.length.toString().padStart(2, "0")}
+          </span>
         </div>
         <div aria-live="polite" className="min-h-[112px] md:min-h-[104px]">
           <h3 className="font-headline text-[42px] font-bold uppercase leading-[0.9] text-[#f2e5c6] sm:text-[58px]">
@@ -872,44 +873,26 @@ function ImageCarousel() {
   );
 }
 
-function WhoIReallyAm() {
-  return (
-    <motion.section
-      className="relative overflow-hidden border-y border-[#f2e5c6]/14 bg-[#080807] px-5 py-20 text-[#f2e5c6] sm:px-8 sm:py-24 lg:px-12"
-      initial={{ opacity: 0, y: 36 }}
-      transition={{ duration: 0.65, ease: "easeOut" }}
-      viewport={{ amount: 0.28, once: true }}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_36%,rgba(143,43,53,0.14),transparent_38%),linear-gradient(180deg,#0b0b0a,#070707)]"
-      />
-      <div aria-hidden="true" className="editorial-film-grain absolute inset-0 opacity-20" />
-      <div className="relative z-10 mx-auto grid max-w-7xl gap-8 border-y border-[#f2e5c6]/16 py-8 lg:grid-cols-[minmax(280px,0.58fr)_minmax(0,1fr)] lg:items-start lg:gap-14">
-        <div>
-          <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
-            <span>My Interests</span>
-            <span className="h-px flex-1 bg-[#f2e5c6]/16" />
-            <span>04</span>
-          </div>
-          <h2 className="font-display mt-5 text-[54px] font-semibold uppercase leading-[0.84] text-[#f2e5c6] sm:text-[78px] lg:text-[92px]">
-            Who I Really Am
-          </h2>
-        </div>
-        <p className="border-l border-[#8f2b35]/48 pl-5 text-base font-light leading-8 text-[#f2e5c6]/72 sm:text-lg sm:leading-9">
-          {myInterestsText}
-        </p>
-      </div>
-    </motion.section>
-  );
-}
-
 function WonderCaptcha() {
   const [tiles, setTiles] = useState(captchaTiles);
   const [selected, setSelected] = useState<string[]>([]);
   const [flashing, setFlashing] = useState(false);
+  const [showKoda, setShowKoda] = useState(false);
+  const flashTimeoutRef = useRef<number | null>(null);
+  const kodaTimeoutRef = useRef<number | null>(null);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
+
+  useEffect(() => {
+    return () => {
+      if (flashTimeoutRef.current !== null) {
+        window.clearTimeout(flashTimeoutRef.current);
+      }
+
+      if (kodaTimeoutRef.current !== null) {
+        window.clearTimeout(kodaTimeoutRef.current);
+      }
+    };
+  }, []);
 
   function shuffle() {
     setTiles((current) => {
@@ -926,27 +909,45 @@ function WonderCaptcha() {
   }
 
   function verify() {
+    if (flashTimeoutRef.current !== null) {
+      window.clearTimeout(flashTimeoutRef.current);
+    }
+
+    if (kodaTimeoutRef.current !== null) {
+      window.clearTimeout(kodaTimeoutRef.current);
+    }
+
     setFlashing(true);
-    window.setTimeout(() => setFlashing(false), 1000);
+    setShowKoda(true);
+
+    flashTimeoutRef.current = window.setTimeout(() => {
+      setFlashing(false);
+      flashTimeoutRef.current = null;
+    }, 1000);
+    kodaTimeoutRef.current = window.setTimeout(() => {
+      setShowKoda(false);
+      kodaTimeoutRef.current = null;
+    }, 4000);
   }
 
   return (
-    <motion.section
-      className="relative overflow-hidden bg-[#0f0f0e] px-5 py-20 text-white sm:px-8 lg:px-12"
-      initial={{ opacity: 0, y: 44 }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
-      viewport={{ amount: 0.2, once: true }}
-      whileInView={{ opacity: 1, y: 0 }}
-    >
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,#121110,#090909)]" />
-      <div className="absolute left-[8%] right-[8%] top-16 h-px bg-[#f2e5c6]/16" />
-      <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[#f2e5c6]/12" />
-
-      <div
-        className={`relative mx-auto max-w-[920px] overflow-hidden rounded-[34px] border border-white/52 bg-[#f8f4eb]/94 text-[#171311] shadow-[0_22px_58px_rgba(0,0,0,0.22)] backdrop-blur-xl ${
-          flashing ? "captcha-flash" : ""
-        }`}
+    <>
+      <motion.section
+        className="relative overflow-hidden bg-[#0f0f0e] px-5 py-20 text-white sm:px-8 lg:px-12"
+        initial={{ opacity: 0, y: 44 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        viewport={{ amount: 0.2, once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,#121110,#090909)]" />
+        <div className="absolute left-[8%] right-[8%] top-16 h-px bg-[#f2e5c6]/16" />
+        <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[#f2e5c6]/12" />
+
+        <div
+          className={`relative mx-auto max-w-[920px] overflow-hidden rounded-[34px] border border-white/52 bg-[#f8f4eb]/94 text-[#171311] shadow-[0_22px_58px_rgba(0,0,0,0.22)] backdrop-blur-xl ${
+            flashing ? "captcha-flash" : ""
+          }`}
+        >
         <div className="px-4 py-4 sm:px-6 sm:py-5">
           <div className="flex items-center gap-3 border-b border-[#171311]/12 pb-3 text-[9px] font-bold uppercase leading-none text-[#171311]/50 sm:text-[10px]">
             <span>Human Check</span>
@@ -954,12 +955,15 @@ function WonderCaptcha() {
             <span>09 Images</span>
             <span>{selected.length.toString().padStart(2, "0")} Selected</span>
           </div>
-          <div className="grid gap-4 pt-5 sm:grid-cols-[minmax(0,1fr)_minmax(170px,0.36fr)] sm:items-end">
+          <div className="pt-5">
             <h2 className="max-w-2xl font-display text-[30px] font-medium leading-[1.02] text-[#171311] sm:text-[42px]">
               Select all images that make you wonder.
             </h2>
-            <p className="border-l border-[#8f2b35]/38 pl-4 text-xs font-light leading-5 text-[#171311]/58">
+            <p className="mt-3 text-xs font-medium leading-5 text-[#171311]/58 sm:text-sm">
               Click verify once your curiosity is satisfied.
+            </p>
+            <p className="mt-5 max-w-3xl border-l border-[#8f2b35]/38 pl-4 text-sm font-light leading-6 text-[#171311]/68 sm:text-base sm:leading-7">
+              {myInterestsText}
             </p>
           </div>
         </div>
@@ -1052,7 +1056,38 @@ function WonderCaptcha() {
             Verify
           </button>
         </div>
-      </div>
-    </motion.section>
+        </div>
+      </motion.section>
+
+      {showKoda ? (
+        <motion.div
+          animate={{ opacity: 1 }}
+          aria-label="Koda photo confirmation"
+          aria-live="polite"
+          className="pointer-events-none fixed inset-0 z-[120] flex items-center justify-center bg-black/58 p-5 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          role="status"
+          transition={{ duration: 0.22 }}
+        >
+          <motion.figure
+            animate={{ scale: 1, y: 0 }}
+            className="w-full max-w-[430px] overflow-hidden rounded-[28px] border border-white/45 bg-[#f8f4eb] p-2.5 text-[#171311] shadow-[0_28px_90px_rgba(0,0,0,0.55)]"
+            initial={{ scale: 0.92, y: 24 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            <img
+              alt="Koda, Kai's dog"
+              className="max-h-[68vh] w-full rounded-[20px] object-cover"
+              decoding="async"
+              onError={handleImageFallback}
+              src="https://qcxeyxinrhwjmmwhguqg.supabase.co/storage/v1/object/public/portfoliomedia/photos/koda.JPG"
+            />
+            <figcaption className="px-3 py-4 text-center font-display text-2xl font-medium leading-none sm:text-3xl">
+              {"My cute dog Koda <3"}
+            </figcaption>
+          </motion.figure>
+        </motion.div>
+      ) : null}
+    </>
   );
 }

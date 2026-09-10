@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Bookmark, X } from "lucide-react";
 import type { BlogRecord } from "@/lib/portfolio-records";
 
-const filters = ["ALL", "FIELD NOTES", "BUILD LOGS", "READING", "VISUAL"] as const;
+const filters = ["ALL", "CAREER", "ENTERTAINMENT", "OPINION"] as const;
 
 type BlogFilter = (typeof filters)[number];
 type SavedNote = {
@@ -54,19 +54,15 @@ function getReadTime(content: string) {
 function getBlogCategory(blog: BlogRecord): SavedNote["category"] {
   const searchable = `${blog.title} ${blog.slug} ${blog.content}`.toLowerCase();
 
-  if (/\b(build|debug|ship|motion|code|dev|stack)\b/.test(searchable)) {
-    return "BUILD LOGS";
+  if (/\b(career|work|job|intern|engineering|leadership|team|professional)\b/.test(searchable)) {
+    return "CAREER";
   }
 
-  if (/\b(read|book|essay|annotation|library)\b/.test(searchable)) {
-    return "READING";
+  if (/\b(entertainment|film|movie|music|book|game|show|art|cosplay)\b/.test(searchable)) {
+    return "ENTERTAINMENT";
   }
 
-  if (/\b(visual|image|photo|mood|camera|film)\b/.test(searchable)) {
-    return "VISUAL";
-  }
-
-  return "FIELD NOTES";
+  return "OPINION";
 }
 
 function mapBlogsToSavedNotes(blogs: BlogRecord[]): SavedNote[] {
@@ -136,9 +132,9 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="grid gap-5 border-y border-[#f2e5c6]/20 py-5 lg:grid-cols-[minmax(260px,0.42fr)_minmax(0,1fr)] lg:items-end">
-          <div>
-            <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
+        <div className="flex flex-col items-center gap-5 border-y border-[#f2e5c6]/20 py-5">
+          <div className="w-full text-center">
+            <div className="mx-auto flex max-w-xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
               <span>Saved Folder</span>
               <span className="h-px flex-1 bg-[#f2e5c6]/14" />
               <span>Index 04</span>
@@ -147,7 +143,7 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
               Saved Notes
             </h1>
           </div>
-          <p className="max-w-2xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base lg:justify-self-end">
+          <p className="w-full max-w-2xl border-l border-[#8f2b35]/45 pl-4 text-left text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
             I used to write for my school newspaper, and I still return to writing
             whenever I want to understand an idea more fully. This is where I save
             what I am learning, building, reading, and noticing along the way.
@@ -211,8 +207,7 @@ function BlogEmptyState() {
         No Notes Saved
       </h2>
       <p className="mt-5 max-w-sm border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
-        Add published rows to the blogs table to populate this reading room.
-        Drafts remain hidden until their published flag is enabled.
+        No blogs published.
       </p>
     </section>
   );

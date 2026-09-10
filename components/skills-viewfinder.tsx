@@ -70,7 +70,18 @@ const floatingBlockLayouts: FloatingBlockLayout[] = [
     speed: "slow",
   },
 ];
-const fallbackSkillHeroImage = withMediaPlaceholder(getPhotoUrl("hero.jpeg"));
+const featuredSkillNames = [
+  "React",
+  "Pandas",
+  "MongoDB",
+  "PostgreSQL",
+  "Python",
+  "C",
+  "Next.js",
+] as const;
+const fallbackSkillHeroImage = withMediaPlaceholder(
+  getPhotoUrl("public/portfoliomedia/photos/IMG_2387.jpg"),
+);
 
 function isSkillCategory(value: string): value is SkillCategory {
   return skillModes.some((mode) => mode.id === value);
@@ -85,10 +96,19 @@ function getModeCount(skillItems: SkillItem[], category: SkillCategory) {
 }
 
 function normalizeSkillItems(skills: SkillRecord[]): SkillItem[] {
-  return skills.map((skill) => ({
-    ...skill,
-    category: isSkillCategory(skill.category) ? skill.category : "tools",
-  }));
+  return skills
+    .map((skill) => ({
+      ...skill,
+      category: isSkillCategory(skill.category) ? skill.category : "tools",
+    }))
+    .sort((left, right) => {
+      const leftIndex = featuredSkillNames.findIndex((name) => name === left.name);
+      const rightIndex = featuredSkillNames.findIndex((name) => name === right.name);
+      const leftRank = leftIndex === -1 ? Number.POSITIVE_INFINITY : leftIndex;
+      const rightRank = rightIndex === -1 ? Number.POSITIVE_INFINITY : rightIndex;
+
+      return leftRank - rightRank;
+    });
 }
 
 function buildFloatingBlocks(skillItems: SkillItem[]): FloatingBlock[] {
@@ -138,7 +158,11 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
   }
 
   const activeMode = getSkillMode(activeSkill.category);
-  const activeIndex = Math.max(0, skillItems.findIndex((skill) => skill.id === activeSkill.id));
+  const visibleSkillItems = skillItems.filter((skill) => skill.category === activeMode.id);
+  const activeIndex = Math.max(
+    0,
+    visibleSkillItems.findIndex((skill) => skill.id === activeSkill.id),
+  );
 
   function selectMode(category: SkillCategory) {
     const modeSkill = skillItems.find((skill) => skill.category === category);
@@ -155,7 +179,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         <img
           alt=""
-          className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-20 blur-2xl grayscale brightness-[0.3] contrast-[1.25]"
+          className="absolute inset-[-12%] h-[124%] w-[124%] object-cover opacity-20 blur-2xl brightness-[0.38] contrast-[1.18] saturate-100"
           decoding="async"
           loading="lazy"
           onError={handleImageFallback}
@@ -183,7 +207,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
               <span>{activeMode.label}</span>
               <span>
                 Shot {(activeIndex + 1).toString().padStart(2, "0")} /{" "}
-                {skillItems.length.toString().padStart(2, "0")}
+                {visibleSkillItems.length.toString().padStart(2, "0")}
               </span>
             </div>
 
@@ -286,7 +310,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                 <dt className="text-[#8f2b35]">Frame</dt>
                 <dd className="min-w-0 truncate text-[#f2e5c6]/64">
                   {(activeIndex + 1).toString().padStart(2, "0")} of{" "}
-                  {skillItems.length.toString().padStart(2, "0")}
+                  {visibleSkillItems.length.toString().padStart(2, "0")}
                 </dd>
               </div>
             </dl>
@@ -297,10 +321,10 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
           <div className="flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
             <span className="text-[#8f2b35]">Contact Sheet</span>
             <span className="h-px flex-1 bg-[#f2e5c6]/14" />
-            <span>{skillItems.length.toString().padStart(2, "0")} Frames</span>
+            <span>{visibleSkillItems.length.toString().padStart(2, "0")} Frames</span>
           </div>
           <div className="mt-4 flex w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {skillItems.map((skill, index) => {
+            {visibleSkillItems.map((skill, index) => {
               const active = skill.id === activeSkill.id;
               const mode = getSkillMode(skill.category);
 
@@ -311,7 +335,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                   className={`group relative h-[132px] w-[176px] shrink-0 overflow-hidden border bg-[#050505] text-left transition focus-visible:z-10 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:h-[152px] sm:w-[214px] ${
                     active
                       ? "z-10 border-[#8f2b35]/90"
-                      : "-ml-px border-[#f2e5c6]/18 grayscale hover:border-[#f2e5c6]/44"
+                      : "-ml-px border-[#f2e5c6]/18 hover:border-[#f2e5c6]/44"
                   }`}
                   key={skill.id}
                   onClick={() => setSelectedId(skill.id)}
@@ -323,7 +347,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                     className={`h-full w-full object-cover transition duration-300 ${
                       active
                         ? "brightness-[0.84] contrast-[1.12] saturate-[0.8]"
-                        : "brightness-[0.56] contrast-[1.2] saturate-[0.24] group-hover:brightness-[0.7]"
+                        : "brightness-[0.68] contrast-[1.16] saturate-[0.82] group-hover:brightness-[0.78]"
                     }`}
                     decoding="async"
                     loading="lazy"
@@ -381,12 +405,12 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
       <div aria-hidden="true" className="absolute inset-0">
         <img
           alt=""
-          className="h-full w-full object-cover opacity-42 grayscale brightness-[0.5] contrast-[1.16]"
+          className="h-full w-full object-cover opacity-100 brightness-[0.64] contrast-[1.08] saturate-100"
           onError={handleImageFallback}
           src={fallbackSkillHeroImage}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(8,8,7,0.12),rgba(8,8,7,0.78)_58%,rgba(8,8,7,0.96)),linear-gradient(180deg,rgba(8,8,7,0.2),rgba(8,8,7,0.86))]" />
-        <div className="absolute inset-0 bg-[#0b0b0a]/34" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(8,8,7,0.06),rgba(8,8,7,0.56)_62%,rgba(8,8,7,0.78)),linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.64))]" />
+        <div className="absolute inset-0 bg-[#0b0b0a]/15" />
       </div>
 
       {floatingBlocks.map((block) => (
@@ -472,7 +496,7 @@ function FloatingSkillBlock({
           <div className="mt-2 grid grid-cols-[42px_1fr] items-center gap-2 md:mt-2.5 md:grid-cols-[58px_1fr] md:gap-3">
             <img
               alt=""
-              className="h-[42px] w-[42px] rounded-[14px] object-cover grayscale brightness-[0.82] contrast-[1.14] md:h-[58px] md:w-[58px] md:rounded-[17px]"
+              className="h-[42px] w-[42px] rounded-[14px] object-cover brightness-[0.88] contrast-[1.08] saturate-100 md:h-[58px] md:w-[58px] md:rounded-[17px]"
               onError={handleImageFallback}
               src={block.image}
             />

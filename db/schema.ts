@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   date,
   index,
   jsonb,
@@ -97,6 +98,10 @@ export const endorsements = pgTable(
       .defaultNow(),
   },
   (table) => [
+    check(
+      "endorsements_note_length_check",
+      sql`char_length(btrim(${table.note})) between 1 and 500`,
+    ),
     index("endorsements_experience_id_idx").on(table.experienceId),
     index("endorsements_approved_idx").on(table.approved),
     index("endorsements_featured_idx").on(table.featured),

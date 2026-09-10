@@ -19,7 +19,7 @@ WITH project_seed(
       $summary$Rock Paper AI Sensors is an AI-powered game built for UCF STEM Day 2024. Using OpenCV, it detects the player's hand gesture, generates a computer response, determines the winner, and turns a familiar game into an interactive introduction to computer vision.$summary$,
       $work$Developed the Tkinter gameplay interface and integrated the computer-vision backend into the frontend. Set up the live camera feed, connected detected gestures to the game logic, and implemented a scoring system that displays each round's result.$work$,
       '[]'::jsonb,
-      'rps.mov',
+      'public/portfoliomedia/project-videos/rps.mov',
       NULL,
       '["Python", "OpenCV", "Tkinter"]'::jsonb
     ),
@@ -30,9 +30,9 @@ WITH project_seed(
       DATE '2026-03-01',
       $summary$Agentic Nuclear Reactor won 1st Overall and the Google Cloud prize at HackUSF 2026, placing first among 80+ teams. The project uses a Google ADK and Gemini agent pipeline to regulate a reactor's electrostatic fields while deterministic Python overrides keep every control decision within safe operating limits.$summary$,
       $work$Implemented a 15-rule Gemini decision tree with Python safety overrides and meta-agent tuning of operating limits. Built the analysis agent that detects beam instability using EWMA, coefficient of variation, integral error, and rate of change. Integrated Python serial control with an Arduino driving an MCP4728 DAC, and streamed real-time telemetry over WebSockets through FastAPI.$work$,
-      '["anr.png"]'::jsonb,
-      'anrvideo.mov',
-      NULL,
+      '["public/portfoliomedia/projects/anr.png"]'::jsonb,
+      'public/portfoliomedia/project-videos/anrvideo.mov',
+      'https://devpost.com/software/regenerative-agentic-nuclear-reactor',
       '["Python", "Gemini", "Google ADK", "FastAPI", "WebSocket", "Arduino"]'::jsonb
     ),
     (
@@ -42,9 +42,9 @@ WITH project_seed(
       DATE '2026-01-01',
       $summary$SignHero won 2nd Place Overall and Best Game Design at SwampHacks 2026 among 110+ teams. It is an ASL rhythm game that uses machine-learning sign recognition and timed gameplay to turn fingerspelling practice into an accessible, competitive experience.$summary$,
       $work$Built type-safe tRPC, Prisma, and MongoDB services for player creation, validation, and results across 50+ players. Created a mistake tracker with React hooks, Tailwind, and WebSockets that surfaced missed signs across 150+ rounds. Implemented tRPC routes and webhooks for beatmap creation, then built the song carousel in React and Tailwind.$work$,
-      '["signhero.png"]'::jsonb,
-      'signherovideo.mov',
-      NULL,
+      '["public/portfoliomedia/projects/signhero.png"]'::jsonb,
+      'public/portfoliomedia/project-videos/signherovideo.mov',
+      'https://devpost.com/software/signhero',
       '["React", "TypeScript", "Tailwind", "WebSocket", "tRPC", "Prisma", "MongoDB"]'::jsonb
     ),
     (
@@ -54,9 +54,9 @@ WITH project_seed(
       DATE '2025-04-01',
       $summary$Tariffix won MLH Best Use of MongoDB at Bitcamp 2025. The browser extension and API scan HTS codes and show consumers how tariffs may affect product prices, combining tariff data with Gemini-powered analysis in an accessible interface.$summary$,
       $work$Deployed a tariff-rate API on MongoDB and developed REST endpoints with Express and Mongoose for efficient, scalable retrieval. Built the React and Tailwind CSS frontend to visualize JSON results, used Cheerio in the tariff-data workflow, and integrated the Gemini API for product analysis. Packaged the experience for the web and as a Vite-powered browser extension.$work$,
-      '["tariffix.png"]'::jsonb,
-      'tariffix.mov',
-      NULL,
+      '["public/portfoliomedia/projects/tariffix.png"]'::jsonb,
+      'public/portfoliomedia/project-videos/tariffix.mov',
+      'https://devpost.com/software/tariffix',
       '["MongoDB", "Cheerio", "Gemini", "React", "Tailwind CSS", "Next.js", "Express.js", "Mongoose", "Vite"]'::jsonb
     ),
     (
@@ -66,9 +66,9 @@ WITH project_seed(
       DATE '2025-04-01',
       $summary$kmodo won 1st Place at Project Launch 2025. The platform enables organizers to run hackathons, participants to discover and apply to events, companies to connect with attendees, and users to find the resources they need throughout an event.$summary$,
       $work$Led frontend development in React and Tailwind CSS for three key pages: Landing, Events, and Resources. Built three reusable components covering the navbar, footer, and sponsor dashboard. Implemented tag-based and keyword event search with Drizzle ORM and tRPC queries against PostgreSQL, and supported deployment through Coolify.$work$,
-      '["kmodo.png"]'::jsonb,
-      'kmodo.MOV',
-      NULL,
+      '["public/portfoliomedia/projects/kmodo.png"]'::jsonb,
+      'public/portfoliomedia/project-videos/kmodo.MOV',
+      'https://devpost.com/software/kmodo',
       '["React", "Tailwind CSS", "PostgreSQL", "Drizzle", "tRPC", "Coolify"]'::jsonb
     ),
     (
@@ -78,9 +78,9 @@ WITH project_seed(
       DATE '2025-03-01',
       $summary$KnightPool is a ridesharing platform that matches students and coworkers around overlapping schedules, routes, and locations. I worked on schedule upload, Gemini parsing, authentication, and MongoDB/Mongoose backend routes for ride requests, users, and rides.$summary$,
       $work$Built the schedule upload flow for importing availability from screenshots. Integrated Gemini analysis to parse schedule images into usable app data. Implemented authentication flows with NextAuth. Developed backend routing and MongoDB/Mongoose models for users, rides, and ride requests. Helped build dashboard flows for drivers, requests, offers, and schedule-based matching.$work$,
-      '["knightpool.png"]'::jsonb,
-      'knightpoolvideo.mov',
-      NULL,
+      '["public/portfoliomedia/projects/knightpool.png"]'::jsonb,
+      'public/portfoliomedia/project-videos/knightpoolvideo.mov',
+      'https://devpost.com/software/carpool-project',
       '["Next.js", "NextAuth", "Gemini", "MongoDB", "Mongoose"]'::jsonb
     ),
     (
@@ -90,10 +90,46 @@ WITH project_seed(
       DATE '2026-04-01',
       $summary$This Verilog and C++ implementation of a pipelined RV32I processor finished in the top 10% for cycle count. The project combines data forwarding, an N-way write-back cache, prefetching, and a custom assembler to improve execution performance while preserving instruction-level correctness.$summary$,
       $work$Built the processor pipeline with EX-to-EX, MEM-to-EX, and MEM-to-MEM forwarding. Implemented an N-way write-back cache with LRU and PLRU replacement, dirty bits, write allocation, and prefetching. Developed a C++ assembler supporting RV32I instruction formats, symbol resolution, immediate values, and hex and binary output.$work$,
-      '["processor.png"]'::jsonb,
-      'ieeevideo.mov',
+      '["public/portfoliomedia/project-videos/processor.png"]'::jsonb,
       NULL,
+      'https://github.com/MsMarion/Phase-7',
       '["Verilog", "C++", "RISC-V", "Assembly"]'::jsonb
+    ),
+    (
+      'SprintScout',
+      'SprintScout',
+      DATE '2024-10-01',
+      DATE '2024-10-01',
+      $summary$SprintScout won the ServiceNow Challenge and MLH Best Use of MongoDB at Knight Hacks 2024. The platform combines a vector-search accelerator recommendation engine with a transcription-to-visuals tool, helping teams move from conversations and ideas to useful technical direction.$summary$,
+      $work$Built a dynamic React and Tailwind CSS interface for user submissions and interactive grid displays. Developed the MongoDB-backed vector search workflow for personalized accelerator recommendations, integrated Whisper-powered transcription, and designed the UI/UX in Figma and Canva to make the project's two core workflows feel like one cohesive product.$work$,
+      '[]'::jsonb,
+      'public/portfoliomedia/project-videos/sprintscoutvideo.mov',
+      'https://devpost.com/software/toolx',
+      '["React", "Tailwind CSS", "OpenCV", "MongoDB", "Whisper", "Figma", "Canva"]'::jsonb
+    ),
+    (
+      'CappuConnect',
+      'CappuConnect',
+      DATE '2025-09-01',
+      DATE '2025-09-01',
+      $summary$CappuConnect won Best Non-AI Hack at STEM Connect 2025 out of more than 30 teams. The networking platform turns more than 600 scraped events into personalized recommendations, helping students discover communities and opportunities that match their interests.$summary$,
+      $work$Built MongoDB REST APIs for member and event CRUD, then integrated NextAuth authentication for more than 160 accounts. Used Puppeteer to collect more than 600 events and implemented a TypeScript vector-similarity ranking system that personalized each member's recommendations.$work$,
+      '[]'::jsonb,
+      'public/portfoliomedia/project-videos/cappuconnectvideo.mov',
+      'https://devpost.com/software/cappuconnect',
+      '["MongoDB", "Next.js", "React", "TypeScript", "Puppeteer", "NextAuth"]'::jsonb
+    ),
+    (
+      'IEEE @ UCF Website',
+      'IEEE @ UCF Website',
+      DATE '2024-08-01',
+      DATE '2026-04-01',
+      $summary$The IEEE @ UCF website is a full-stack platform for member accounts, events, attendance, contact information, and organization projects. It gives more than 100 members one place to connect with the organization while preserving data from more than 200 events for future planning.$summary$,
+      $work$Built six React and Tailwind CSS pages and 35 reusable frontend components, then deployed the application on Vercel. Designed the PostgreSQL database with Drizzle ORM, implemented Discord OAuth for more than 100 users, and created 39 type-safe tRPC endpoints across seven routers for user, event, attendance, contact, and project CRUD.$work$,
+      '[]'::jsonb,
+      'public/portfoliomedia/project-videos/ieeevideo.mov',
+      'https://www.ieeeucf.com/',
+      '["Next.js", "React", "TypeScript", "Tailwind CSS", "PostgreSQL", "Drizzle ORM", "tRPC", "Discord OAuth", "Vercel"]'::jsonb
     )
 ),
 updated_projects AS (
@@ -103,7 +139,7 @@ updated_projects AS (
     from_date = project_seed.from_date,
     to_date = project_seed.to_date,
     summary = project_seed.summary,
-    what_i_did = project_seed.what_i_did,
+    what_i_did = '• ' || replace(project_seed.what_i_did, '. ', E'.\n• '),
     photos = project_seed.photos,
     main_video = project_seed.main_video,
     project_link = COALESCE(project_seed.project_link, projects.project_link),
@@ -130,7 +166,7 @@ SELECT
   project_seed.from_date,
   project_seed.to_date,
   project_seed.summary,
-  project_seed.what_i_did,
+  '• ' || replace(project_seed.what_i_did, '. ', E'.\n• '),
   project_seed.photos,
   project_seed.main_video,
   project_seed.project_link,
@@ -165,8 +201,8 @@ WITH experience_seed(
       DATE '2026-08-01',
       $summary$At NVIDIA, I built agentic AI and CI automation for MISRA/CERT-C remediation across embedded software. The tooling generated fixes and deviations, surfaced regressions directly in GitLab merge requests, and reduced static-analysis findings by 89%.$summary$,
       '["Built an agentic AI Python pipeline that developed MISRA/CERT violation fixes and wrote deviations across 70+ files.", "Built a Jenkins pipeline that flagged MISRA/CERT violations, posted suggestions on GitLab merge requests, and blocked 50+ regressions.", "Fixed 600 violations and authored 900 deviations, cutting MISRA/CERT-C findings from 1,800 to 200, an 89% drop.", "Built a Python Coverity scanner that applied profile and ruleset configurations and produced HTML/CSS reports."]'::jsonb,
-      '["hero.jpeg"]'::jsonb,
-      'nvidiaexpvideo.mov'
+      '["public/portfoliomedia/experiences/nvidia2026-1.JPG", "public/portfoliomedia/experiences/nvidia2026-2.jpeg"]'::jsonb,
+      'public/portfoliomedia/experience-videos/nvidiaexpvideo.mov'
     ),
     (
       'Software Engineer Intern',
@@ -177,8 +213,8 @@ WITH experience_seed(
       DATE '2026-04-01',
       $summary$At BNY, I built multi-agent observability and machine-learning systems across AppDynamics, Grafana, and Prometheus. The work resolved 500+ injection attacks and automated 70% of fault-diagnosis paths by combining anomaly detection with fault classification.$summary$,
       '["Built a 4-agent observability pipeline for AppDynamics, Grafana, and Prometheus that resolved 500+ injection attacks.", "Trained an Isolation Forest model on 4,000+ points across 8 features and 300+ trees to flag latency and Docker faults.", "Built Random Forest and XGBoost models that classified 6 fault causes with 85% accuracy and automated 70% of diagnosis paths."]'::jsonb,
-      '["builder.png"]'::jsonb,
-      'bnyvideo.mov'
+      '["public/portfoliomedia/experiences/bny2025-1.png"]'::jsonb,
+      'public/portfoliomedia/experience-videos/bnyexpvideo.png'
     ),
     (
       'Systems Software Intern',
@@ -189,8 +225,8 @@ WITH experience_seed(
       DATE '2025-08-01',
       $summary$At NVIDIA, I expanded validation for a RISC-V operating system and shipped production fixes for low-level inter-process communication and thread-local storage behavior. My test work raised line coverage from 77.7% to 97.1%.$summary$,
       '["Wrote 10,000+ C microkernel tests across 230 RISC-V OS functions, raising line coverage from 77.7% to 97.1%.", "Shipped 4 production features addressing 8 critical inter-process communication and thread-local storage bugs."]'::jsonb,
-      '["hero.jpeg"]'::jsonb,
-      'nvidiaexpvideo.mov'
+      '["public/portfoliomedia/experiences/nvidia2025-2.jpeg", "public/portfoliomedia/experiences/nvidia2025-1.jpeg"]'::jsonb,
+      'public/portfoliomedia/experience-videos/nvidiaexpvideo2.mov'
     ),
     (
       'Software Engineer',
@@ -201,8 +237,8 @@ WITH experience_seed(
       DATE '2026-04-01',
       $summary$At IEEE @ UCF, I led a 25-developer team across four products while building the organization's full-stack platform. I introduced delivery workflows and shipped frontend, database, authentication, and backend systems serving members, events, and projects.$summary$,
       '["Led a 25-developer team across 4 products, boosting output by 600% through DevOps, GitHub workflows, and ticketing.", "Developed 6 React/Tailwind pages and 35 frontend components, then deployed the full-stack website on Vercel.", "Deployed a PostgreSQL/Drizzle ORM database and built Discord OAuth authentication for 100+ users.", "Built 39 tRPC endpoints across 7 routers, supporting CRUD for 100+ users, 200+ events, and 6 projects."]'::jsonb,
-      '["ieee.jpeg", "knighthacks.jpeg"]'::jsonb,
-      'ieeeexpvideo.MOV'
+      '["public/portfoliomedia/experiences/ieee-1.JPG"]'::jsonb,
+      'public/portfoliomedia/experience-videos/ieeeexpvideo.MOV'
     )
 ),
 updated_experiences AS (

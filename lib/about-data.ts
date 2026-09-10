@@ -1,17 +1,15 @@
 import {
-  getExperienceVideoUrl,
   getPhotoUrl,
   withMediaPlaceholder,
 } from "@/lib/supabase-media";
 
 export const heroPhoto = withMediaPlaceholder(getPhotoUrl("hero.jpeg"));
 export const whoAmIPhoto = withMediaPlaceholder(getPhotoUrl("traveling.jpeg"));
-export const visualArchiveVideo = withMediaPlaceholder(
-  getExperienceVideoUrl("ieeeexpvideo.MOV"),
-);
+export const visualArchiveVideo =
+  "https://qcxeyxinrhwjmmwhguqg.supabase.co/storage/v1/object/public/portfoliomedia/about/meinthreelenses.mp4";
 
 export const whoIAmText =
-  "I am a computer science student at the University of Central Florida’s Burnett Honors College and the Hackathon Lead for Knight Hacks IX. I have also completed two software engineering internships each at NVIDIA and BNY, working across low-level systems, AI, observability, and infrastructure. Although I love building things, I am just as interested in the questions that lead to them: why something works, who it serves, and how it could be better. Curiosity guides nearly everything I do, from the teams I lead to the projects I choose.";
+  "My name is Kai and I am majoring in Computer Science at the University of Central Florida's Burnett Honors College. I love making things, but I am just as drawn to the questions behind them: why something works, who it serves, and how it could be better. Curiosity is the thread that connects the teams I lead, the projects I build, and the person I am still becoming.";
 
 export const myInterestsText =
   "Beyond computer science, I am usually making something or finding a new world to disappear into. I love Studio Ghibli films, cosplaying, drawing, making jewelry, and listening to beabadoobee, FKA twigs, Clairo, and EPIC: The Musical. I am also the kind of person who turns matcha, coffee, or bubble tea into a small experiment and makes drinks for my friends. When I am not building or creating, I love traveling and collecting new places, ideas, and stories to bring home.";
@@ -58,7 +56,7 @@ export const captchaTiles = [
   {
     id: "tile-5",
     caption: "Coolest hackathon project",
-    image: withMediaPlaceholder(getPhotoUrl("knighthacks.jpeg")),
+    image: withMediaPlaceholder(getPhotoUrl("hackathons.jpeg")),
   },
   {
     id: "tile-6",

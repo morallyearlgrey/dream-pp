@@ -5,7 +5,7 @@ import { endorsements } from "@/db/schema";
 const limits = {
   authorName: 120,
   experienceId: 160,
-  note: 1000,
+  note: 500,
 };
 
 export async function POST(request: Request) {
@@ -70,8 +70,8 @@ function parseEndorsementPayload(payload: unknown):
     return { error: "Name must be between 2 and 120 characters." };
   }
 
-  if (note.length < 12 || note.length > limits.note) {
-    return { error: "Endorsement must be between 12 and 1000 characters." };
+  if (note.length < 1 || note.length > limits.note) {
+    return { error: "Endorsement must be between 1 and 500 characters." };
   }
 
   return { authorName, experienceId, note };

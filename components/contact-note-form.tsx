@@ -1,7 +1,7 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
-import { AlertCircle, CheckCircle2, Mail, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Send } from "lucide-react";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -160,40 +160,30 @@ export function ContactNoteForm() {
           </label>
         </div>
 
-        <div className="grid gap-3 border-y border-[#f2e5c6]/14 py-3 sm:grid-cols-[1fr_auto] sm:items-center">
-          <p
-            aria-live="polite"
-            className={`flex min-h-5 min-w-0 items-center gap-2 text-[9px] font-bold uppercase leading-4 ${
-              status === "success"
-                ? "text-[#8f2b35]"
-                : status === "error"
-                  ? "text-[#f2e5c6]"
-                  : "text-[#f2e5c6]/46"
-            }`}
-          >
-            {status === "success" ? <CheckCircle2 aria-hidden="true" size={14} /> : null}
-            {status === "error" ? <AlertCircle aria-hidden="true" size={14} /> : null}
-            <span className="min-w-0">{message || "Server-routed note / private archive."}</span>
-          </p>
-
+        <div className="flex flex-col items-center gap-3 border-y border-[#f2e5c6]/14 py-3">
+          {message ? (
+            <p
+              aria-live="polite"
+              className={`flex min-h-5 min-w-0 items-center gap-2 text-center text-[9px] font-bold uppercase leading-4 ${
+                status === "success" ? "text-[#8f2b35]" : "text-[#f2e5c6]"
+              }`}
+            >
+              {status === "success" ? <CheckCircle2 aria-hidden="true" size={14} /> : null}
+              {status === "error" ? <AlertCircle aria-hidden="true" size={14} /> : null}
+              <span className="min-w-0">{message}</span>
+            </p>
+          ) : null}
           <button
-            className="inline-flex min-h-11 items-center justify-center gap-2 border border-[#f2e5c6]/26 bg-[#f2e5c6] px-4 text-[10px] font-bold uppercase leading-none text-[#080807] transition hover:border-[#8f2b35] hover:bg-[#8f2b35] hover:text-[#f2e5c6] disabled:cursor-not-allowed disabled:opacity-45"
+            className="inline-flex min-h-9 items-center justify-center gap-2 border border-[#f2e5c6]/26 bg-[#f2e5c6] px-3 text-[9px] font-bold uppercase leading-none text-[#080807] transition hover:border-[#8f2b35] hover:bg-[#8f2b35] hover:text-[#f2e5c6] disabled:cursor-not-allowed disabled:opacity-45"
             disabled={status === "submitting"}
             type="submit"
           >
-            <Send aria-hidden="true" size={14} strokeWidth={1.9} />
+            <Send aria-hidden="true" size={12} strokeWidth={1.9} />
             {status === "submitting" ? "Sending" : "Send Note"}
           </button>
         </div>
       </form>
 
-      <div className="mt-4 grid grid-cols-2 gap-px border-y border-[#f2e5c6]/14 bg-transparent text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
-        <span className="bg-[#080807] px-3 py-2.5">
-          <Mail aria-hidden="true" className="mr-2 inline text-[#8f2b35]" size={13} />
-          Private Send
-        </span>
-        <span className="bg-[#080807] px-3 py-2.5 text-right">No Client Keys</span>
-      </div>
     </section>
   );
 }

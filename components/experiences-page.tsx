@@ -17,7 +17,6 @@ import type {
   FeaturedEndorsementRecord,
 } from "@/lib/portfolio-records";
 import {
-  getExperienceVideoUrl,
   getPhotoUrl,
   isVideoMediaUrl,
   mediaPlaceholderImageUrl,
@@ -34,39 +33,41 @@ type FilmFrame = {
 export type ExperienceFeatureData = ExperienceRecord;
 export type FeaturedEndorsementData = FeaturedEndorsementRecord;
 
+const experienceVideoBaseUrl =
+  "https://qcxeyxinrhwjmmwhguqg.supabase.co/storage/v1/object/public/portfoliomedia/experience-videos";
 const filmFrames: FilmFrame[] = [
   {
-    src: getExperienceVideoUrl("bnyvideo.mov"),
+    src: `${experienceVideoBaseUrl}/frame1.mov`,
     label: "Campus Frame",
     meta: "Field 01",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("ieeeexpvideo.MOV"),
+    src: `${experienceVideoBaseUrl}/frame2.mov`,
     label: "Team Frame",
     meta: "Field 02",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("knighthacksexpvideo.MOV"),
+    src: `${experienceVideoBaseUrl}/frame3.MOV`,
     label: "Briefing Frame",
     meta: "Field 03",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("nvidiaexpvideo.mov"),
+    src: `${experienceVideoBaseUrl}/frame4.MOV`,
     label: "Public Crowd",
     meta: "Frame 04",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("ieeeexpvideo.MOV"),
+    src: `${experienceVideoBaseUrl}/frame5.MOV`,
     label: "Motion Field One",
     meta: "Frame 05",
     frameClassName: "",
   },
   {
-    src: getExperienceVideoUrl("bnyvideo.mov"),
+    src: `${experienceVideoBaseUrl}/frame6.MOV`,
     label: "Motion Field Two",
     meta: "Frame 06",
     frameClassName: "",
@@ -75,6 +76,8 @@ const filmFrames: FilmFrame[] = [
 const upperFilmFrames = filmFrames.slice(0, 3);
 const lowerFilmFrames = filmFrames.slice(3);
 const experienceSubjectPhoto = withMediaPlaceholder(getPhotoUrl("/photos/experiences.png"));
+const experiencePageText =
+  "My experiences are the places where curiosity became responsibility. Across NVIDIA, BNY, IEEE @ UCF, and Knight Hacks, I have learned how to build reliable systems, ask better questions, and help teams turn ambitious ideas into work people can depend on.";
 
 export function ExperiencesPage({
   experiences,
@@ -139,7 +142,7 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
               ISO <span className="text-[#8f2b35]">800</span>
             </span>
             <span className="text-right">
-              Tone <span className="text-[#8f2b35]">Mono</span>
+              Tone <span className="text-[#8f2b35]">Color</span>
             </span>
           </div>
         </div>
@@ -152,7 +155,6 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
           <FilmStrip
             className="bottom-0 left-[-8vw] right-[-8vw] rotate-[1.2deg] lg:left-[-6vw] lg:right-[-6vw]"
             frames={lowerFilmFrames}
-            mutedTone
           />
 
           <ExperienceSubject />
@@ -161,16 +163,10 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
           <div className="absolute inset-x-0 bottom-[-22px] z-10 h-px bg-[#f2e5c6]/10" />
         </div>
 
-        <div className="relative z-40 mx-5 mt-8 grid gap-5 border-t border-[#f2e5c6]/18 pt-4 text-[10px] font-light leading-5 text-[#f2e5c6]/62 sm:mx-8 sm:grid-cols-[minmax(0,0.62fr)_minmax(190px,0.28fr)] sm:items-start sm:text-xs sm:leading-6 lg:mx-12 lg:mt-9">
-          <p>
-            {leadExperience
-              ? `A cover note for ${leadExperience.companyName}: ${leadExperience.summary}`
-              : "A database-backed role archive. Add experience rows with media URLs, responsibilities, and summaries to populate the work notes below."}
+        <div className="relative z-40 mx-5 mt-8 border-t border-[#f2e5c6]/18 pt-5 sm:mx-8 lg:mx-12 lg:mt-9">
+          <p className="max-w-4xl text-base font-light leading-7 text-[#f2e5c6]/72 sm:text-lg sm:leading-8 lg:text-xl lg:leading-9">
+            {experiencePageText}
           </p>
-          <div className="border-t border-[#f2e5c6]/18 pt-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/42 sm:border-t-0 sm:pt-0 sm:text-right">
-            <p>Looping field frames from the media bucket.</p>
-            <p className="mt-2 text-[#f2e5c6]/68">Looping Study / Silent</p>
-          </div>
         </div>
       </motion.div>
     </section>
@@ -180,11 +176,9 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
 function FilmStrip({
   className,
   frames,
-  mutedTone = false,
 }: {
   className: string;
   frames: FilmFrame[];
-  mutedTone?: boolean;
 }) {
   return (
     <div className={`absolute z-20 ${className}`}>
@@ -203,7 +197,7 @@ function FilmStrip({
               className={`relative aspect-[4/3] min-w-0 overflow-hidden bg-[#080807] ring-1 ring-inset ring-[#f2e5c6]/10 sm:aspect-[16/7] lg:aspect-[3/1] ${frame.frameClassName}`}
               key={`${frame.src}-${frame.meta}`}
             >
-              <FilmFrameMedia frame={frame} mutedTone={mutedTone} />
+              <FilmFrameMedia frame={frame} />
               <span
                 aria-hidden="true"
                 className="absolute inset-0 z-10 bg-[linear-gradient(180deg,rgba(8,8,7,0.16)_0%,rgba(8,8,7,0.04)_48%,rgba(8,8,7,0.44)_100%)]"
@@ -225,19 +219,10 @@ function FilmStrip({
   );
 }
 
-function FilmFrameMedia({
-  frame,
-  mutedTone,
-}: {
-  frame: FilmFrame;
-  mutedTone: boolean;
-}) {
+function FilmFrameMedia({ frame }: { frame: FilmFrame }) {
   const [loadFailed, setLoadFailed] = useState(false);
-  const className = `h-full w-full object-cover ${
-    mutedTone
-      ? "grayscale contrast-[1.18] brightness-[0.68]"
-      : "contrast-[1.1] saturate-[0.82] brightness-[0.88]"
-  }`;
+  const className =
+    "h-full w-full object-cover contrast-[1.08] saturate-100 brightness-[0.9]";
 
   if (!loadFailed && isVideoMediaUrl(frame.src)) {
     return (
@@ -325,23 +310,6 @@ function ExperienceRoleArchive({ experiences }: { experiences: ExperienceFeature
   return (
     <section className="relative px-5 py-16 sm:px-8 lg:px-12">
       <div className="mx-auto max-w-7xl border-t border-[#f2e5c6]/16 pt-8">
-        <div className="mb-7 grid gap-4 md:grid-cols-[minmax(220px,0.45fr)_1fr] md:items-end">
-          <div>
-            <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
-              Role Archive
-              <span className="h-px flex-1 bg-[#f2e5c6]/16" />
-            </p>
-            <h2 className="mt-4 font-display text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[68px]">
-              Work Notes
-            </h2>
-          </div>
-          <p className="max-w-xl text-sm font-light leading-6 text-[#f2e5c6]/58 md:justify-self-end">
-            My experiences are the places where curiosity became responsibility.
-            Across NVIDIA, BNY, IEEE @ UCF, and Knight Hacks, I have learned how to
-            build reliable systems, ask better questions, and help teams turn
-            ambitious ideas into work people can depend on.
-          </p>
-        </div>
         {experiences.length > 0 ? (
           <div className="grid gap-12 lg:gap-16">
             {experiences.map((experience, index) => (
@@ -363,12 +331,7 @@ function ExperienceRoleArchive({ experiences }: { experiences: ExperienceFeature
 function ExperienceEmptyState() {
   return (
     <section className="border-y border-[#f2e5c6]/18 py-12">
-      <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
-        Role Archive
-        <span className="h-px flex-1 bg-[#f2e5c6]/16" />
-        No Frames Yet
-      </p>
-      <h3 className="font-display mt-5 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[72px]">
+      <h3 className="font-display text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[72px]">
         No Experience Records
       </h3>
       <p className="mt-5 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
@@ -391,10 +354,6 @@ function ExperienceFeature({
 
   return (
     <article className="group relative isolate overflow-visible border-t border-[#f2e5c6]/14 pt-10 first:border-t-0 first:pt-0">
-      <div
-        aria-hidden="true"
-        className="absolute right-0 top-10 hidden h-px w-[42%] bg-[#5E1C23]/45 lg:block"
-      />
       <div className="relative grid gap-5 lg:grid-cols-[minmax(280px,0.44fr)_minmax(0,0.86fr)] lg:items-center lg:gap-0 lg:pr-[150px] xl:pr-[170px]">
         <InfoPanel
           className="lg:w-[116%]"
@@ -482,10 +441,6 @@ function InfoPanel({
     <section
       className={`editorial-panel relative z-30 overflow-visible p-4 text-[#f2e5c6] sm:p-5 ${className}`}
     >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-5 top-5 right-[13.8%] z-20 hidden w-px bg-[#f2e5c6]/24 lg:block"
-      />
       <div className="relative z-10 flex flex-col lg:pr-[16%]">
         <div className="flex items-center justify-between gap-4 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/50">
           <span>Experience {sequence.toString().padStart(2, "0")}</span>
@@ -536,7 +491,7 @@ function PhotoFlipPanel({
   }, [flipped, photos.length]);
 
   return (
-    <div className="group/panel relative block h-[220px] w-full overflow-hidden border border-[#f2e5c6]/20 bg-[#080807] text-left transition hover:border-[#8f2b35]/75 sm:h-[250px] lg:h-[280px] xl:h-[300px]">
+    <div className="group/panel relative block h-[180px] w-full overflow-hidden border border-[#f2e5c6]/20 bg-[#080807] text-left transition hover:border-[#8f2b35]/75 sm:h-[200px] lg:h-[220px] xl:h-[230px]">
       <AnimatePresence initial={false} mode="wait">
         {flipped ? (
           <motion.div
@@ -561,14 +516,9 @@ function PhotoFlipPanel({
                 </li>
               ))}
             </ul>
-            <button
-              className="mt-3 inline-flex min-h-9 shrink-0 items-center justify-center gap-2 border border-[#171311]/16 bg-white/55 px-3 text-[9px] font-bold uppercase leading-none text-[#5E1C23] transition hover:border-[#5E1C23]/55 hover:bg-white focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#5E1C23]"
-              onClick={() => setFlipped(false)}
-              type="button"
-            >
-              <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
-              Return to photo
-            </button>
+            <div className="mt-3 shrink-0">
+              <PhotoFlipAction label="Return to photo" onClick={() => setFlipped(false)} />
+            </div>
           </motion.div>
         ) : photos.length > 0 ? (
           <motion.button
@@ -603,10 +553,8 @@ function PhotoFlipPanel({
                 {photos.length.toString().padStart(2, "0")}
               </span>
             </div>
-            <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2 border border-[#f2e5c6]/24 bg-[#080807]/70 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/76 backdrop-blur-sm">
-              <Images aria-hidden="true" size={14} strokeWidth={1.8} />
-              <span className="min-w-0 flex-1">Flip for responsibilities</span>
-              <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
+            <div className="absolute bottom-3 left-3 right-3">
+              <PhotoFlipAction label="Flip for responsibilities" />
             </div>
           </motion.button>
         ) : (
@@ -622,10 +570,8 @@ function PhotoFlipPanel({
             type="button"
           >
             <PlaceholderMediaImage className="h-full w-full object-cover brightness-[0.84] contrast-[1.08] saturate-[0.72]" decorative />
-            <div className="absolute bottom-3 left-3 right-3 flex items-center gap-2 border border-[#f2e5c6]/24 bg-[#080807]/70 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/76 backdrop-blur-sm">
-              <Images aria-hidden="true" size={14} strokeWidth={1.8} />
-              <span className="min-w-0 flex-1">Flip for responsibilities</span>
-              <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
+            <div className="absolute bottom-3 left-3 right-3">
+              <PhotoFlipAction label="Flip for responsibilities" />
             </div>
           </motion.button>
         )}
@@ -639,6 +585,35 @@ function PhotoFlipPanel({
       </span>
     </div>
   );
+}
+
+const photoFlipActionClassName =
+  "flex min-h-9 w-full items-center gap-2 border border-[#f2e5c6]/24 bg-[#080807]/70 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/76 backdrop-blur-sm transition hover:border-[#8f2b35]/75 hover:bg-[#080807] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35]";
+
+function PhotoFlipAction({
+  label,
+  onClick,
+}: {
+  label: string;
+  onClick?: () => void;
+}) {
+  const content = (
+    <>
+      <Images aria-hidden="true" size={14} strokeWidth={1.8} />
+      <span className="min-w-0 flex-1 text-left">{label}</span>
+      <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button className={photoFlipActionClassName} onClick={onClick} type="button">
+        {content}
+      </button>
+    );
+  }
+
+  return <div className={photoFlipActionClassName}>{content}</div>;
 }
 
 function EndorsementPanel({ experience }: { experience: ExperienceFeatureData }) {
@@ -692,7 +667,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
   }
 
   return (
-    <section className="relative z-40 mt-3 max-h-none w-full overflow-y-auto rounded-[26px] border border-[#f2e5c6]/18 bg-[#080807]/82 p-2 text-[#f2e5c6] shadow-none backdrop-blur-xl sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:max-h-[72%] lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
+    <section className="relative z-40 mt-3 w-full overflow-hidden rounded-[26px] border border-[#f2e5c6]/18 bg-[#080807]/96 p-2 text-[#f2e5c6] shadow-none backdrop-blur-xl sm:ml-auto sm:w-[min(360px,78%)] lg:absolute lg:bottom-auto lg:right-0 lg:top-1/2 lg:mt-0 lg:w-[320px] lg:-translate-y-1/2 lg:translate-x-1/2 xl:w-[340px]">
       <div className="rounded-[22px] border border-white/16 bg-[#f8f4eb]/92 p-2 text-[#171311]">
         <div className="flex items-center gap-2 border-b border-[#171311]/10 pb-2">
           <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#171311,#5E1C23)] text-[9px] font-bold uppercase leading-none text-[#f8f4eb]">
@@ -700,8 +675,10 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border border-[#f8f4eb] bg-[#8f2b35]" />
           </span>
           <div className="min-w-0 flex-1">
-            <div className="flex items-center justify-between gap-2 text-[8px] font-bold uppercase leading-none">
-              <span className="truncate text-[#5E1C23]">{experience.companyName}</span>
+            <div className="flex items-center justify-between gap-2 text-[7px] font-bold uppercase leading-none">
+              <span className="truncate text-[#5E1C23]">
+                {experience.companyName} - {experience.positionName}
+              </span>
               <span className="text-[#171311]/42">
                 {featuredEndorsements.length.toString().padStart(2, "0")} / 03
               </span>
@@ -712,7 +689,10 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
           </div>
         </div>
 
-        <div className="mt-3 grid gap-2">
+        <div
+          aria-label={`${experience.companyName} endorsement messages`}
+          className="experience-responsibilities-scroll mt-3 grid max-h-[180px] touch-pan-y gap-2 overflow-y-auto overscroll-y-contain pr-1 [scrollbar-gutter:stable]"
+        >
           {featuredEndorsements.length > 0 ? (
             featuredEndorsements.map((endorsement, index) => (
               <blockquote className="flex items-end gap-2" key={endorsement.id}>
@@ -724,7 +704,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
                     <span className="truncate">{endorsement.authorName}</span>
                     <span>Seen {(index + 1).toString().padStart(2, "0")}</span>
                   </div>
-                  <p className="mt-1.5 text-[11px] font-light leading-4 text-[#171311]/74">
+                  <p className="mt-1.5 break-words text-[10px] font-light leading-[15px] text-[#171311]/74">
                     {endorsement.note}
                   </p>
                 </div>
@@ -735,7 +715,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
               <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#5E1C23] text-[8px] font-bold uppercase leading-none text-[#f8f4eb]">
                 KS
               </span>
-              <p className="min-w-0 flex-1 rounded-[19px] rounded-bl-md border border-[#171311]/8 bg-white/72 px-3 py-2 text-[11px] font-light leading-4 text-[#171311]/58">
+              <p className="min-w-0 flex-1 rounded-[19px] rounded-bl-md border border-[#171311]/8 bg-white/72 px-3 py-2 text-[10px] font-light leading-[15px] text-[#171311]/58">
                 No endorsements selected yet.
               </p>
             </div>
@@ -751,7 +731,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
               Me
             </span>
             <input
-              className="min-w-0 flex-1 rounded-full border border-[#171311]/8 bg-[#171311]/5 px-3 py-2 text-[11px] font-light leading-none text-[#171311] outline-none transition placeholder:text-[#171311]/36 focus:border-[#8f2b35]/70 focus:bg-white/70"
+              className="min-w-0 flex-1 rounded-full border border-[#171311]/8 bg-[#171311]/5 px-3 py-2 text-[9px] font-light leading-none text-[#171311] outline-none transition placeholder:text-[7px] placeholder:text-[#171311]/36 focus:border-[#8f2b35]/70 focus:bg-white/70"
               maxLength={120}
               onChange={(event) =>
                 setForm((current) => ({ ...current, authorName: event.target.value }))
@@ -764,11 +744,14 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
 
           <div className="mt-2 flex items-end gap-2 rounded-[22px] border border-[#171311]/8 bg-white/70 px-2 py-2">
             <textarea
-              className="min-h-10 flex-1 resize-none bg-transparent px-1 text-xs font-light leading-5 text-[#171311] outline-none placeholder:text-[#171311]/36"
-              maxLength={1000}
+              aria-label={`Message ${experience.companyName} - ${experience.positionName}`}
+              className="experience-responsibilities-scroll max-h-24 min-h-10 flex-1 resize-none overflow-y-auto bg-transparent px-1 text-[9px] font-light leading-4 text-[#171311] outline-none placeholder:text-[7px] placeholder:text-[#171311]/36"
+              maxLength={500}
+              minLength={1}
               onChange={(event) => setForm((current) => ({ ...current, note: event.target.value }))}
-              placeholder={`Message ${experience.companyName}`}
+              placeholder={`Message ${experience.companyName} - ${experience.positionName}`}
               required
+              rows={2}
               value={form.note}
             />
             <button

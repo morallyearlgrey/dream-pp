@@ -44,6 +44,12 @@ const projectVideoAssets: ProjectVideoAsset[] = [
     meta: "Frame 04",
   },
 ];
+const highlightedProjectNames = [
+  "A.N.R / Agentic Nuclear Reactor",
+  "SignHero",
+  "CappuConnect",
+  "Tariffix",
+] as const;
 const stripSlots = [-2, -1, 0, 1, 2] as const;
 const mobileStripSlots = [-1, 0, 1] as const;
 
@@ -60,15 +66,31 @@ function getMediaAsset(src: string | null | undefined, alt: string): ProjectMedi
 }
 
 function getProjectCarouselMedia(project: ProjectFeature): ProjectMediaAsset | null {
-  const src = project.carouselMedia ?? project.photos[0] ?? project.mainVideo;
+  const src = project.carouselMedia ?? project.mainVideo ?? project.photos[0];
 
   return getMediaAsset(src, `${project.name} carousel media`);
 }
 
 function getProjectBackgroundMedia(project: ProjectFeature): ProjectMediaAsset | null {
-  const src = project.backgroundMedia ?? project.photos[0] ?? project.mainVideo;
+  const src = project.backgroundMedia ?? project.mainVideo ?? project.photos[0];
 
   return getMediaAsset(src, `${project.name} background media`);
+}
+
+function getHighlightedProjects(projects: ProjectFeature[]) {
+  return highlightedProjectNames
+    .map((name) => {
+      const projectIndex = projects.findIndex((project) => project.name === name);
+
+      return projectIndex === -1
+        ? null
+        : { project: projects[projectIndex], projectIndex };
+    })
+    .filter(
+      (
+        item,
+      ): item is { project: ProjectFeature; projectIndex: number } => item !== null,
+    );
 }
 
 function formatDateRange(project: ProjectFeature) {
@@ -205,23 +227,22 @@ function ProjectHero({
 }) {
   const { scrollY } = useScroll();
   const coverY = useTransform(scrollY, [0, 900], [0, -30]);
-  const accentProject = projects[getWrappedProjectIndex(selected + 1, projects.length)];
+  const highlightedProjects = getHighlightedProjects(projects);
+  const accentProject = projects[selected];
 
   return (
     <section className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[#0b0b0a] px-5 pb-12 pt-6 text-[#f2e5c6] sm:px-8 lg:min-h-screen lg:px-12">
-      <ProjectBackgroundTexture projects={projects} selected={selected} />
+      <ProjectBackgroundTexture
+        highlightedProjects={highlightedProjects.map(({ project }) => project)}
+        projects={projects}
+        selected={selected}
+      />
 
       <div className="relative z-30 mx-auto flex max-w-7xl items-center justify-between gap-4 border-b border-[#f2e5c6]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[10px]">
         <span>Project Cover Archive</span>
         <span className="hidden text-center sm:block">Projects / Contact Sheet / Notes</span>
         <span>Issue 03</span>
       </div>
-
-      <p className="relative z-30 mx-auto mt-5 max-w-2xl border-l border-[#8f2b35]/48 pl-4 text-sm font-light leading-6 text-[#f2e5c6]/70 sm:text-base sm:leading-7">
-        I build projects because I like seeing strange ideas become real. From an
-        agentic nuclear reactor to an ASL rhythm game and a pipelined RISC-V
-        processor, each one records what I was curious enough to learn next.
-      </p>
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
@@ -247,6 +268,12 @@ function ProjectHero({
           Projects
         </h1>
 
+        <p className="pointer-events-none absolute left-1/2 top-[62%] z-50 w-[min(88vw,42rem)] -translate-x-1/2 border-l border-[#8f2b35]/48 bg-[#080807]/42 px-4 py-2 text-sm font-light leading-6 text-[#f2e5c6]/78 backdrop-blur-[2px] sm:text-base sm:leading-7 lg:top-[66%]">
+          I build projects because I like seeing strange ideas become real. From an
+          agentic nuclear reactor to an ASL rhythm game and a pipelined RISC-V
+          processor, each one records what I was curious enough to learn next.
+        </p>
+
         {accentProject ? (
           <div className="absolute left-[6%] top-[24%] z-10 h-[46%] w-[72%] rotate-[-4deg] opacity-25 blur-[1px] lg:left-[26%] lg:top-[16%] lg:h-[58%] lg:w-[36%]">
             <ProjectMedia
@@ -257,21 +284,25 @@ function ProjectHero({
           </div>
         ) : null}
 
-        {projectVideoAssets.map((asset, index) => (
+        {projectVideoAssets.map((asset, index) => {
+          const highlightedProject = highlightedProjects[index];
+
+          if (!highlightedProject) {
+            return null;
+          }
+
+          return (
           <ProjectVideoFrame
             asset={asset}
-            active={getWrappedProjectIndex(selected + index - 1, projects.length) === selected}
+            active={highlightedProject.projectIndex === selected}
             index={index}
-            key={
-              projects.length >= projectVideoAssets.length
-                ? projects[getWrappedProjectIndex(selected + index - 1, projects.length)].id
-                : asset.meta
-            }
-            project={projects[getWrappedProjectIndex(selected + index - 1, projects.length)]}
-            projectIndex={getWrappedProjectIndex(selected + index - 1, projects.length)}
+            key={highlightedProject.project.id}
+            project={highlightedProject.project}
+            projectIndex={highlightedProject.projectIndex}
             setSelected={setSelected}
           />
-        ))}
+          );
+        })}
 
         <div className="absolute right-[9%] top-[29%] z-40 border border-[#f2e5c6]/28 bg-[#5E1C23] px-2 py-1 text-[10px] font-black uppercase leading-none text-[#f2e5c6] lg:right-[36%] lg:top-[10%]">
           In Frame
@@ -285,9 +316,11 @@ function ProjectHero({
 }
 
 function ProjectBackgroundTexture({
+  highlightedProjects,
   projects,
   selected,
 }: {
+  highlightedProjects: ProjectFeature[];
   projects: ProjectFeature[];
   selected: number;
 }) {
@@ -311,7 +344,7 @@ function ProjectBackgroundTexture({
         ))}
       </div>
       <div className="absolute inset-0 grid grid-cols-2 opacity-[0.18] blur-[1.5px] grayscale">
-        {projects.slice(0, 4).map((item) => (
+        {highlightedProjects.map((item) => (
           <ProjectMedia
             className="h-full w-full object-cover brightness-[0.58] contrast-[1.2]"
             decorative
@@ -491,7 +524,7 @@ function ProjectInfoPanel({
         <span>Project {String(selected + 1).padStart(2, "0")}</span>
         <span>{projectCount} Works</span>
       </div>
-      <h3 className="mt-5 max-w-full break-words font-display text-[52px] font-semibold uppercase leading-[0.82] text-[#f2e5c6] sm:text-[72px] lg:text-[82px] xl:text-[100px]">
+      <h3 className="mt-5 max-w-full break-words font-display text-[42px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[56px] lg:text-[64px] xl:text-[76px]">
         {project.name}
       </h3>
       <dl className="mt-5 grid border-y border-[#f2e5c6]/14 text-[10px] leading-5 sm:text-xs">
@@ -552,15 +585,25 @@ function ProjectLink({ project }: { project: ProjectFeature }) {
 }
 
 function ProjectWorkPanel({ project }: { project: ProjectFeature }) {
+  const workItems = project.whatIDid
+    .split(/\n+/)
+    .map((item) => item.replace(/^[•*-]\s*/, "").trim())
+    .filter(Boolean);
+
   return (
     <section className="relative z-30 flex min-w-0 flex-col overflow-visible border-t border-[#f2e5c6]/18 p-4 text-[#f2e5c6] sm:p-5 lg:border-t-0 lg:p-6 xl:p-7">
       <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/58">
         <span>What I Did</span>
         <span className="h-px flex-1 bg-[#f2e5c6]/16" />
       </div>
-      <p className="mt-5 max-w-[58ch] text-sm font-light leading-6 text-[#f2e5c6]/72">
-        {project.whatIDid}
-      </p>
+      <ul className="mt-5 grid max-w-[58ch] gap-3 text-sm font-light leading-6 text-[#f2e5c6]/72">
+        {workItems.map((item, index) => (
+          <li className="grid grid-cols-[auto_1fr] gap-3" key={`${project.id}-work-${index}`}>
+            <span aria-hidden="true" className="mt-[0.68rem] h-1.5 w-1.5 bg-[#8f2b35]" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
       <div className="mt-auto grid grid-cols-2 border-y border-[#f2e5c6]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/44 lg:mt-8">
         <span>Frame ID</span>
         <span className="text-right text-[#8f2b35]">{project.id}</span>

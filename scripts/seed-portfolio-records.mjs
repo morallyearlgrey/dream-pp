@@ -29,7 +29,7 @@ try {
     await sql.unsafe(statement);
   }
 
-  console.log("Projects and experiences seeded with Supabase media object keys.");
+  console.log("Projects and experiences seeded with Supabase media references.");
 } finally {
   await sql.end();
 }

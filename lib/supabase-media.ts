@@ -56,6 +56,15 @@ export function getSupabaseMediaUrl(
   }
 
   const bucketName = getMediaBucketName();
+  const publicObjectPrefix = `public/${bucketName}/`;
+  const normalizedSource = source.replace(/^\/+/, "");
+
+  if (normalizedSource.startsWith(publicObjectPrefix)) {
+    const publicObjectPath = normalizedSource.slice(publicObjectPrefix.length);
+
+    return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${encodeObjectPath(publicObjectPath)}`;
+  }
+
   const folderName = getFolderName(bucket);
   const objectKey = normalizeObjectKey(bucket, bucketName, folderName, source);
   const fullObjectPath = folderName ? `${folderName}/${objectKey}` : objectKey;
