@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ContactNoteForm } from "@/components/contact-note-form";
+import { handleImageFallback } from "@/components/media-placeholder";
 import { createPageMetadata } from "@/lib/seo";
 import { getPhotoUrl, withMediaPlaceholder } from "@/lib/supabase-media";
 
@@ -20,11 +21,12 @@ export default function Contact() {
       <div aria-hidden="true" className="absolute inset-0">
         <img
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center brightness-[0.52] contrast-[1.12] saturate-[0.72]"
+          className="absolute inset-0 h-full w-full object-cover object-[center_58%] brightness-[0.72] contrast-[1.08] saturate-[0.92]"
+          onError={handleImageFallback}
           src={contactBackgroundImage}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_24%,rgba(143,43,53,0.18),transparent_34%),linear-gradient(180deg,rgba(var(--color-deep-rgb),0.72),rgba(var(--color-deep-rgb),0.96))]" />
-        <div className="editorial-film-grain absolute inset-0 opacity-26" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_24%,rgba(143,43,53,0.14),transparent_38%),linear-gradient(180deg,rgba(var(--color-deep-rgb),0.4),rgba(var(--color-deep-rgb),0.7))]" />
+        <div className="editorial-film-grain absolute inset-0 opacity-20" />
       </div>
 
       <section className="relative z-10 mx-auto grid min-h-[72vh] w-full max-w-7xl gap-10 border-y border-[var(--color-text)]/20 py-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,0.58fr)] lg:items-center lg:gap-20 xl:gap-28">

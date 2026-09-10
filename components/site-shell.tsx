@@ -34,6 +34,12 @@ const footerLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
+const footerSocialLinks = [
+  { href: "#", label: "GitHub" },
+  { href: "#", label: "LinkedIn" },
+  { href: "/Kai_Sprunger_Resume_2027.pdf", label: "Resume" },
+] as const;
+
 export function SiteShell({
   audioTracks,
   children,
@@ -158,9 +164,15 @@ export function SiteShell({
                 Social
               </p>
               <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[10px] font-bold uppercase leading-none text-[var(--color-text)]/62">
-                {["GitHub", "LinkedIn", "CV"].map((item) => (
-                  <a className="transition hover:text-[#8f2b35]" href="#" key={item}>
-                    {item}
+                {footerSocialLinks.map((item) => (
+                  <a
+                    className="transition hover:text-[#8f2b35]"
+                    href={item.href}
+                    key={item.label}
+                    rel={item.label === "Resume" ? "noreferrer" : undefined}
+                    target={item.label === "Resume" ? "_blank" : undefined}
+                  >
+                    {item.label}
                   </a>
                 ))}
               </div>

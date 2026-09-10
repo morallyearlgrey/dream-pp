@@ -125,14 +125,14 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         <img
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-[0.38] grayscale brightness-[0.42] contrast-[1.18]"
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-[0.82] brightness-[0.62] contrast-[1.12] saturate-[0.86]"
           decoding="async"
           onError={handleImageFallback}
           src={blogBackgroundImage}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.92),rgba(var(--color-deep-rgb),0.78)_46%,rgba(var(--color-deep-rgb),0.96)),linear-gradient(90deg,rgba(var(--color-deep-rgb),0.95),rgba(var(--color-deep-rgb),0.62),rgba(var(--color-deep-rgb),0.95))]" />
-        <div className="absolute inset-0 bg-[var(--color-base)]/44" />
-        <div className="editorial-film-grain absolute inset-0 opacity-28" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.7),rgba(var(--color-deep-rgb),0.48)_46%,rgba(var(--color-deep-rgb),0.84)),linear-gradient(90deg,rgba(var(--color-deep-rgb),0.8),rgba(var(--color-deep-rgb),0.36),rgba(var(--color-deep-rgb),0.8))]" />
+        <div className="absolute inset-0 bg-[var(--color-base)]/18" />
+        <div className="editorial-film-grain absolute inset-0 opacity-22" />
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
