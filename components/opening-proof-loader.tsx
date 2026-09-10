@@ -33,7 +33,7 @@ export function OpeningProofLoader() {
         <motion.div
           aria-busy="true"
           aria-label="Opening Kai Sprunger portfolio"
-          className="fixed inset-0 z-[100] isolate overflow-hidden bg-[#0b0b0a] text-[#f2e5c6]"
+          className="fixed inset-0 z-[100] isolate overflow-hidden bg-[var(--color-base)] text-[var(--color-text)]"
           exit={
             prefersReducedMotion
               ? { opacity: 0 }
@@ -42,7 +42,7 @@ export function OpeningProofLoader() {
           initial={false}
           transition={{ duration: prefersReducedMotion ? 0.3 : 0.58, ease: [0.76, 0, 0.24, 1] }}
         >
-          <div aria-hidden="true" className="absolute inset-0 bg-[#0b0b0a]" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[var(--color-base)]" />
           <motion.img
             alt=""
             aria-hidden="true"
@@ -59,11 +59,11 @@ export function OpeningProofLoader() {
             src={heroPhoto}
             transition={{ delay: prefersReducedMotion ? 0 : 0.18, duration: 1.25, ease: "easeOut" }}
           />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(242,229,198,0.08),rgba(11,11,10,0.72)_58%,#0b0b0a_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(var(--color-text-rgb),0.08),rgba(var(--color-base-rgb),0.72)_58%,var(--color-base)_100%)]" />
           <div className="editorial-film-grain absolute inset-0 opacity-28" />
 
           <div className="relative z-10 flex min-h-screen flex-col justify-between px-5 py-6 sm:px-8 sm:py-7 lg:px-12">
-            <div className="flex items-center justify-between gap-4 border-y border-[#f2e5c6]/12 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/52">
+            <div className="flex items-center justify-between gap-4 border-y border-[var(--color-text)]/12 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/52">
               <span className="text-[#8f2b35]">Opening Look 01</span>
               <span className="hidden sm:inline">Kai Sprunger / Private Issue</span>
               <span>Soft Proof</span>
@@ -72,15 +72,15 @@ export function OpeningProofLoader() {
             <div className="mx-auto grid w-full max-w-5xl place-items-center">
               <motion.div
                 aria-hidden="true"
-                className="relative h-[176px] w-[min(78vw,620px)] border-y border-[#8f2b35]/72 bg-[#f2e5c6]/[0.025] sm:h-[220px]"
+                className="relative h-[176px] w-[min(78vw,620px)] border-y border-[#8f2b35]/72 bg-[var(--color-text)]/[0.025] sm:h-[220px]"
                 initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scaleX: 0.68 }}
                 animate={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: prefersReducedMotion ? 0.2 : 0.46, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span className="absolute -left-px -top-px h-8 w-8 border-l border-t border-[#f2e5c6]/58" />
-                <span className="absolute -right-px -top-px h-8 w-8 border-r border-t border-[#f2e5c6]/58" />
-                <span className="absolute -bottom-px -left-px h-8 w-8 border-b border-l border-[#f2e5c6]/58" />
-                <span className="absolute -bottom-px -right-px h-8 w-8 border-b border-r border-[#f2e5c6]/58" />
+                <span className="absolute -left-px -top-px h-8 w-8 border-l border-t border-[var(--color-text)]/58" />
+                <span className="absolute -right-px -top-px h-8 w-8 border-r border-t border-[var(--color-text)]/58" />
+                <span className="absolute -bottom-px -left-px h-8 w-8 border-b border-l border-[var(--color-text)]/58" />
+                <span className="absolute -bottom-px -right-px h-8 w-8 border-b border-r border-[var(--color-text)]/58" />
                 <motion.span
                   aria-hidden="true"
                   className="absolute inset-y-[-18px] left-0 w-[34%] border-x border-[#8f2b35]/64 bg-[#8f2b35]/10"
@@ -97,8 +97,8 @@ export function OpeningProofLoader() {
                 />
               </motion.div>
 
-              <div className="mt-6 flex w-full max-w-[620px] items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/58">
-                <span className="h-px flex-1 bg-[#f2e5c6]/18" />
+              <div className="mt-6 flex w-full max-w-[620px] items-center gap-3 text-[10px] font-bold uppercase leading-none text-[var(--color-text)]/58">
+                <span className="h-px flex-1 bg-[var(--color-text)]/18" />
                 <AnimatePresence mode="wait">
                   <motion.span
                     animate={{ opacity: 1, y: 0 }}
@@ -111,7 +111,7 @@ export function OpeningProofLoader() {
                     {statusLabels[statusIndex]}
                   </motion.span>
                 </AnimatePresence>
-                <span className="h-px flex-1 bg-[#f2e5c6]/18" />
+                <span className="h-px flex-1 bg-[var(--color-text)]/18" />
               </div>
 
               <motion.h1
@@ -121,7 +121,7 @@ export function OpeningProofLoader() {
                     ? { opacity: [0, 1, 0] }
                     : { opacity: [0, 0, 1, 1, 0], scale: [0.98, 0.98, 1, 1, 1.02] }
                 }
-                className="pointer-events-none absolute px-4 text-center font-display text-[54px] font-semibold uppercase leading-[0.78] text-[#f2e5c6] mix-blend-screen sm:text-[104px] lg:text-[142px]"
+                className="pointer-events-none absolute px-4 text-center font-display text-[54px] font-semibold uppercase leading-[0.78] text-[var(--color-text)] mix-blend-screen sm:text-[104px] lg:text-[142px]"
                 initial={{ opacity: 0, scale: 0.98 }}
                 transition={{
                   delay: prefersReducedMotion ? 0.16 : 1.34,
@@ -134,7 +134,7 @@ export function OpeningProofLoader() {
               </motion.h1>
             </div>
 
-            <div className="grid gap-px border-y border-[#f2e5c6]/14 bg-transparent text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/54 sm:grid-cols-3">
+            <div className="grid gap-px border-y border-[var(--color-text)]/14 bg-transparent text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/54 sm:grid-cols-3">
               <span className="px-3 py-2">Light / Low Contrast</span>
               <span className="px-3 py-2">Frame / Maroon Mark</span>
               <span className="px-3 py-2 sm:text-right">Issue / Personal Edition</span>

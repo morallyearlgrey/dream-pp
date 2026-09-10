@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { getDb } from "@/db";
 import {
@@ -166,11 +166,7 @@ export async function getDashboardPortfolioData(): Promise<DashboardPortfolioDat
     const [
       experienceRows,
       endorsementRows,
-      projectsCount,
-      blogsCount,
-      skillsCount,
-      experiencesCount,
-      endorsementsCount,
+      [counts],
     ] = await Promise.all([
       db
         .select({
@@ -180,20 +176,29 @@ export async function getDashboardPortfolioData(): Promise<DashboardPortfolioDat
         .from(experiencesTable)
         .orderBy(desc(experiencesTable.fromDate)),
       db.select().from(endorsementsTable).orderBy(desc(endorsementsTable.createdAt)),
-      getTableCount(projectsTable),
-      getTableCount(blogsTable),
-      getTableCount(skillsTable),
-      getTableCount(experiencesTable),
-      getTableCount(endorsementsTable),
+      db.execute<{
+        blogs: number;
+        endorsements: number;
+        experiences: number;
+        projects: number;
+        skills: number;
+      }>(sql`
+        select
+          (select count(*)::int from ${blogsTable}) as "blogs",
+          (select count(*)::int from ${endorsementsTable}) as "endorsements",
+          (select count(*)::int from ${experiencesTable}) as "experiences",
+          (select count(*)::int from ${projectsTable}) as "projects",
+          (select count(*)::int from ${skillsTable}) as "skills"
+      `),
     ]);
 
     return {
       counts: {
-        blogs: blogsCount,
-        endorsements: endorsementsCount,
-        experiences: experiencesCount,
-        projects: projectsCount,
-        skills: skillsCount,
+        blogs: Number(counts?.blogs ?? 0),
+        endorsements: Number(counts?.endorsements ?? 0),
+        experiences: Number(counts?.experiences ?? 0),
+        projects: Number(counts?.projects ?? 0),
+        skills: Number(counts?.skills ?? 0),
       },
       databaseBacked: true,
       endorsements: endorsementRows.map((endorsement) => ({
@@ -221,24 +226,10 @@ export async function getDashboardPortfolioData(): Promise<DashboardPortfolioDat
 
 export function getPortfolioDbErrorMessage(error: unknown) {
   if (error instanceof Error && error.message.includes("DATABASE_URL")) {
-    return "DATABASE_URL is required before portfolio records can be read.";
+    return "A PostgreSQL connection URL is required before portfolio records can be read.";
   }
 
   return "Portfolio database records could not be read.";
-}
-
-async function getTableCount(
-  table:
-    | typeof blogsTable
-    | typeof endorsementsTable
-    | typeof experiencesTable
-    | typeof projectsTable
-    | typeof skillsTable,
-) {
-  const db = getDb();
-  const [row] = await db.select({ value: count() }).from(table);
-
-  return Number(row?.value ?? 0);
 }
 
 function normalizeStringArray(value: string[] | null | undefined) {
@@ -272,11 +263,15 @@ function serializeTimestamp(value: Date | string) {
   return value;
 }
 
-function formatDashboardDate(value: Date | string) {
+function formatDashboardDate(value: Date | string | null | undefined) {
+  if (value == null) {
+    return "Date unavailable";
+  }
+
   const date = value instanceof Date ? value : new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return typeof value === "string" ? value : value.toISOString();
+    return typeof value === "string" && value.trim() ? value : "Date unavailable";
   }
 
   return new Intl.DateTimeFormat("en", {

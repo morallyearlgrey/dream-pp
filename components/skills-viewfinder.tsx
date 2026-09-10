@@ -80,7 +80,7 @@ const featuredSkillNames = [
   "Next.js",
 ] as const;
 const fallbackSkillHeroImage = withMediaPlaceholder(
-  getPhotoUrl("public/portfoliomedia/photos/IMG_2387.jpg"),
+  getPhotoUrl("public/portfoliomedia/photos/skills.jpg"),
 );
 
 function isSkillCategory(value: string): value is SkillCategory {
@@ -135,19 +135,19 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
 
   if (!activeSkill) {
     return (
-      <main className="overflow-x-clip bg-[#080807] text-[#f2e5c6]">
+      <main className="overflow-x-clip bg-[var(--color-deep)] text-[var(--color-text)]">
         <SkillsHero skillItems={skillItems} />
         <section className="px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mx-auto w-full max-w-6xl border-y border-[#f2e5c6]/18 py-12">
+          <div className="mx-auto w-full max-w-6xl border-y border-[var(--color-text)]/18 py-12">
             <p className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
               Viewfinder Archive
-              <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+              <span className="h-px flex-1 bg-[var(--color-text)]/16" />
               No Frames Yet
             </p>
-            <h2 className="font-display mt-5 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[72px]">
+            <h2 className="font-display mt-5 text-[46px] font-semibold uppercase leading-[0.86] text-[var(--color-text)] sm:text-[72px]">
               No Skills Captured
             </h2>
-            <p className="mt-5 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
+            <p className="mt-5 max-w-xl border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[var(--color-text)]/64">
               Add rows to the skills table with a name, category, and skills
               bucket object key to populate the viewfinder and contact sheet.
             </p>
@@ -173,7 +173,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
   }
 
   return (
-    <main className="overflow-x-clip bg-[#080807] text-[#f2e5c6]">
+    <main className="overflow-x-clip bg-[var(--color-deep)] text-[var(--color-text)]">
       <SkillsHero skillItems={skillItems} />
       <section className="relative isolate px-4 pb-16 pt-10 sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
@@ -185,21 +185,21 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
           onError={handleImageFallback}
           src={activeSkill.photo}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.9),rgba(8,8,7,0.78)_48%,rgba(8,8,7,0.95)),linear-gradient(90deg,rgba(8,8,7,0.94),rgba(8,8,7,0.64),rgba(8,8,7,0.94))]" />
-        <div className="absolute inset-0 bg-[#0b0b0a]/42" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.9),rgba(var(--color-deep-rgb),0.78)_48%,rgba(var(--color-deep-rgb),0.95)),linear-gradient(90deg,rgba(var(--color-deep-rgb),0.94),rgba(var(--color-deep-rgb),0.64),rgba(var(--color-deep-rgb),0.94))]" />
+        <div className="absolute inset-0 bg-[var(--color-base)]/42" />
         <div className="editorial-film-grain absolute inset-0 opacity-28" />
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="flex items-center justify-between gap-4 border-y border-[#f2e5c6]/20 py-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58">
+        <div className="flex items-center justify-between gap-4 border-y border-[var(--color-text)]/20 py-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/58">
           <span className="text-[#8f2b35]">Viewfinder Archive</span>
           <span>Camera Modes / Contact Sheet</span>
           <span>Index 05</span>
         </div>
 
         <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_292px]">
-          <section className="border border-[#f2e5c6]/22 bg-[#050505]/88 p-2">
-            <div className="flex items-center justify-between gap-3 border-b border-[#f2e5c6]/14 px-2 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:px-3">
+          <section className="border border-[var(--color-text)]/22 bg-[var(--color-panel)]/88 p-2">
+            <div className="flex items-center justify-between gap-3 border-b border-[var(--color-text)]/14 px-2 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/58 sm:px-3">
               <span className="inline-flex items-center gap-2 text-[#8f2b35]">
                 <span className="h-1.5 w-1.5 bg-[#8f2b35]" />
                 Rec
@@ -211,27 +211,27 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
               </span>
             </div>
 
-            <div className="relative aspect-[4/5] overflow-hidden border border-[#f2e5c6]/18 bg-[#080807] sm:aspect-[16/10] lg:aspect-[16/9]">
+            <div className="relative aspect-[4/5] overflow-hidden border border-[var(--color-text)]/18 bg-white sm:aspect-[16/10] lg:aspect-[16/9]">
               <img
                 alt={`${activeSkill.name} skill reference`}
-                className="h-full w-full object-cover brightness-[0.82] contrast-[1.16] saturate-[0.72]"
+                className="h-full w-full bg-white object-contain p-8 sm:p-12"
                 decoding="async"
                 loading="lazy"
                 onError={handleImageFallback}
                 src={activeSkill.photo}
               />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.16)_45%,rgba(8,8,7,0.72)),linear-gradient(90deg,rgba(8,8,7,0.28),transparent_24%,transparent_76%,rgba(8,8,7,0.32))]" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_0%,rgba(var(--color-deep-rgb),0.05)_48%,rgba(var(--color-deep-rgb),0.8)_100%)]" />
               <div className="archive-scanlines absolute inset-0 opacity-20" />
 
-              <span className="absolute left-4 top-4 h-14 w-14 border-l border-t border-[#f2e5c6]/52" />
-              <span className="absolute right-4 top-4 h-14 w-14 border-r border-t border-[#f2e5c6]/52" />
-              <span className="absolute bottom-4 left-4 h-14 w-14 border-b border-l border-[#f2e5c6]/52" />
-              <span className="absolute bottom-4 right-4 h-14 w-14 border-b border-r border-[#f2e5c6]/52" />
-              <span className="absolute left-1/2 top-6 h-[calc(100%-3rem)] w-px -translate-x-1/2 bg-[#f2e5c6]/10" />
-              <span className="absolute left-6 top-1/2 h-px w-[calc(100%-3rem)] -translate-y-1/2 bg-[#f2e5c6]/10" />
-              <span className="absolute left-1/2 top-1/2 h-[34%] w-[42%] -translate-x-1/2 -translate-y-1/2 border border-[#f2e5c6]/16" />
+              <span className="absolute left-4 top-4 h-14 w-14 border-l border-t border-[var(--color-text)]/52" />
+              <span className="absolute right-4 top-4 h-14 w-14 border-r border-t border-[var(--color-text)]/52" />
+              <span className="absolute bottom-4 left-4 h-14 w-14 border-b border-l border-[var(--color-text)]/52" />
+              <span className="absolute bottom-4 right-4 h-14 w-14 border-b border-r border-[var(--color-text)]/52" />
+              <span className="absolute left-1/2 top-6 h-[calc(100%-3rem)] w-px -translate-x-1/2 bg-[var(--color-text)]/10" />
+              <span className="absolute left-6 top-1/2 h-px w-[calc(100%-3rem)] -translate-y-1/2 bg-[var(--color-text)]/10" />
+              <span className="absolute left-1/2 top-1/2 h-[34%] w-[42%] -translate-x-1/2 -translate-y-1/2 border border-[var(--color-text)]/16" />
 
-              <div className="absolute left-4 right-4 top-4 flex items-start justify-between gap-4 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:text-[9px]">
+              <div className="absolute left-4 right-4 top-4 flex items-start justify-between gap-4 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/58 sm:text-[9px]">
                 <span>RAW / Manual</span>
                 <span className="text-right">WB 5200K</span>
               </div>
@@ -241,34 +241,34 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                   <p className="text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
                     {activeMode.label}
                   </p>
-                  <h2 className="font-display mt-2 max-w-full break-words text-[46px] font-semibold uppercase leading-[0.84] text-[#f2e5c6] sm:text-[68px] lg:text-[82px]">
+                  <h2 className="font-display mt-2 max-w-full break-words text-[46px] font-semibold uppercase leading-[0.84] text-[var(--color-text)] sm:text-[68px] lg:text-[82px]">
                     {activeSkill.name}
                   </h2>
                 </div>
-                <div className="grid grid-cols-3 gap-px border border-[#f2e5c6]/16 bg-[#f2e5c6]/16 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/68 sm:w-[240px]">
-                  <span className="bg-[#080807]/92 px-2 py-2">ISO 400</span>
-                  <span className="bg-[#080807]/92 px-2 py-2">F 2.8</span>
-                  <span className="bg-[#080807]/92 px-2 py-2">1/125</span>
+                <div className="grid grid-cols-3 gap-px border border-[var(--color-text)]/16 bg-[var(--color-text)]/16 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/68 sm:w-[240px]">
+                  <span className="bg-[var(--color-card-surface)]/92 px-2 py-2">ISO 400</span>
+                  <span className="bg-[var(--color-card-surface)]/92 px-2 py-2">F 2.8</span>
+                  <span className="bg-[var(--color-card-surface)]/92 px-2 py-2">1/125</span>
                 </div>
               </div>
             </div>
 
-            <div className="grid gap-px border-t border-[#f2e5c6]/14 bg-[#f2e5c6]/12 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58 sm:grid-cols-4">
-              <span className="bg-[#080807] px-3 py-2.5">Focus / {activeSkill.name}</span>
-              <span className="bg-[#080807] px-3 py-2.5">Mode / {activeMode.meter}</span>
-              <span className="bg-[#080807] px-3 py-2.5">Light / Soft</span>
-              <span className="bg-[#080807] px-3 py-2.5 sm:text-right">State / Selected</span>
+            <div className="grid gap-px border-t border-[var(--color-text)]/14 bg-[var(--color-text)]/12 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/58 sm:grid-cols-4">
+              <span className="bg-[var(--color-card-surface)] px-3 py-2.5">Focus / {activeSkill.name}</span>
+              <span className="bg-[var(--color-card-surface)] px-3 py-2.5">Mode / {activeMode.meter}</span>
+              <span className="bg-[var(--color-card-surface)] px-3 py-2.5">Light / Soft</span>
+              <span className="bg-[var(--color-card-surface)] px-3 py-2.5 sm:text-right">State / Selected</span>
             </div>
           </section>
 
-          <aside className="border-y border-[#f2e5c6]/16 bg-[#080807]/42 p-4 xl:p-5">
-            <div className="flex items-center gap-3 border-b border-[#f2e5c6]/14 pb-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
+          <aside className="border-y border-[var(--color-text)]/16 bg-[var(--color-card-surface)]/92 p-4 xl:p-5">
+            <div className="flex items-center gap-3 border-b border-[var(--color-text)]/14 pb-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/54">
               <span>Camera Modes</span>
-              <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+              <span className="h-px flex-1 bg-[var(--color-text)]/14" />
             </div>
             <div
               aria-label="Skill category modes"
-              className="mt-4 grid gap-px border-y border-[#f2e5c6]/14 bg-transparent"
+              className="mt-4 grid gap-px border-y border-[var(--color-text)]/14 bg-transparent"
               role="tablist"
             >
               {skillModes.map((mode) => {
@@ -278,10 +278,10 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                 return (
                   <button
                     aria-selected={active}
-                    className={`grid grid-cols-[1fr_auto] items-center gap-3 bg-[#080807] px-3 py-3 text-left text-[10px] font-bold uppercase leading-none transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
+                    className={`grid grid-cols-[1fr_auto] items-center gap-3 bg-[var(--color-card-surface)] px-3 py-3 text-left text-[10px] font-bold uppercase leading-none transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
                       active
-                        ? "text-[#f2e5c6] shadow-[inset_3px_0_0_#8f2b35]"
-                        : "text-[#f2e5c6]/50 hover:text-[#8f2b35]"
+                        ? "text-[var(--color-text)] shadow-[inset_3px_0_0_#8f2b35]"
+                        : "text-[var(--color-text)]/50 hover:text-[#8f2b35]"
                     }`}
                     disabled={count === 0}
                     key={mode.id}
@@ -290,25 +290,25 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                     type="button"
                   >
                     <span>{mode.label}</span>
-                    <span className={active ? "text-[#8f2b35]" : "text-[#f2e5c6]/34"}>
+                    <span className={active ? "text-[#8f2b35]" : "text-[var(--color-text)]/34"}>
                       {count.toString().padStart(2, "0")}
                     </span>
                   </button>
                 );
               })}
             </div>
-            <dl className="mt-5 grid border-y border-[#f2e5c6]/14 text-[9px] font-bold uppercase leading-none">
-              <div className="grid grid-cols-[92px_1fr] gap-3 border-b border-[#f2e5c6]/10 py-3">
+            <dl className="mt-5 grid border-y border-[var(--color-text)]/14 text-[9px] font-bold uppercase leading-none">
+              <div className="grid grid-cols-[92px_1fr] gap-3 border-b border-[var(--color-text)]/10 py-3">
                 <dt className="text-[#8f2b35]">Capture</dt>
-                <dd className="min-w-0 truncate text-[#f2e5c6]/64">{activeSkill.name}</dd>
+                <dd className="min-w-0 truncate text-[var(--color-text)]/64">{activeSkill.name}</dd>
               </div>
-              <div className="grid grid-cols-[92px_1fr] gap-3 border-b border-[#f2e5c6]/10 py-3">
+              <div className="grid grid-cols-[92px_1fr] gap-3 border-b border-[var(--color-text)]/10 py-3">
                 <dt className="text-[#8f2b35]">Category</dt>
-                <dd className="min-w-0 truncate text-[#f2e5c6]/64">{activeMode.label}</dd>
+                <dd className="min-w-0 truncate text-[var(--color-text)]/64">{activeMode.label}</dd>
               </div>
               <div className="grid grid-cols-[92px_1fr] gap-3 py-3">
                 <dt className="text-[#8f2b35]">Frame</dt>
-                <dd className="min-w-0 truncate text-[#f2e5c6]/64">
+                <dd className="min-w-0 truncate text-[var(--color-text)]/64">
                   {(activeIndex + 1).toString().padStart(2, "0")} of{" "}
                   {visibleSkillItems.length.toString().padStart(2, "0")}
                 </dd>
@@ -317,10 +317,10 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
           </aside>
         </div>
 
-        <section className="mt-5 border-y border-[#f2e5c6]/18 py-4">
-          <div className="flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
+        <section className="mt-5 border-y border-[var(--color-text)]/18 py-4">
+          <div className="flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/54">
             <span className="text-[#8f2b35]">Contact Sheet</span>
-            <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+            <span className="h-px flex-1 bg-[var(--color-text)]/14" />
             <span>{visibleSkillItems.length.toString().padStart(2, "0")} Frames</span>
           </div>
           <div className="mt-4 flex w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -332,10 +332,10 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                 <button
                   aria-label={`Select ${skill.name}`}
                   aria-pressed={active}
-                  className={`group relative h-[132px] w-[176px] shrink-0 overflow-hidden border bg-[#050505] text-left transition focus-visible:z-10 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:h-[152px] sm:w-[214px] ${
+                  className={`group relative h-[132px] w-[176px] shrink-0 overflow-hidden border bg-white text-left transition focus-visible:z-10 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:h-[152px] sm:w-[214px] ${
                     active
                       ? "z-10 border-[#8f2b35]/90"
-                      : "-ml-px border-[#f2e5c6]/18 hover:border-[#f2e5c6]/44"
+                      : "-ml-px border-[var(--color-text)]/18 hover:border-[var(--color-text)]/44"
                   }`}
                   key={skill.id}
                   onClick={() => setSelectedId(skill.id)}
@@ -344,23 +344,23 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
                   <img
                     alt=""
                     aria-hidden="true"
-                    className={`h-full w-full object-cover transition duration-300 ${
+                    className={`h-full w-full bg-white object-contain p-4 transition duration-300 ${
                       active
-                        ? "brightness-[0.84] contrast-[1.12] saturate-[0.8]"
-                        : "brightness-[0.68] contrast-[1.16] saturate-[0.82] group-hover:brightness-[0.78]"
+                        ? "opacity-100"
+                        : "opacity-80 group-hover:opacity-100"
                     }`}
                     decoding="async"
                     loading="lazy"
                     onError={handleImageFallback}
                     src={skill.photo}
                   />
-                  <span className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.04),rgba(8,8,7,0.72))]" />
+                  <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_36%,rgba(var(--color-deep-rgb),0.76))]" />
                   {active ? <span className="absolute inset-x-0 top-0 h-1 bg-[#8f2b35]" /> : null}
-                  <span className="absolute left-2 right-2 top-2 flex items-center justify-between border-b border-[#f2e5c6]/20 pb-1.5 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/56">
+                  <span className="absolute left-2 right-2 top-2 flex items-center justify-between border-b border-[var(--color-text)]/20 pb-1.5 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/56">
                     <span>{(index + 1).toString().padStart(2, "0")}</span>
                     <span>{mode.meter}</span>
                   </span>
-                  <span className="absolute bottom-2 left-2 right-2 border-t border-[#f2e5c6]/24 pt-2 text-[9px] font-bold uppercase leading-3 text-[#f2e5c6]">
+                  <span className="absolute bottom-2 left-2 right-2 border-t border-[var(--color-text)]/24 pt-2 text-[9px] font-bold uppercase leading-3 text-[var(--color-text)]">
                     {skill.name}
                     <span className="block text-[#8f2b35]">{mode.label}</span>
                   </span>
@@ -398,7 +398,7 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
 
   return (
     <section
-      className="relative isolate flex min-h-[calc(100svh-72px)] items-center justify-center overflow-hidden px-4 py-20 text-[#f2e5c6] sm:px-6 lg:min-h-screen lg:px-8"
+      className="relative isolate flex min-h-[calc(100svh-72px)] items-center justify-center overflow-hidden px-4 py-20 text-[var(--color-text)] sm:px-6 lg:min-h-screen lg:px-8"
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
     >
@@ -409,8 +409,8 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
           onError={handleImageFallback}
           src={fallbackSkillHeroImage}
         />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(8,8,7,0.06),rgba(8,8,7,0.56)_62%,rgba(8,8,7,0.78)),linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.64))]" />
-        <div className="absolute inset-0 bg-[#0b0b0a]/15" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,rgba(var(--color-deep-rgb),0.06),rgba(var(--color-deep-rgb),0.56)_62%,rgba(var(--color-deep-rgb),0.78)),linear-gradient(180deg,rgba(var(--color-deep-rgb),0.08),rgba(var(--color-deep-rgb),0.64))]" />
+        <div className="absolute inset-0 bg-[var(--color-base)]/15" />
       </div>
 
       {floatingBlocks.map((block) => (
@@ -429,13 +429,13 @@ function SkillsHero({ skillItems }: { skillItems: SkillItem[] }) {
       >
         <div className="mx-auto mb-5 flex max-w-xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
           <span>Capability Mix</span>
-          <span className="h-px flex-1 bg-[#f2e5c6]/18" />
+          <span className="h-px flex-1 bg-[var(--color-text)]/18" />
           <span>Live Set</span>
         </div>
-        <h1 className="font-display text-[78px] font-semibold uppercase leading-[0.76] text-[#f2e5c6] sm:text-[132px] lg:text-[168px]">
+        <h1 className="font-display text-[78px] font-semibold uppercase leading-[0.76] text-[var(--color-text)] sm:text-[132px] lg:text-[168px]">
           Skills
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-sm font-light leading-7 text-[#f2e5c6]/72 sm:text-base">
+        <p className="mx-auto mt-6 max-w-2xl text-sm font-light leading-7 text-[var(--color-text)]/72 sm:text-base">
           My skills are less of a checklist and more of a record of the questions I
           have followed. They span low-level systems, AI, full-stack engineering,
           hardware, and design, with each one developed through something I
@@ -477,7 +477,7 @@ function FloatingSkillBlock({
         animate={{
           scale: [1, 1.018, 1],
         }}
-        className="relative overflow-hidden rounded-[22px] border border-white/70 bg-white/90 p-2 text-[#080807] opacity-[0.92] shadow-[0_18px_48px_rgba(0,0,0,0.28)] ring-1 ring-[#080807]/8 backdrop-blur-xl md:rounded-[28px] md:p-2.5 md:opacity-100 md:shadow-[0_24px_70px_rgba(0,0,0,0.32)]"
+        className="relative overflow-hidden rounded-[22px] border border-white/70 bg-white/90 p-2 text-[var(--color-ink)] opacity-[0.92] shadow-[0_18px_48px_rgba(0,0,0,0.28)] ring-1 ring-[var(--color-ink)]/8 backdrop-blur-xl md:rounded-[28px] md:p-2.5 md:opacity-100 md:shadow-[0_24px_70px_rgba(0,0,0,0.32)]"
         style={{ rotate, x, y }}
         transition={{ duration: 7.5, ease: "easeInOut", repeat: Infinity }}
       >
@@ -485,7 +485,7 @@ function FloatingSkillBlock({
         <div className="absolute inset-x-0 top-0 h-px bg-white/90" />
 
         <div className="relative">
-          <div className="flex items-center justify-between gap-2 border-b border-[#080807]/10 pb-1.5 text-[7px] font-bold uppercase leading-none text-[#080807]/44 md:gap-3 md:pb-2 md:text-[8px]">
+          <div className="flex items-center justify-between gap-2 border-b border-[var(--color-ink)]/10 pb-1.5 text-[7px] font-bold uppercase leading-none text-[var(--color-ink)]/44 md:gap-3 md:pb-2 md:text-[8px]">
             <span className="inline-flex items-center gap-1.5 text-[#8f2b35]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#8f2b35]" />
               {block.status}
@@ -496,7 +496,7 @@ function FloatingSkillBlock({
           <div className="mt-2 grid grid-cols-[42px_1fr] items-center gap-2 md:mt-2.5 md:grid-cols-[58px_1fr] md:gap-3">
             <img
               alt=""
-              className="h-[42px] w-[42px] rounded-[14px] object-cover brightness-[0.88] contrast-[1.08] saturate-100 md:h-[58px] md:w-[58px] md:rounded-[17px]"
+              className="h-[42px] w-[42px] rounded-[14px] bg-white object-contain p-1 md:h-[58px] md:w-[58px] md:rounded-[17px]"
               onError={handleImageFallback}
               src={block.image}
             />
@@ -504,34 +504,34 @@ function FloatingSkillBlock({
               <p className="truncate text-[7px] font-bold uppercase leading-none text-[#8f2b35] md:text-[9px]">
                 {block.label}
               </p>
-              <p className="font-display mt-1 truncate text-[15px] font-semibold uppercase leading-none text-[#080807] sm:text-[18px] md:text-2xl">
+              <p className="font-display mt-1 truncate text-[15px] font-semibold uppercase leading-none text-[var(--color-ink)] sm:text-[18px] md:text-2xl">
                 {block.meta}
               </p>
-              <p className="mt-1 truncate text-[7px] font-bold uppercase leading-none text-[#080807]/42 md:text-[9px]">
+              <p className="mt-1 truncate text-[7px] font-bold uppercase leading-none text-[var(--color-ink)]/42 md:text-[9px]">
                 Portfolio Capture / Saved
               </p>
             </div>
           </div>
 
           <div className="mt-2.5 grid grid-cols-[22px_1fr_22px] items-center gap-2 md:mt-3.5 md:grid-cols-[28px_1fr_28px] md:gap-3">
-            <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-[#080807] md:h-7 md:w-7">
+            <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-[var(--color-ink)] md:h-7 md:w-7">
               <span className="ml-0.5 h-0 w-0 border-y-[5px] border-l-[8px] border-y-transparent border-l-white" />
             </span>
-            <span className="relative h-[3px] overflow-hidden rounded-full bg-[#080807]/14">
+            <span className="relative h-[3px] overflow-hidden rounded-full bg-[var(--color-ink)]/14">
               <span className="absolute inset-y-0 left-0 w-[54%] rounded-full bg-[#8f2b35]" />
               <span className="absolute left-[54%] top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full border border-white bg-[#8f2b35]" />
             </span>
-            <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-[#080807]/8 md:h-7 md:w-7">
-              <span className="h-3 w-3 rounded-full border border-[#080807]/46" />
+            <span className="grid h-[22px] w-[22px] place-items-center rounded-full bg-[var(--color-ink)]/8 md:h-7 md:w-7">
+              <span className="h-3 w-3 rounded-full border border-[var(--color-ink)]/46" />
             </span>
           </div>
 
-          <div className="mt-2 flex items-center justify-between border-t border-[#080807]/10 pt-1.5 text-[7px] font-bold uppercase leading-none text-[#080807]/42 md:mt-3 md:pt-2 md:text-[8px]">
+          <div className="mt-2 flex items-center justify-between border-t border-[var(--color-ink)]/10 pt-1.5 text-[7px] font-bold uppercase leading-none text-[var(--color-ink)]/42 md:mt-3 md:pt-2 md:text-[8px]">
             <span>00:15</span>
             <span className="inline-flex items-center gap-1">
               <span className="h-1 w-1 rounded-full bg-[#8f2b35]" />
-              <span className="h-1 w-1 rounded-full bg-[#080807]/28" />
-              <span className="h-1 w-1 rounded-full bg-[#080807]/28" />
+              <span className="h-1 w-1 rounded-full bg-[var(--color-ink)]/28" />
+              <span className="h-1 w-1 rounded-full bg-[var(--color-ink)]/28" />
             </span>
             <span>03:10</span>
           </div>

@@ -116,7 +116,7 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
   }, [openNote]);
 
   return (
-    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[#080807] px-4 pb-16 pt-20 text-[#f2e5c6] sm:px-6 lg:px-8">
+    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[var(--color-deep)] px-4 pb-16 pt-20 text-[var(--color-text)] sm:px-6 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         {featuredNote?.image ? (
           <img
@@ -126,31 +126,31 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
             src={featuredNote.image}
           />
         ) : null}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.92),rgba(8,8,7,0.78)_46%,rgba(8,8,7,0.96)),linear-gradient(90deg,rgba(8,8,7,0.95),rgba(8,8,7,0.62),rgba(8,8,7,0.95))]" />
-        <div className="absolute inset-0 bg-[#0b0b0a]/44" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.92),rgba(var(--color-deep-rgb),0.78)_46%,rgba(var(--color-deep-rgb),0.96)),linear-gradient(90deg,rgba(var(--color-deep-rgb),0.95),rgba(var(--color-deep-rgb),0.62),rgba(var(--color-deep-rgb),0.95))]" />
+        <div className="absolute inset-0 bg-[var(--color-base)]/44" />
         <div className="editorial-film-grain absolute inset-0 opacity-28" />
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="flex flex-col items-center gap-5 border-y border-[#f2e5c6]/20 py-5">
+        <div className="flex flex-col items-center gap-5 border-y border-[var(--color-text)]/20 py-5">
           <div className="w-full text-center">
             <div className="mx-auto flex max-w-xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
               <span>Saved Folder</span>
-              <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+              <span className="h-px flex-1 bg-[var(--color-text)]/14" />
               <span>Index 04</span>
             </div>
-            <h1 className="font-display mt-4 text-[58px] font-semibold uppercase leading-[0.82] text-[#f2e5c6] sm:text-[98px] lg:text-[124px]">
+            <h1 className="font-display mt-4 text-[58px] font-semibold uppercase leading-[0.82] text-[var(--color-text)] sm:text-[98px] lg:text-[124px]">
               Saved Notes
             </h1>
           </div>
-          <p className="w-full max-w-2xl border-l border-[#8f2b35]/45 pl-4 text-left text-sm font-light leading-7 text-[#f2e5c6]/66 sm:text-base">
+          <p className="w-full max-w-2xl border-l border-[#8f2b35]/45 pl-4 text-left text-sm font-light leading-7 text-[var(--color-text)]/66 sm:text-base">
             I used to write for my school newspaper, and I still return to writing
             whenever I want to understand an idea more fully. This is where I save
             what I am learning, building, reading, and noticing along the way.
           </p>
         </div>
 
-        <div className="mt-5 flex w-full gap-px overflow-x-auto border-y border-[#f2e5c6]/18 bg-[#f2e5c6]/12 py-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mt-5 flex w-full gap-px overflow-x-auto border-y border-[var(--color-text)]/18 bg-[var(--color-text)]/12 py-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {filters.map((filter) => {
             const active = selectedFilter === filter;
             const count =
@@ -161,10 +161,10 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
             return (
               <button
                 aria-pressed={active}
-                className={`shrink-0 bg-[#080807] px-4 py-3 text-[10px] font-bold uppercase leading-none transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
+                className={`shrink-0 bg-[var(--color-card-surface)] px-4 py-3 text-[10px] font-bold uppercase leading-none transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
                   active
-                    ? "text-[#f2e5c6] shadow-[inset_0_-3px_0_#8f2b35]"
-                    : "text-[#f2e5c6]/52 hover:text-[#8f2b35]"
+                    ? "text-[var(--color-text)] shadow-[inset_0_-3px_0_#8f2b35]"
+                    : "text-[var(--color-text)]/52 hover:text-[#8f2b35]"
                 }`}
                 key={filter}
                 onClick={() => setSelectedFilter(filter)}
@@ -198,15 +198,15 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
 
 function BlogEmptyState() {
   return (
-    <section className="min-h-[420px] border border-[#f2e5c6]/18 bg-[#050505]/86 p-5 text-[#f2e5c6] xl:sticky xl:top-24">
-      <div className="flex items-center gap-3 border-b border-[#f2e5c6]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
+    <section className="min-h-[420px] border border-[var(--color-text)]/18 bg-[var(--color-panel)]/86 p-5 text-[var(--color-text)] xl:sticky xl:top-24">
+      <div className="flex items-center gap-3 border-b border-[var(--color-text)]/16 pb-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
         <Bookmark aria-hidden="true" size={12} strokeWidth={2} />
         No Notes Yet
       </div>
       <h2 className="font-display mt-6 text-[44px] font-semibold uppercase leading-[0.88] sm:text-[58px]">
         No Notes Saved
       </h2>
-      <p className="mt-5 max-w-sm border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/64">
+      <p className="mt-5 max-w-sm border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[var(--color-text)]/64">
         No blogs published.
       </p>
     </section>
@@ -222,8 +222,8 @@ function NoteImage({
 }) {
   if (!image) {
     return (
-      <div className={`${className} grid place-items-center bg-[#080807]`}>
-        <span className="border-y border-[#f2e5c6]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/42">
+      <div className={`${className} grid place-items-center bg-[var(--color-deep)]`}>
+        <span className="border-y border-[var(--color-text)]/18 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/42">
           Media Pending
         </span>
       </div>
@@ -252,7 +252,7 @@ function FeaturedNote({
   return (
     <button
       aria-label={`Open featured note ${note.title}`}
-      className="group relative min-h-[520px] overflow-hidden border border-[#f2e5c6]/24 bg-[#050505] text-left transition hover:border-[#8f2b35]/76 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] xl:sticky xl:top-24 xl:min-h-[620px]"
+      className="group relative min-h-[520px] overflow-hidden border border-[var(--color-text)]/24 bg-[var(--color-panel)] text-left transition hover:border-[#8f2b35]/76 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] xl:sticky xl:top-24 xl:min-h-[620px]"
       onClick={() => onOpen(note.id)}
       type="button"
     >
@@ -260,9 +260,9 @@ function FeaturedNote({
         className="absolute inset-0 h-full w-full object-cover brightness-[0.72] contrast-[1.16] saturate-[0.72] transition duration-500 group-hover:scale-[1.025] group-hover:brightness-[0.48]"
         image={note.image}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.12),rgba(8,8,7,0.38)_44%,rgba(8,8,7,0.88))]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.12),rgba(var(--color-deep-rgb),0.38)_44%,rgba(var(--color-deep-rgb),0.88))]" />
       <div className="archive-scanlines absolute inset-0 opacity-20" />
-      <div className="absolute left-4 right-4 top-4 flex items-center justify-between border-b border-[#f2e5c6]/24 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/62">
+      <div className="absolute left-4 right-4 top-4 flex items-center justify-between border-b border-[var(--color-text)]/24 pb-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/62">
         <span className="inline-flex items-center gap-2 text-[#8f2b35]">
           <Bookmark aria-hidden="true" size={12} strokeWidth={2} />
           Pinned
@@ -273,14 +273,14 @@ function FeaturedNote({
         <p className="text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
           {note.category} / {note.date}
         </p>
-        <h2 className="font-display mt-3 text-[46px] font-semibold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[60px]">
+        <h2 className="font-display mt-3 text-[46px] font-semibold uppercase leading-[0.88] text-[var(--color-text)] sm:text-[60px]">
           {note.title}
         </h2>
-        <p className="mt-4 max-w-sm border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-6 text-[#f2e5c6]/68">
+        <p className="mt-4 max-w-sm border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-6 text-[var(--color-text)]/68">
           {note.content}
         </p>
       </div>
-      <span className="absolute right-4 top-14 border border-[#8f2b35]/65 bg-[#080807]/80 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6] opacity-0 transition group-hover:opacity-100">
+      <span className="absolute right-4 top-14 border border-[#8f2b35]/65 bg-[var(--color-deep)]/80 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)] opacity-0 transition group-hover:opacity-100">
         Open Note
       </span>
     </button>
@@ -297,7 +297,7 @@ function BlogTile({
   return (
     <button
       aria-label={`Open note ${note.title}`}
-      className={`group mb-5 inline-block w-full break-inside-avoid overflow-hidden border border-[#f2e5c6]/18 bg-[#050505] text-left transition hover:border-[#8f2b35]/76 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${note.heightClassName}`}
+      className={`group mb-5 inline-block w-full break-inside-avoid overflow-hidden border border-[var(--color-text)]/18 bg-[var(--color-panel)] text-left transition hover:border-[#8f2b35]/76 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${note.heightClassName}`}
       onClick={() => onOpen(note.id)}
       type="button"
     >
@@ -306,9 +306,9 @@ function BlogTile({
           className="h-full w-full object-cover brightness-[0.68] contrast-[1.18] saturate-[0.62] transition duration-500 group-hover:scale-[1.03] group-hover:brightness-[0.44]"
           image={note.image}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.06),rgba(8,8,7,0.28)_46%,rgba(8,8,7,0.84))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.06),rgba(var(--color-deep-rgb),0.28)_46%,rgba(var(--color-deep-rgb),0.84))]" />
         <div className="archive-scanlines absolute inset-0 opacity-[0.18]" />
-        <div className="absolute left-3 right-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/22 pb-2 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/58">
+        <div className="absolute left-3 right-3 top-3 flex items-center justify-between border-b border-[var(--color-text)]/22 pb-2 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/58">
           <span>{note.category}</span>
           <span>{note.readTime}</span>
         </div>
@@ -316,11 +316,11 @@ function BlogTile({
           <p className="text-[8px] font-bold uppercase leading-none text-[#8f2b35]">
             {note.date}
           </p>
-          <h3 className="font-display mt-2 text-[30px] font-semibold uppercase leading-[0.9] text-[#f2e5c6] sm:text-[36px]">
+          <h3 className="font-display mt-2 text-[30px] font-semibold uppercase leading-[0.9] text-[var(--color-text)] sm:text-[36px]">
             {note.title}
           </h3>
         </div>
-        <span className="absolute left-4 top-12 border border-[#8f2b35]/65 bg-[#080807]/84 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6] opacity-0 transition group-hover:opacity-100">
+        <span className="absolute left-4 top-12 border border-[#8f2b35]/65 bg-[var(--color-deep)]/84 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)] opacity-0 transition group-hover:opacity-100">
           Open Note
         </span>
       </div>
@@ -336,23 +336,23 @@ function ReadingDrawer({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-[80] bg-[#080807]/78 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[80] bg-[var(--color-deep)]/78 backdrop-blur-sm">
       <button
         aria-label="Close note overlay"
         className="absolute inset-0 hidden cursor-default md:block"
         onClick={onClose}
         type="button"
       />
-      <aside className="absolute inset-0 overflow-y-auto border-l border-[#f2e5c6]/18 bg-[#080807] text-[#f2e5c6] md:left-auto md:w-[min(540px,44vw)]">
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-[#f2e5c6]/16 bg-[#080807]/92 px-4 py-3 backdrop-blur">
-          <div className="min-w-0 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/54">
+      <aside className="absolute inset-0 overflow-y-auto border-l border-[var(--color-text)]/18 bg-[var(--color-deep)] text-[var(--color-text)] md:left-auto md:w-[min(540px,44vw)]">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-[var(--color-text)]/16 bg-[var(--color-deep)]/92 px-4 py-3 backdrop-blur">
+          <div className="min-w-0 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/54">
             <span className="text-[#8f2b35]">Reading Drawer</span>
-            <span className="mx-2 text-[#f2e5c6]/24">/</span>
+            <span className="mx-2 text-[var(--color-text)]/24">/</span>
             <span>{note.category}</span>
           </div>
           <button
             aria-label="Close note"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center border border-[#f2e5c6]/22 text-[#f2e5c6]/68 transition hover:border-[#8f2b35] hover:text-[#8f2b35] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35]"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center border border-[var(--color-text)]/22 text-[var(--color-text)]/68 transition hover:border-[#8f2b35] hover:text-[#8f2b35] focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35]"
             onClick={onClose}
             type="button"
           >
@@ -360,31 +360,31 @@ function ReadingDrawer({
           </button>
         </div>
 
-        <div className="relative h-[46vh] min-h-[320px] overflow-hidden border-b border-[#f2e5c6]/16">
+        <div className="relative h-[46vh] min-h-[320px] overflow-hidden border-b border-[var(--color-text)]/16">
           <NoteImage
             className="h-full w-full object-cover brightness-[0.72] contrast-[1.16] saturate-[0.7]"
             image={note.image}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,7,0.08),rgba(8,8,7,0.68))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(var(--color-deep-rgb),0.08),rgba(var(--color-deep-rgb),0.68))]" />
           <div className="absolute bottom-4 left-4 right-4">
             <p className="text-[9px] font-bold uppercase leading-none text-[#8f2b35]">
               {note.date} / {note.readTime}
             </p>
-            <h2 className="font-display mt-2 text-[46px] font-semibold uppercase leading-[0.86] text-[#f2e5c6] sm:text-[58px]">
+            <h2 className="font-display mt-2 text-[46px] font-semibold uppercase leading-[0.86] text-[var(--color-text)] sm:text-[58px]">
               {note.title}
             </h2>
           </div>
         </div>
 
         <article className="px-4 py-6 sm:px-6">
-          <div className="grid grid-cols-2 border-y border-[#f2e5c6]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[#f2e5c6]/46">
+          <div className="grid grid-cols-2 border-y border-[var(--color-text)]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[var(--color-text)]/46">
             <span>Saved Artifact</span>
             <span className="text-right text-[#8f2b35]">{note.category}</span>
           </div>
-          <p className="mt-6 text-base font-light leading-8 text-[#f2e5c6]/74">
+          <p className="mt-6 text-base font-light leading-8 text-[var(--color-text)]/74">
             {note.content}
           </p>
-          <p className="mt-5 border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[#f2e5c6]/58">
+          <p className="mt-5 border-l border-[#8f2b35]/45 pl-4 text-sm font-light leading-7 text-[var(--color-text)]/58">
             This note is kept as a visual reading-room fragment: image first,
             metadata visible, and ready to expand into a longer entry.
           </p>

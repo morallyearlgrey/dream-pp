@@ -36,7 +36,6 @@ type AudioPlayerContextValue = {
 
 const AudioPlayerContext = createContext<AudioPlayerContextValue | null>(null);
 const audioStorageKey = "kai-portfolio-audio-state";
-
 function readStoredAudioState(): StoredAudioState | null {
   try {
     const value = window.localStorage.getItem(audioStorageKey);
@@ -292,13 +291,13 @@ export function NowPlayingModule() {
     <div aria-live="polite" className="grid gap-1.5 sm:gap-2">
       <div className="flex items-center gap-2 text-[9px] leading-none">
         <span className="text-[#8f2b35]">Now playing</span>
-        <span className="h-px flex-1 bg-[#f2e5c6]/24" />
+        <span className="h-px flex-1 bg-[var(--color-text)]/24" />
         <span>{hasTracks ? `${trackNumber}/${totalTracks}` : "0/0"}</span>
       </div>
       <div className="flex min-w-0 items-center gap-2">
         <button
           aria-label="Previous track"
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/20 bg-[#080807]/72 text-[#f2e5c6]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[var(--color-text)]/20 bg-[var(--color-deep)]/72 text-[var(--color-text)]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
           disabled={!hasTracks}
           onClick={playPreviousTrack}
           type="button"
@@ -308,7 +307,7 @@ export function NowPlayingModule() {
         <button
           aria-label={isPlaying ? "Pause track" : "Play track"}
           aria-pressed={isPlaying}
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/28 bg-[#080807]/72 text-[#f2e5c6] transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[var(--color-text)]/28 bg-[var(--color-deep)]/72 text-[var(--color-text)] transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
           disabled={!hasTracks}
           onClick={togglePlayback}
           type="button"
@@ -316,16 +315,16 @@ export function NowPlayingModule() {
           <Icon aria-hidden="true" size={14} strokeWidth={2} />
         </button>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[9px] font-bold uppercase leading-none text-[#f2e5c6] sm:text-[10px]">
+          <p className="truncate text-[9px] font-bold uppercase leading-none text-[var(--color-text)] sm:text-[10px]">
             {title}
           </p>
-          <p className="mt-1 text-[8px] font-bold uppercase leading-none text-[#f2e5c6]/44">
+          <p className="mt-1 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/44">
             {status}
           </p>
         </div>
         <button
           aria-label="Next track"
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[#f2e5c6]/20 bg-[#080807]/72 text-[#f2e5c6]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
+          className="inline-flex h-7 w-7 shrink-0 items-center justify-center border border-[var(--color-text)]/20 bg-[var(--color-deep)]/72 text-[var(--color-text)]/70 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-35 sm:h-8 sm:w-8"
           disabled={!hasTracks}
           onClick={playNextTrack}
           type="button"
@@ -339,7 +338,7 @@ export function NowPlayingModule() {
 
 export function GlobalAudioDock() {
   return (
-    <aside className="fixed bottom-4 left-4 z-[70] w-[min(360px,calc(100vw-2rem))] border border-[#f2e5c6]/24 bg-[#080807]/84 p-3 text-[#f2e5c6] shadow-[0_10px_28px_rgba(0,0,0,0.22)] backdrop-blur-md">
+    <aside className="fixed bottom-4 left-4 z-[70] w-[min(360px,calc(100vw-2rem))] border border-[var(--color-text)]/24 bg-[var(--color-card-surface)]/92 p-3 text-[var(--color-text)] shadow-[0_10px_28px_rgba(0,0,0,0.22)] backdrop-blur-md">
       <NowPlayingModule />
     </aside>
   );

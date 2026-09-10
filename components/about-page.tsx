@@ -143,7 +143,7 @@ function getIsMobileViewport() {
 
 export function AboutPage() {
   return (
-    <main className="-mt-[72px] overflow-hidden bg-[#0b0b0a] text-[#f2e5c6]">
+    <main className="-mt-[72px] overflow-hidden bg-[var(--color-base)] text-[var(--color-text)]">
       <HeroSection />
       <WhoAmI />
       <ImageCarousel />
@@ -274,7 +274,7 @@ function HeroSection() {
         className="about-hero-colorwash absolute inset-0"
         style={{ clipPath }}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.84)_0%,rgba(242,229,198,0.24)_34%,rgba(8,8,7,0.08)_60%,rgba(8,8,7,0.5)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(242,229,198,0.84)_0%,rgba(242,229,198,0.24)_34%,rgba(var(--color-deep-rgb),0.08)_60%,rgba(var(--color-deep-rgb),0.5)_100%)]" />
       <div aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
       <div className="absolute left-4 right-4 top-24 z-10 flex items-center gap-2 text-[8px] font-bold uppercase leading-none text-[#5E1C23]/84 sm:gap-4 sm:text-[10px] lg:left-14 lg:right-14">
         <span>Issue I</span>
@@ -295,10 +295,10 @@ function HeroSection() {
           Light <span className="text-[#5E1C23]">Window</span>
         </span>
       </div>
-      <p className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/64 [writing-mode:vertical-rl] sm:block lg:right-14">
+      <p className="absolute right-4 top-1/2 z-10 hidden -translate-y-1/2 text-[10px] font-bold uppercase leading-none text-[var(--color-text)]/64 [writing-mode:vertical-rl] sm:block lg:right-14">
         Move the lens. Reveal the next detail.
       </p>
-      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#0b0b0a] to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[var(--color-base)] to-transparent" />
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
@@ -388,13 +388,13 @@ function HeroSection() {
           <span className="h-px w-6 bg-white/45" />
           <span>{focusRegionLabel}</span>
         </span>
-        <span className="absolute -right-8 top-1/2 hidden -translate-y-1/2 items-center gap-1 border border-white/50 bg-[#f2e5c6]/82 px-1.5 py-2 text-[#5E1C23] shadow-[0_8px_22px_rgba(0,0,0,0.16)] backdrop-blur-sm sm:flex">
+        <span className="absolute -right-8 top-1/2 hidden -translate-y-1/2 items-center gap-1 border border-white/50 bg-[var(--color-text)]/82 px-1.5 py-2 text-[var(--color-drag-text)] shadow-[0_8px_22px_rgba(0,0,0,0.16)] backdrop-blur-sm sm:flex">
           <GripVertical aria-hidden="true" size={16} strokeWidth={1.8} />
           <span className="text-[8px] font-bold uppercase leading-none [writing-mode:vertical-rl]">
             Drag
           </span>
         </span>
-        <span className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-[#f2e5c6]/86 px-2 py-1 text-[8px] font-bold uppercase leading-none text-[#5E1C23] shadow-[0_7px_18px_rgba(0,0,0,0.12)] sm:hidden">
+        <span className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-[var(--color-text)]/86 px-2 py-1 text-[8px] font-bold uppercase leading-none text-[var(--color-drag-text)] shadow-[0_7px_18px_rgba(0,0,0,0.12)] sm:hidden">
           <GripVertical aria-hidden="true" size={13} strokeWidth={1.8} />
           DRAG
         </span>
@@ -414,7 +414,7 @@ function WhoAmI() {
 
   return (
     <motion.section
-      className="group relative w-full overflow-hidden border-y border-[#f2e5c6]/12 bg-[#080807] py-20 text-center md:py-24"
+      className="group relative w-full overflow-hidden border-y border-[var(--color-text)]/12 bg-[var(--color-deep)] py-20 text-center md:py-24"
       initial={{ opacity: 0, y: 36 }}
       style={maskImageStyle}
       transition={{ duration: 0.65, ease: "easeOut" }}
@@ -432,12 +432,12 @@ function WhoAmI() {
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(8,8,7,0.48)_0%,rgba(8,8,7,0.72)_48%,rgba(8,8,7,0.92)_100%)]"
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(var(--color-deep-rgb),0.48)_0%,rgba(var(--color-deep-rgb),0.72)_48%,rgba(var(--color-deep-rgb),0.92)_100%)]"
       />
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 sm:px-8 lg:px-12">
         <div className="mb-5 flex w-full items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#8f2b35]/86 sm:text-[10px]">
           <span>Profile Note</span>
-          <span className="h-px flex-1 bg-[#f2e5c6]/14" />
+          <span className="h-px flex-1 bg-[var(--color-text)]/14" />
           <span>02</span>
         </div>
         <div className="relative inline-block">
@@ -452,9 +452,9 @@ function WhoAmI() {
           />
           <div
             aria-hidden="true"
-            className="absolute inset-x-[-8%] top-1/2 h-[130%] w-[116%] -translate-y-1/2 bg-[#080807]/54"
+            className="absolute inset-x-[-8%] top-1/2 h-[130%] w-[116%] -translate-y-1/2 bg-[var(--color-deep)]/54"
           />
-          <h2 className="who-mask-heading relative z-10 font-headline text-[54px] font-bold uppercase leading-[0.88] text-[#f2e5c6] sm:text-[86px] lg:text-[118px]">
+          <h2 className="who-mask-heading relative z-10 font-headline text-[54px] font-bold uppercase leading-[0.88] text-[var(--color-text)] sm:text-[86px] lg:text-[118px]">
             <span>Who I Am</span>
             <motion.span
               aria-hidden="true"
@@ -471,14 +471,14 @@ function WhoAmI() {
             </span>
           </h2>
         </div>
-        <div className="relative z-10 mt-6 flex w-full max-w-5xl items-center gap-3 text-xs font-bold uppercase leading-5 text-[#f2e5c6]/66 sm:text-base sm:leading-6">
-          <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+        <div className="relative z-10 mt-6 flex w-full max-w-5xl items-center gap-3 text-xs font-bold uppercase leading-5 text-[var(--color-text)]/66 sm:text-base sm:leading-6">
+          <span className="h-px flex-1 bg-[var(--color-text)]/16" />
           <span className="text-center tracking-[0.18em]">
             2x @ NVIDIA <span className="text-[#8f2b35]">•</span> 2x @ BNY <span className="text-[#8f2b35]">•</span> Hack Lead @ Knight Hacks <span className="text-[#8f2b35]">•</span> Prev Software Chair @ IEEE
           </span>
-          <span className="h-px flex-1 bg-[#f2e5c6]/16" />
+          <span className="h-px flex-1 bg-[var(--color-text)]/16" />
         </div>
-        <p className="relative z-10 mt-9 max-w-3xl text-lg font-light leading-9 text-[#f2e5c6]/70 sm:text-xl sm:leading-10">
+        <p className="relative z-10 mt-9 max-w-3xl text-lg font-light leading-9 text-[var(--color-text)]/70 sm:text-xl sm:leading-10">
           {whoIAmText}
         </p>
       </div>
@@ -691,7 +691,7 @@ function ImageCarousel() {
 
   return (
     <motion.section
-      className="relative overflow-hidden bg-[#0b0b0a] px-5 py-16 text-[#f2e5c6] sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+      className="relative overflow-hidden bg-[var(--color-base)] px-5 py-16 text-[var(--color-text)] sm:px-8 sm:py-20 lg:px-12 lg:py-24"
       initial={{ opacity: 0, y: 44 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
       viewport={{ amount: 0.22, once: true }}
@@ -699,22 +699,22 @@ function ImageCarousel() {
     >
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(180deg,#11100f,#070707)]"
+        className="absolute inset-0 bg-[linear-gradient(180deg,var(--color-elevated),var(--color-low))]"
       />
       <div aria-hidden="true" className="editorial-film-grain absolute inset-0 opacity-24" />
-      <div className="absolute inset-x-0 top-0 h-px bg-[#f2e5c6]/16" />
-      <div className="absolute inset-x-0 bottom-0 h-px bg-[#f2e5c6]/16" />
+      <div className="absolute inset-x-0 top-0 h-px bg-[var(--color-text)]/16" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-[var(--color-text)]/16" />
 
-      <div className="relative z-10 mx-auto mb-7 grid max-w-[1500px] gap-6 border-b border-[#f2e5c6]/14 pb-6 md:grid-cols-[minmax(0,0.95fr)_minmax(260px,420px)] md:items-end lg:gap-8">
+      <div className="relative z-10 mx-auto mb-7 grid max-w-[1500px] gap-6 border-b border-[var(--color-text)]/14 pb-6 md:grid-cols-[minmax(0,0.95fr)_minmax(260px,420px)] md:items-end lg:gap-8">
         <div>
           <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35] sm:text-[11px]">
             <span>Visual Archive</span>
-            <span className="h-px flex-1 bg-white/20" />
+            <span className="h-px flex-1 bg-[var(--color-text)]/20" />
           </div>
-          <h2 className="mt-4 font-headline text-[38px] font-bold leading-[0.9] text-[#f5efe6] sm:text-[48px] md:text-[56px]">
+          <h2 className="mt-4 font-headline text-[38px] font-bold leading-[0.9] text-[var(--color-heading)] sm:text-[48px] md:text-[56px]">
             Me in Three Lenses
           </h2>
-          <p className="mt-4 max-w-[40rem] text-base font-light leading-7 text-white/68 sm:text-lg sm:leading-8">
+          <p className="mt-4 max-w-[40rem] text-base font-light leading-7 text-[var(--color-text)]/68 sm:text-lg sm:leading-8">
             The same story can be told an infinite amount of ways – it&apos;s all about the perspective that you look at it through. My journalism instructor taught me this lesson five years ago and despite the fact I no longer write stories, it&apos;s never left me. To fully understand the why and what behind a person, event, or place, you need to look at it through different lenses. 
             <br />
             <br />
@@ -722,7 +722,7 @@ function ImageCarousel() {
           </p>
         </div>
         <div className="editorial-proof-frame relative overflow-hidden p-2 md:justify-self-end md:w-full md:max-w-[420px]">
-          <div className="relative aspect-square overflow-hidden border border-[#f2e5c6]/20 bg-[#11100f]">
+          <div className="relative aspect-square overflow-hidden border border-[var(--color-text)]/20 bg-[var(--color-elevated)]">
             {showVisualArchiveVideo ? (
               <video
                 aria-label="Looping visual archive preview"
@@ -743,16 +743,16 @@ function ImageCarousel() {
             )}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_22%,rgba(143,43,53,0.16),transparent_34%),linear-gradient(180deg,rgba(8,8,7,0)_52%,rgba(8,8,7,0.62))]"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_22%,rgba(143,43,53,0.16),transparent_34%),linear-gradient(180deg,rgba(var(--color-deep-rgb),0)_52%,rgba(var(--color-deep-rgb),0.62))]"
             />
             <span aria-hidden="true" className="archive-scanlines pointer-events-none absolute inset-0 opacity-[0.22]" />
-            <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between border-b border-[#f2e5c6]/18 pb-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/72">
+            <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center justify-between border-b border-[var(--color-text)]/18 pb-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/72">
               <span>Motion Plate</span>
               <span>01 / {aboutCards.length.toString().padStart(2, "0")}</span>
             </div>
-            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-end gap-3 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/70">
+            <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex items-end gap-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/70">
               <span>Auto Loop</span>
-              <span className="mb-0.5 h-px flex-1 bg-[#f2e5c6]/24" />
+              <span className="mb-0.5 h-px flex-1 bg-[var(--color-text)]/24" />
               <span>Color Proof</span>
             </div>
           </div>
@@ -834,7 +834,7 @@ function ImageCarousel() {
                       />
                       <span
                         aria-hidden="true"
-                        className="absolute inset-0 z-20 bg-[#080807] transition-opacity duration-150 ease-out"
+                        className="absolute inset-0 z-20 bg-[var(--color-deep)] transition-opacity duration-150 ease-out"
                         style={{ opacity: inactiveEmphasis * 0.32 }}
                       />
                       <span aria-hidden="true" className="archive-scanlines absolute inset-0 z-30 opacity-30" />
@@ -846,24 +846,24 @@ function ImageCarousel() {
           })}
         </div>
       </div>
-      <div className="relative z-10 mx-auto mt-5 grid max-w-[1200px] gap-4 border-t border-[#f2e5c6]/14 pt-5 md:grid-cols-[minmax(140px,0.3fr)_minmax(0,1fr)_minmax(140px,0.3fr)] md:items-center">
-        <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#f2e5c6]/52 md:grid md:justify-items-center md:gap-2 md:text-center">
+      <div className="relative z-10 mx-auto mt-5 grid max-w-[1200px] gap-4 border-t border-[var(--color-text)]/14 pt-5 md:grid-cols-[minmax(140px,0.3fr)_minmax(0,1fr)_minmax(140px,0.3fr)] md:items-center">
+        <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[var(--color-text)]/52 md:grid md:justify-items-center md:gap-2 md:text-center">
           <span className="text-[#8f2b35]">Active Plate</span>
           <span>
             {activeImageNumber} / {aboutCards.length.toString().padStart(2, "0")}
           </span>
         </div>
         <div aria-live="polite" className="min-h-[112px] md:min-h-[104px]">
-          <h3 className="font-headline text-[42px] font-bold uppercase leading-[0.9] text-[#f2e5c6] sm:text-[58px]">
+          <h3 className="font-headline text-[42px] font-bold uppercase leading-[0.9] text-[var(--color-text)] sm:text-[58px]">
             {activeCard.title}
           </h3>
-          <p className="mt-3 max-w-2xl text-sm font-light leading-6 text-[#f2e5c6]/66 sm:text-base sm:leading-7">
+          <p className="mt-3 max-w-2xl text-sm font-light leading-6 text-[var(--color-text)]/66 sm:text-base sm:leading-7">
             {activeCard.text}
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-px border border-[#f2e5c6]/14 bg-[#f2e5c6]/14 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/58 md:grid-cols-1">
+        <div className="grid grid-cols-3 gap-px border border-[var(--color-text)]/14 bg-[var(--color-text)]/14 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/58 md:grid-cols-1">
           {[activeCard.category, activeCard.focus, activeCard.location].map((item) => (
-            <span className="bg-[#0f0e0d] px-3 py-2.5" key={item}>
+            <span className="bg-[var(--color-card)] px-3 py-2.5" key={item}>
               {item}
             </span>
           ))}
@@ -930,52 +930,61 @@ function WonderCaptcha() {
     }, 4000);
   }
 
+  function dismissKoda() {
+    if (kodaTimeoutRef.current !== null) {
+      window.clearTimeout(kodaTimeoutRef.current);
+      kodaTimeoutRef.current = null;
+    }
+
+    setShowKoda(false);
+  }
+
   return (
     <>
       <motion.section
-        className="relative overflow-hidden bg-[#0f0f0e] px-5 py-20 text-white sm:px-8 lg:px-12"
+        className="relative overflow-hidden bg-[var(--color-section)] px-5 py-20 text-[var(--color-text)] sm:px-8 lg:px-12"
         initial={{ opacity: 0, y: 44 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
         viewport={{ amount: 0.2, once: true }}
         whileInView={{ opacity: 1, y: 0 }}
       >
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#121110,#090909)]" />
-        <div className="absolute left-[8%] right-[8%] top-16 h-px bg-[#f2e5c6]/16" />
-        <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[#f2e5c6]/12" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,var(--color-section-top),var(--color-section-bottom))]" />
+        <div className="absolute left-[8%] right-[8%] top-16 h-px bg-[var(--color-text)]/16" />
+        <div className="absolute left-[8%] right-[8%] bottom-16 h-px bg-[var(--color-text)]/12" />
 
         <div
-          className={`relative mx-auto max-w-[920px] overflow-hidden rounded-[34px] border border-white/52 bg-[#f8f4eb]/94 text-[#171311] shadow-[0_22px_58px_rgba(0,0,0,0.22)] backdrop-blur-xl ${
+          className={`relative mx-auto max-w-[920px] overflow-hidden rounded-[34px] border border-white/52 bg-[var(--color-paper)]/94 text-[var(--color-ink)] shadow-[0_22px_58px_rgba(0,0,0,0.22)] backdrop-blur-xl ${
             flashing ? "captcha-flash" : ""
           }`}
         >
         <div className="px-4 py-4 sm:px-6 sm:py-5">
-          <div className="flex items-center gap-3 border-b border-[#171311]/12 pb-3 text-[9px] font-bold uppercase leading-none text-[#171311]/50 sm:text-[10px]">
+          <div className="flex items-center gap-3 border-b border-[var(--color-ink)]/12 pb-3 text-[9px] font-bold uppercase leading-none text-[var(--color-ink)]/50 sm:text-[10px]">
             <span>Human Check</span>
-            <span className="h-px flex-1 bg-[#171311]/10" />
+            <span className="h-px flex-1 bg-[var(--color-ink)]/10" />
             <span>09 Images</span>
             <span>{selected.length.toString().padStart(2, "0")} Selected</span>
           </div>
           <div className="pt-5">
-            <h2 className="max-w-2xl font-display text-[30px] font-medium leading-[1.02] text-[#171311] sm:text-[42px]">
+            <h2 className="max-w-2xl font-display text-[30px] font-medium leading-[1.02] text-[var(--color-ink)] sm:text-[42px]">
               Select all images that make you wonder.
             </h2>
-            <p className="mt-3 text-xs font-medium leading-5 text-[#171311]/58 sm:text-sm">
+            <p className="mt-3 text-xs font-medium leading-5 text-[var(--color-ink)]/58 sm:text-sm">
               Click verify once your curiosity is satisfied.
             </p>
-            <p className="mt-5 max-w-3xl border-l border-[#8f2b35]/38 pl-4 text-sm font-light leading-6 text-[#171311]/68 sm:text-base sm:leading-7">
+            <p className="mt-5 max-w-3xl border-l border-[#8f2b35]/38 pl-4 text-sm font-light leading-6 text-[var(--color-ink)]/68 sm:text-base sm:leading-7">
               {myInterestsText}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-1 border-y border-[#171311]/10 bg-[#171311]/8 p-1.5">
+        <div className="grid grid-cols-3 gap-1 border-y border-[var(--color-ink)]/10 bg-[var(--color-ink)]/8 p-1.5">
           {tiles.map((tile, index) => {
             const active = selectedSet.has(tile.id);
 
             return (
               <button
                 aria-pressed={active}
-                className={`group relative aspect-square overflow-hidden rounded-[18px] bg-[#0b0b0a] outline-none transition focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-[#8f2b35] ${
+                className={`group relative aspect-square overflow-hidden rounded-[18px] bg-[var(--color-base)] outline-none transition focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-[#8f2b35] ${
                   active
                     ? "shadow-[inset_0_0_0_2px_#8f2b35,inset_0_0_0_6px_rgba(248,244,235,0.9)]"
                     : "hover:shadow-[inset_0_0_0_1px_rgba(23,19,17,0.28)]"
@@ -1010,22 +1019,22 @@ function WonderCaptcha() {
                   }`}
                 />
                 <span
-                  className={`absolute inset-x-2 bottom-2 border-t border-[#f2e5c6]/40 pt-1.5 text-left text-[9px] font-bold uppercase leading-tight text-[#f2e5c6] transition duration-300 ${
+                  className={`absolute inset-x-2 bottom-2 border-t border-[var(--color-text)]/40 pt-1.5 text-left text-[9px] font-bold uppercase leading-tight text-[var(--color-text)] transition duration-300 ${
                     active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                   }`}
                 >
                   {tile.caption}
                 </span>
                 <span
-                  className={`absolute left-2 top-2 inline-flex h-5 w-5 items-center justify-center border text-[#f2e5c6] transition ${
+                  className={`absolute left-2 top-2 inline-flex h-5 w-5 items-center justify-center border text-[var(--color-text)] transition ${
                     active
-                      ? "border-[#8f2b35] bg-[#8f2b35] text-[#f2e5c6]"
+                      ? "border-[#8f2b35] bg-[#8f2b35] text-[var(--color-text)]"
                       : "border-white/60 bg-black/18"
                   }`}
                 >
                   {active ? <X aria-hidden="true" size={13} strokeWidth={2.6} /> : null}
                 </span>
-                <span className="absolute right-2 top-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/50">
+                <span className="absolute right-2 top-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/50">
                   {(index + 1).toString().padStart(2, "0")}
                 </span>
               </button>
@@ -1034,21 +1043,21 @@ function WonderCaptcha() {
         </div>
 
         <div className="flex items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <div className="hidden items-center gap-3 text-[9px] font-bold uppercase leading-none text-[#171311]/42 sm:flex">
+          <div className="hidden items-center gap-3 text-[9px] font-bold uppercase leading-none text-[var(--color-ink)]/42 sm:flex">
             <span>Choose by feel</span>
-            <span className="h-px w-16 bg-[#171311]/12" />
+            <span className="h-px w-16 bg-[var(--color-ink)]/12" />
             <span>There is no answer key</span>
           </div>
           <button
             aria-label="Undo and shuffle images"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#171311]/12 bg-white/64 text-[#171311]/62 transition hover:border-[#8f2b35]/40 hover:text-[#8f2b35]"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[var(--color-ink)]/12 bg-white/64 text-[var(--color-ink)]/62 transition hover:border-[#8f2b35]/40 hover:text-[#8f2b35]"
             onClick={shuffle}
             type="button"
           >
             <RotateCcw aria-hidden="true" size={17} strokeWidth={1.9} />
           </button>
           <button
-            className="inline-flex h-9 items-center gap-2 rounded-full border border-[#171311]/14 bg-[#171311] px-4 text-[9px] font-bold uppercase leading-none text-[#f8f4eb] transition hover:bg-[#5E1C23]"
+            className="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--color-ink)]/14 bg-[var(--color-ink)] px-4 text-[9px] font-bold uppercase leading-none text-[var(--color-paper)] transition hover:bg-[#5E1C23]"
             onClick={verify}
             type="button"
           >
@@ -1064,17 +1073,25 @@ function WonderCaptcha() {
           animate={{ opacity: 1 }}
           aria-label="Koda photo confirmation"
           aria-live="polite"
-          className="pointer-events-none fixed inset-0 z-[120] flex items-center justify-center bg-black/58 p-5 backdrop-blur-sm"
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/58 p-5 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           role="status"
           transition={{ duration: 0.22 }}
         >
           <motion.figure
             animate={{ scale: 1, y: 0 }}
-            className="w-full max-w-[430px] overflow-hidden rounded-[28px] border border-white/45 bg-[#f8f4eb] p-2.5 text-[#171311] shadow-[0_28px_90px_rgba(0,0,0,0.55)]"
+            className="relative w-full max-w-[430px] overflow-hidden rounded-[28px] border border-white/45 bg-[var(--color-paper)] p-2.5 text-[var(--color-ink)] shadow-[0_28px_90px_rgba(0,0,0,0.55)]"
             initial={{ scale: 0.92, y: 24 }}
             transition={{ duration: 0.28, ease: "easeOut" }}
           >
+            <button
+              aria-label="Close Koda photo"
+              className="absolute right-5 top-5 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/70 bg-[var(--color-ink)]/76 text-[var(--color-paper)] backdrop-blur-sm transition hover:bg-[#8f2b35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              onClick={dismissKoda}
+              type="button"
+            >
+              <X aria-hidden="true" size={16} strokeWidth={2.2} />
+            </button>
             <img
               alt="Koda, Kai's dog"
               className="max-h-[68vh] w-full rounded-[20px] object-cover"
@@ -1082,7 +1099,7 @@ function WonderCaptcha() {
               onError={handleImageFallback}
               src="https://qcxeyxinrhwjmmwhguqg.supabase.co/storage/v1/object/public/portfoliomedia/photos/koda.JPG"
             />
-            <figcaption className="px-3 py-4 text-center font-display text-2xl font-medium leading-none sm:text-3xl">
+            <figcaption className="px-3 py-4 text-center font-body text-lg font-medium leading-snug sm:text-xl">
               {"My cute dog Koda <3"}
             </figcaption>
           </motion.figure>

@@ -99,6 +99,10 @@ DISCORD_CLIENT_ID
 DISCORD_CLIENT_SECRET
 ```
 
+When the Supabase Vercel integration provides `POSTGRES_URL` instead of
+`DATABASE_URL`, the application uses it automatically. `POSTGRES_PRISMA_URL`
+and `POSTGRES_URL_NON_POOLING` are also supported as fallbacks.
+
 Make the `portfoliomedia` bucket public if you want the site to render direct
 public media URLs from the browser. For a private bucket, add a signed URL API
 route instead of using public object URLs.

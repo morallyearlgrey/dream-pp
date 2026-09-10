@@ -54,6 +54,12 @@ function writeIdentityToToken(token: JWT, identity: DiscordIdentity) {
   token.isAdmin = isAuthorizedDiscordIdentity(identity);
 }
 
+function refreshTokenAuthorization(token: JWT) {
+  token.isAdmin = isAuthorizedDiscordIdentity({
+    discordId: typeof token.discordId === "string" ? token.discordId : undefined,
+  });
+}
+
 export function isAuthorizedAdminSession(session: { user?: AdminSessionUser } | null) {
   return session?.user?.isAdmin === true;
 }
@@ -61,6 +67,12 @@ export function isAuthorizedAdminSession(session: { user?: AdminSessionUser } | 
 export const authOptions: NextAuthOptions = {
   providers: [
     DiscordProvider({
+      authorization: {
+        params: {
+          prompt: "consent",
+          scope: "identify email",
+        },
+      },
       clientId: process.env.DISCORD_CLIENT_ID ?? "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET ?? "",
     }),
@@ -69,6 +81,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ profile, token, user }) {
       if (profile || user) {
         writeIdentityToToken(token, getDiscordIdentity(profile, user));
+      } else {
+        refreshTokenAuthorization(token);
       }
 
       return token;

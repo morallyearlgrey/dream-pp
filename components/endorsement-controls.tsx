@@ -49,7 +49,7 @@ export function EndorsementControls({
       <div className="flex flex-wrap gap-2">
         {!approved ? (
           <button
-            className="border border-[#8f2b35]/45 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[#f2e5c6] disabled:cursor-not-allowed disabled:opacity-45"
+            className="border border-[#8f2b35]/45 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#8f2b35] transition hover:bg-[#8f2b35] hover:text-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-45"
             disabled={disabled || pendingAction !== null}
             onClick={() => updateEndorsement("approve", { approved: true })}
             type="button"
@@ -58,7 +58,7 @@ export function EndorsementControls({
           </button>
         ) : null}
         <button
-          className="border border-[#f2e5c6]/22 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/68 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-45"
+          className="border border-[var(--color-text)]/22 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/68 transition hover:border-[#8f2b35] hover:text-[#8f2b35] disabled:cursor-not-allowed disabled:opacity-45"
           disabled={disabled || pendingAction !== null}
           onClick={() =>
             updateEndorsement(featured ? "unfeature" : "feature", { featured: !featured })
@@ -75,7 +75,7 @@ export function EndorsementControls({
         </button>
         {approved ? (
           <button
-            className="border border-[#f2e5c6]/14 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/46 transition hover:border-[#ffb0a8]/50 hover:text-[#ffb0a8] disabled:cursor-not-allowed disabled:opacity-45"
+            className="border border-[var(--color-text)]/14 px-3 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/46 transition hover:border-[#ffb0a8]/50 hover:text-[#ffb0a8] disabled:cursor-not-allowed disabled:opacity-45"
             disabled={disabled || pendingAction !== null}
             onClick={() => updateEndorsement("hide", { approved: false })}
             type="button"
@@ -85,7 +85,7 @@ export function EndorsementControls({
         ) : null}
       </div>
       {disabled ? (
-        <p className="text-[9px] font-bold uppercase leading-none text-[#f2e5c6]/36">
+        <p className="text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/36">
           Connect DATABASE_URL to moderate live endorsements.
         </p>
       ) : null}

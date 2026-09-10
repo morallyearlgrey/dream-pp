@@ -5,10 +5,16 @@ import * as schema from "./schema";
 let client: ReturnType<typeof postgres> | undefined;
 
 export function getDb() {
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl =
+    process.env.DATABASE_URL?.trim() ||
+    process.env.POSTGRES_URL?.trim() ||
+    process.env.POSTGRES_PRISMA_URL?.trim() ||
+    process.env.POSTGRES_URL_NON_POOLING?.trim();
 
   if (!databaseUrl) {
-    throw new Error("DATABASE_URL is required before using the database.");
+    throw new Error(
+      "DATABASE_URL or a supported POSTGRES_URL variable is required before using the database.",
+    );
   }
 
   client ??= postgres(databaseUrl, {

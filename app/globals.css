@@ -2,8 +2,30 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b0b0a;
-  --foreground: #f2e5c6;
+  --color-base: #0b0b0a;
+  --color-deep: #080807;
+  --color-panel: #050505;
+  --color-text: #f2e5c6;
+  --color-paper: #f8f4eb;
+  --color-ink: #171311;
+  --color-base-rgb: 11, 11, 10;
+  --color-deep-rgb: 8, 8, 7;
+  --color-panel-rgb: 5, 5, 5;
+  --color-text-rgb: 242, 229, 198;
+  --color-elevated: #11100f;
+  --color-shell-top: #10100f;
+  --color-low: #070707;
+  --color-heading: #f5efe6;
+  --color-card: #0f0e0d;
+  --color-card-surface: #080807;
+  --color-card-surface-rgb: 8, 8, 7;
+  --color-section: #0f0f0e;
+  --color-section-top: #121110;
+  --color-section-bottom: #090909;
+  --color-phone: #0d0c0b;
+  --color-drag-text: #5e1c23;
+  --background: var(--color-base);
+  --foreground: var(--color-text);
   --maroon: #5e1c23;
   --bark: #605246;
   --linen-shadow: #a1947f;
@@ -123,14 +145,18 @@ a {
   font-weight: 300;
 }
 
+.project-title {
+  mix-blend-mode: screen;
+}
+
 .editorial-shell {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(242, 229, 198, 0.035), transparent 42%),
-    linear-gradient(180deg, #10100f 0%, #070707 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(var(--color-text-rgb), 0.035), transparent 42%),
+    linear-gradient(180deg, var(--color-shell-top) 0%, var(--color-low) 100%);
 }
 
 .editorial-label {
-  color: rgba(242, 229, 198, 0.58);
+  color: rgba(var(--color-text-rgb), 0.58);
   font-size: 9px;
   font-weight: 700;
   line-height: 1;
@@ -143,14 +169,14 @@ a {
 
 .editorial-rule-row {
   align-items: center;
-  border-bottom: 1px solid rgba(242, 229, 198, 0.16);
+  border-bottom: 1px solid rgba(var(--color-text-rgb), 0.16);
   display: flex;
   gap: 0.75rem;
   padding-bottom: 0.75rem;
 }
 
 .editorial-rule-row::after {
-  background: rgba(242, 229, 198, 0.16);
+  background: rgba(var(--color-text-rgb), 0.16);
   content: "";
   flex: 1;
   height: 1px;
@@ -158,20 +184,20 @@ a {
 }
 
 .editorial-panel {
-  background: rgba(8, 8, 7, 0.94);
-  border-bottom: 1px solid rgba(242, 229, 198, 0.13);
-  border-top: 1px solid rgba(242, 229, 198, 0.13);
+  background: rgba(var(--color-card-surface-rgb), 0.94);
+  border-bottom: 1px solid rgba(var(--color-text-rgb), 0.13);
+  border-top: 1px solid rgba(var(--color-text-rgb), 0.13);
 }
 
 .editorial-proof-frame {
-  background: #050505;
-  border: 1px solid rgba(242, 229, 198, 0.14);
+  background: var(--color-panel);
+  border: 1px solid rgba(var(--color-text-rgb), 0.14);
   box-shadow: none;
 }
 
 .editorial-archive-tag {
-  border-top: 1px solid rgba(242, 229, 198, 0.24);
-  color: rgba(242, 229, 198, 0.58);
+  border-top: 1px solid rgba(var(--color-text-rgb), 0.24);
+  color: rgba(var(--color-text-rgb), 0.58);
   font-size: 9px;
   font-weight: 700;
   line-height: 1.25;
@@ -180,7 +206,7 @@ a {
 }
 
 .editorial-note-overlay {
-  background: rgba(242, 229, 198, 0.9);
+  background: rgba(var(--color-panel-rgb), 0.9);
   border: 1px solid rgba(8, 8, 7, 0.14);
   border-radius: 0;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
@@ -188,8 +214,8 @@ a {
 }
 
 .reference-phone {
-  background: #0d0c0b;
-  border: 1px solid rgba(242, 229, 198, 0.28);
+  background: var(--color-phone);
+  border: 1px solid rgba(var(--color-text-rgb), 0.28);
   border-radius: 0;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
   overflow: hidden;
@@ -331,7 +357,7 @@ a {
 .noise::after {
   background-image:
     radial-gradient(rgba(33, 27, 24, 0.18) 0.6px, transparent 0.6px),
-    radial-gradient(rgba(242, 229, 198, 0.18) 0.6px, transparent 0.6px);
+    radial-gradient(rgba(var(--color-text-rgb), 0.18) 0.6px, transparent 0.6px);
   background-position:
     0 0,
     8px 8px;
@@ -373,9 +399,9 @@ a {
 
 .editorial-film-sprockets {
   background:
-    radial-gradient(circle, rgba(242, 229, 198, 0.46) 0 2px, transparent 2.6px)
+    radial-gradient(circle, rgba(var(--color-text-rgb), 0.46) 0 2px, transparent 2.6px)
       0 50% / 18px 8px repeat-x,
-    linear-gradient(180deg, rgba(242, 229, 198, 0.04), rgba(242, 229, 198, 0));
+    linear-gradient(180deg, rgba(var(--color-text-rgb), 0.04), rgba(var(--color-text-rgb), 0));
 }
 
 .editorial-film-grain {
@@ -384,11 +410,11 @@ a {
 
 .editorial-film-grain::after {
   background:
-    radial-gradient(rgba(242, 229, 198, 0.2) 0.55px, transparent 0.6px),
+    radial-gradient(rgba(var(--color-text-rgb), 0.2) 0.55px, transparent 0.6px),
     radial-gradient(rgba(8, 8, 7, 0.34) 0.7px, transparent 0.75px),
     repeating-linear-gradient(
       180deg,
-      rgba(242, 229, 198, 0.07) 0 1px,
+      rgba(var(--color-text-rgb), 0.07) 0 1px,
       transparent 1px 4px
     );
   background-position:
@@ -414,7 +440,7 @@ a {
   background:
     repeating-linear-gradient(
       180deg,
-      rgba(242, 229, 198, 0.08) 0 1px,
+      rgba(var(--color-text-rgb), 0.08) 0 1px,
       transparent 1px 11px
     ),
     linear-gradient(180deg, transparent, rgba(143, 43, 53, 0.035));
@@ -521,7 +547,7 @@ a {
 @keyframes flashRed {
   0%,
   100% {
-    border-color: rgba(242, 229, 198, 0.18);
+    border-color: rgba(var(--color-text-rgb), 0.18);
   }
   35%,
   70% {
