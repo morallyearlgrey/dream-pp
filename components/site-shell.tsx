@@ -8,6 +8,7 @@ import {
   PersistentAudioProvider,
   type AudioTrack,
 } from "@/components/audio-player";
+import { OpeningProofLoader } from "@/components/opening-proof-loader";
 import {
   BadgeCheck,
   BookOpen,
@@ -51,6 +52,7 @@ export function SiteShell({
 
   return (
     <PersistentAudioProvider tracks={audioTracks}>
+      <OpeningProofLoader />
       <div className="min-h-screen">
       <header className="sticky top-5 z-50 mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8">
         <nav
