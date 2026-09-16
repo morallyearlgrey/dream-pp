@@ -197,8 +197,8 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
           <span>Index 05</span>
         </div>
 
-        <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_292px]">
-          <section className="border border-[var(--color-text)]/22 bg-[var(--color-panel)]/88 p-2">
+        <div className="mt-6 grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_292px]">
+          <section className="order-3 min-w-0 border border-[var(--color-text)]/22 bg-[var(--color-panel)]/88 p-2 xl:order-1">
             <div className="flex items-center justify-between gap-3 border-b border-[var(--color-text)]/14 px-2 py-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/58 sm:px-3">
               <span className="inline-flex items-center gap-2 text-[#8f2b35]">
                 <span className="h-1.5 w-1.5 bg-[#8f2b35]" />
@@ -214,7 +214,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
             <div className="relative aspect-[4/5] overflow-hidden border border-[var(--color-text)]/18 bg-white sm:aspect-[16/10] lg:aspect-[16/9]">
               <img
                 alt={`${activeSkill.name} skill reference`}
-                className="h-full w-full bg-white object-contain p-8 sm:p-12"
+                className="absolute inset-0 h-full w-full bg-white object-contain p-8 sm:p-12"
                 decoding="async"
                 loading="lazy"
                 onError={handleImageFallback}
@@ -261,7 +261,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
             </div>
           </section>
 
-          <aside className="border-y border-[var(--color-text)]/16 bg-[var(--color-card-surface)]/92 p-4 xl:p-5">
+          <aside className="order-1 min-w-0 border-y border-[var(--color-text)]/16 bg-[var(--color-card-surface)]/92 p-4 xl:order-2 xl:p-5">
             <div className="flex items-center gap-3 border-b border-[var(--color-text)]/14 pb-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/54">
               <span>Camera Modes</span>
               <span className="h-px flex-1 bg-[var(--color-text)]/14" />
@@ -315,9 +315,8 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
               </div>
             </dl>
           </aside>
-        </div>
 
-        <section className="mt-5 border-y border-[var(--color-text)]/18 py-4">
+        <section className="order-2 min-w-0 overflow-hidden border-y border-[var(--color-text)]/18 py-4 xl:order-3 xl:col-span-2">
           <div className="flex items-center gap-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/54">
             <span className="text-[#8f2b35]">Contact Sheet</span>
             <span className="h-px flex-1 bg-[var(--color-text)]/14" />
@@ -369,6 +368,7 @@ export function SkillsViewfinder({ skills }: { skills: SkillRecord[] }) {
             })}
           </div>
         </section>
+        </div>
       </section>
       </section>
     </main>

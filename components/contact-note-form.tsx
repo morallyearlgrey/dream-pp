@@ -147,7 +147,7 @@ export function ContactNoteForm() {
               Note / Message
             </span>
             <textarea
-              className="min-h-36 resize-none bg-transparent text-sm font-light leading-6 text-[var(--color-text)] outline-none placeholder:text-[var(--color-text)]/28 focus:text-[var(--color-paper)]"
+              className="editorial-y-scroll min-h-44 max-h-80 touch-pan-y resize-none overflow-y-auto overscroll-y-contain bg-transparent pr-2 text-sm font-light leading-6 text-[var(--color-text)] outline-none [scrollbar-gutter:stable] placeholder:text-[var(--color-text)]/28 focus:text-[var(--color-paper)] sm:min-h-36"
               id="contact-note"
               maxLength={2000}
               onChange={(event) =>

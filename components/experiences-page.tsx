@@ -491,7 +491,11 @@ function PhotoFlipPanel({
   }, [flipped, photos.length]);
 
   return (
-    <div className="group/panel relative block h-[180px] w-full overflow-hidden border border-[var(--color-text)]/20 bg-[var(--color-card-surface)] text-left transition hover:border-[#8f2b35]/75 sm:h-[200px] lg:h-[220px] xl:h-[230px]">
+    <div
+      className={`group/panel relative block w-full overflow-hidden border border-[var(--color-text)]/20 bg-[var(--color-card-surface)] text-left transition-[height,border-color] hover:border-[#8f2b35]/75 lg:h-[220px] xl:h-[230px] ${
+        flipped ? "h-[340px] sm:h-[300px]" : "h-[180px] sm:h-[200px]"
+      }`}
+    >
       <AnimatePresence initial={false} mode="wait">
         {flipped ? (
           <motion.div
@@ -553,7 +557,7 @@ function PhotoFlipPanel({
                 {photos.length.toString().padStart(2, "0")}
               </span>
             </div>
-            <div className="absolute bottom-3 left-3 right-3">
+            <div className="absolute bottom-4 left-4 right-4">
               <PhotoFlipAction label="Flip for responsibilities" />
             </div>
           </motion.button>
@@ -570,7 +574,7 @@ function PhotoFlipPanel({
             type="button"
           >
             <PlaceholderMediaImage className="h-full w-full object-cover brightness-[0.84] contrast-[1.08] saturate-[0.72]" decorative />
-            <div className="absolute bottom-3 left-3 right-3">
+            <div className="absolute bottom-4 left-4 right-4">
               <PhotoFlipAction label="Flip for responsibilities" />
             </div>
           </motion.button>
@@ -600,7 +604,7 @@ function PhotoFlipAction({
   const content = (
     <>
       <Images aria-hidden="true" size={14} strokeWidth={1.8} />
-      <span className="min-w-0 flex-1 text-left">{label}</span>
+      <span className="min-w-0 flex-1 text-left text-[9px]">{label}</span>
       <RefreshCw aria-hidden="true" size={13} strokeWidth={1.8} />
     </>
   );
@@ -745,7 +749,7 @@ function EndorsementPanel({ experience }: { experience: ExperienceFeatureData })
           <div className="mt-2 flex items-end gap-2 rounded-[22px] border border-[var(--color-ink)]/8 bg-white/70 px-2 py-2">
             <textarea
               aria-label={`Message ${experience.companyName} - ${experience.positionName}`}
-              className="experience-responsibilities-scroll max-h-24 min-h-10 min-w-0 flex-1 resize-none overflow-y-auto bg-transparent px-1 text-[9px] font-light leading-4 text-[var(--color-ink)] outline-none placeholder:text-[7px] placeholder:text-[var(--color-ink)]/36"
+              className="editorial-y-scroll min-h-24 max-h-40 min-w-0 flex-1 touch-pan-y resize-none overflow-y-auto overscroll-y-contain bg-transparent px-1 text-xs font-light leading-5 text-[var(--color-ink)] outline-none [scrollbar-gutter:stable] placeholder:text-[9px] placeholder:text-[var(--color-ink)]/36 sm:min-h-16 sm:max-h-28 sm:text-[10px] sm:leading-4 sm:placeholder:text-[8px]"
               maxLength={500}
               minLength={1}
               onChange={(event) => setForm((current) => ({ ...current, note: event.target.value }))}

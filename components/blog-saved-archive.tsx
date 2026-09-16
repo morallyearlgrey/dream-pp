@@ -154,7 +154,7 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
           </p>
         </div>
 
-        <div className="mt-5 flex w-full gap-px overflow-x-auto border-y border-[var(--color-text)]/18 bg-[var(--color-text)]/12 py-px [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mt-5 grid w-full grid-cols-4 gap-px border-y border-[var(--color-text)]/18 bg-[var(--color-text)]/12 py-px">
           {filters.map((filter) => {
             const active = selectedFilter === filter;
             const count =
@@ -165,7 +165,7 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
             return (
               <button
                 aria-pressed={active}
-                className={`shrink-0 bg-[var(--color-card-surface)] px-4 py-3 text-[10px] font-bold uppercase leading-none transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] ${
+                className={`min-w-0 bg-[var(--color-card-surface)] px-1 py-3 text-[8px] font-bold uppercase leading-none transition focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[#8f2b35] sm:px-4 sm:text-[10px] ${
                   active
                     ? "text-[var(--color-text)] shadow-[inset_0_-3px_0_#8f2b35]"
                     : "text-[var(--color-text)]/52 hover:text-[#8f2b35]"
@@ -174,7 +174,10 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
                 onClick={() => setSelectedFilter(filter)}
                 type="button"
               >
-                {filter} <span className="ml-2 text-[#8f2b35]">{count.toString().padStart(2, "0")}</span>
+                <span className="block whitespace-nowrap">{filter}</span>
+                <span className="mt-1 block text-[#8f2b35] sm:ml-2 sm:mt-0 sm:inline">
+                  {count.toString().padStart(2, "0")}
+                </span>
               </button>
             );
           })}

@@ -234,7 +234,7 @@ function ProjectHero({
   const accentProject = projects[selected];
 
   return (
-    <section className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[var(--color-base)] px-5 pb-12 pt-6 text-[var(--color-text)] sm:px-8 lg:min-h-screen lg:px-12">
+    <section className="relative isolate min-h-0 overflow-hidden bg-[var(--color-base)] px-5 pb-12 pt-6 text-[var(--color-text)] sm:px-8 lg:min-h-screen lg:px-12">
       <ProjectBackgroundTexture />
 
       <div className="relative z-30 mx-auto flex max-w-7xl items-center justify-between gap-4 border-b border-[var(--color-text)]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/58 sm:text-[10px]">
@@ -258,18 +258,6 @@ function ProjectHero({
           agentic nuclear reactor to an ASL rhythm game and a pipelined RISC-V
           processor, each one records what I was curious enough to learn next.
         </p>
-        <div className="mt-7 grid grid-cols-2 gap-3 border-t border-[#5E1C23]/70 pt-5 sm:gap-4">
-          {highlightedProjects.map(({ project, projectIndex }, index) => (
-            <MobileHeroProject
-              active={projectIndex === selected}
-              index={index}
-              key={project.id}
-              project={project}
-              projectIndex={projectIndex}
-              setSelected={setSelected}
-            />
-          ))}
-        </div>
       </motion.div>
 
       <motion.div
@@ -356,51 +344,6 @@ function ProjectBackgroundTexture() {
       <div className="absolute inset-0 bg-[var(--color-base)]/42" />
       <div className="editorial-film-grain absolute inset-0 opacity-34" />
     </div>
-  );
-}
-
-function MobileHeroProject({
-  active,
-  index,
-  project,
-  projectIndex,
-  setSelected,
-}: {
-  active: boolean;
-  index: number;
-  project: ProjectFeature;
-  projectIndex: number;
-  setSelected: Dispatch<SetStateAction<number>>;
-}) {
-  return (
-    <button
-      aria-label={`Select ${project.name}`}
-      aria-pressed={active}
-      className={`min-w-0 border bg-[var(--color-panel)] p-1.5 text-left transition ${
-        active ? "border-[#8f2b35]" : "border-[var(--color-text)]/28"
-      }`}
-      onClick={() => setSelected(projectIndex)}
-      type="button"
-    >
-      <span className="relative block aspect-[4/3] overflow-hidden bg-[var(--color-deep)]">
-        <ProjectMedia
-          className={`h-full w-full object-cover transition ${
-            active
-              ? "brightness-[0.9] contrast-[1.12] saturate-[0.88]"
-              : "grayscale brightness-[0.62] contrast-[1.18]"
-          }`}
-          decorative
-          project={project}
-        />
-        <span aria-hidden="true" className="archive-scanlines absolute inset-0 opacity-20" />
-        <span className="absolute right-2 top-2 border-t border-[var(--color-text)]/40 pt-1 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/70">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-      </span>
-      <span className="mt-2 block break-words border-t border-[#5E1C23]/70 pt-2 text-[9px] font-bold uppercase leading-3 text-[var(--color-text)]">
-        {project.name}
-      </span>
-    </button>
   );
 }
 
@@ -621,20 +564,20 @@ function ProjectWorkPanel({ project }: { project: ProjectFeature }) {
     .filter(Boolean);
 
   return (
-    <section className="relative z-30 flex min-w-0 flex-col overflow-visible border-t border-[var(--color-text)]/18 p-4 text-[var(--color-text)] sm:p-5 lg:border-t-0 lg:p-6 xl:p-7">
+    <section className="relative z-30 flex h-auto min-h-0 min-w-0 flex-col overflow-visible border-t border-[var(--color-text)]/18 p-4 text-[var(--color-text)] sm:p-5 lg:border-t-0 lg:p-6 xl:p-7">
       <div className="flex items-center gap-3 border-b border-[var(--color-text)]/16 pb-3 text-[9px] font-bold uppercase leading-4 text-[var(--color-text)]/58">
         <span>What I Did</span>
         <span className="h-px flex-1 bg-[var(--color-text)]/16" />
       </div>
-      <ul className="mt-5 grid max-w-[58ch] gap-3 text-sm font-light leading-6 text-[var(--color-text)]/72">
+      <ul className="mt-5 grid h-auto max-h-none max-w-[58ch] gap-3 overflow-visible text-sm font-light leading-6 text-[var(--color-text)]/72">
         {workItems.map((item, index) => (
           <li className="grid grid-cols-[auto_1fr] gap-3" key={`${project.id}-work-${index}`}>
             <span aria-hidden="true" className="mt-[0.68rem] h-1.5 w-1.5 bg-[#8f2b35]" />
-            <span>{item}</span>
+            <span className="min-w-0 break-words">{item}</span>
           </li>
         ))}
       </ul>
-      <div className="mt-auto grid grid-cols-2 border-y border-[var(--color-text)]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[var(--color-text)]/44 lg:mt-8">
+      <div className="mt-6 grid grid-cols-2 border-y border-[var(--color-text)]/14 py-3 text-[9px] font-bold uppercase leading-4 text-[var(--color-text)]/44 lg:mt-8">
         <span>Frame ID</span>
         <span className="text-right text-[#8f2b35]">{project.id}</span>
       </div>

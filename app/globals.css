@@ -50,6 +50,8 @@
 html {
   background: var(--background);
   scroll-behavior: smooth;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -65,7 +67,7 @@ a,
 input,
 textarea,
 select {
-  font: inherit;
+  font-family: inherit;
 }
 
 button,
@@ -110,21 +112,25 @@ a {
   color: var(--cream);
 }
 
-.experience-responsibilities-scroll {
+.experience-responsibilities-scroll,
+.editorial-y-scroll {
   scrollbar-color: rgba(94, 28, 35, 0.68) rgba(23, 19, 17, 0.08);
   scrollbar-width: thin;
 }
 
-.experience-responsibilities-scroll::-webkit-scrollbar {
+.experience-responsibilities-scroll::-webkit-scrollbar,
+.editorial-y-scroll::-webkit-scrollbar {
   width: 7px;
 }
 
-.experience-responsibilities-scroll::-webkit-scrollbar-thumb {
+.experience-responsibilities-scroll::-webkit-scrollbar-thumb,
+.editorial-y-scroll::-webkit-scrollbar-thumb {
   background: rgba(94, 28, 35, 0.68);
   border-radius: 999px;
 }
 
-.experience-responsibilities-scroll::-webkit-scrollbar-track {
+.experience-responsibilities-scroll::-webkit-scrollbar-track,
+.editorial-y-scroll::-webkit-scrollbar-track {
   background: rgba(23, 19, 17, 0.08);
 }
 
