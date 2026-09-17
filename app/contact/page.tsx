@@ -17,7 +17,7 @@ export const metadata = createPageMetadata({
 
 export default function Contact() {
   return (
-    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[var(--color-deep)] px-4 pb-16 pt-20 text-[var(--color-text)] sm:px-6 lg:px-8">
+    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[var(--color-deep)] px-4 pb-16 pt-0 text-[var(--color-text)] sm:px-6 sm:pt-20 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0">
         <img
           alt=""
@@ -29,8 +29,8 @@ export default function Contact() {
         <div className="editorial-film-grain absolute inset-0 opacity-20" />
       </div>
 
-      <section className="relative z-10 mx-auto grid min-h-[72vh] w-full max-w-7xl gap-10 border-y border-[var(--color-text)]/20 py-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,0.58fr)] lg:items-center lg:gap-20 xl:gap-28">
-        <div className="min-w-0">
+      <section className="relative z-10 mx-auto grid w-full max-w-7xl gap-10 sm:min-h-[72vh] sm:border-y sm:border-[var(--color-text)]/20 sm:py-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(360px,0.58fr)] lg:items-center lg:gap-20 xl:gap-28">
+        <div className="flex min-h-[calc(100svh-42px)] min-w-0 flex-col justify-center border-y border-[var(--color-text)]/20 sm:min-h-0 sm:border-y-0">
           <div className="flex items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
             <span>Send A Note</span>
             <span className="h-px flex-1 bg-[var(--color-text)]/14" />

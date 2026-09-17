@@ -121,7 +121,7 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
   }, [openNote]);
 
   return (
-    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[var(--color-deep)] px-4 pb-16 pt-20 text-[var(--color-text)] sm:px-6 lg:px-8">
+    <main className="relative isolate min-h-[calc(100svh-72px)] overflow-x-clip bg-[var(--color-deep)] px-4 pb-16 pt-0 text-[var(--color-text)] sm:px-6 sm:pt-20 lg:px-8">
       <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
         <img
           alt=""
@@ -136,7 +136,7 @@ export function BlogSavedArchive({ blogs }: { blogs: BlogRecord[] }) {
       </div>
 
       <section className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="flex flex-col items-center gap-5 border-y border-[var(--color-text)]/20 py-5">
+        <div className="flex min-h-[calc(100svh-42px)] flex-col items-center justify-center gap-5 border-y border-[var(--color-text)]/20 py-5 sm:min-h-0 sm:justify-start">
           <div className="w-full text-center">
             <div className="mx-auto flex max-w-xl items-center gap-3 text-[10px] font-bold uppercase leading-none text-[#8f2b35]">
               <span>Saved Folder</span>

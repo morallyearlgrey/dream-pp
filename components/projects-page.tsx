@@ -234,7 +234,7 @@ function ProjectHero({
   const accentProject = projects[selected];
 
   return (
-    <section className="relative isolate min-h-0 overflow-hidden bg-[var(--color-base)] px-5 pb-12 pt-6 text-[var(--color-text)] sm:px-8 lg:min-h-screen lg:px-12">
+    <section className="relative isolate min-h-[calc(100svh-42px)] overflow-hidden bg-[var(--color-base)] px-5 pb-12 pt-6 text-[var(--color-text)] sm:min-h-0 sm:px-8 lg:min-h-screen lg:px-12">
       <ProjectBackgroundTexture />
 
       <div className="relative z-30 mx-auto flex max-w-7xl items-center justify-between gap-4 border-b border-[var(--color-text)]/18 pb-2 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/58 sm:text-[10px]">

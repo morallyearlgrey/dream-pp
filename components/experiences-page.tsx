@@ -103,8 +103,6 @@ export function ExperiencesPage({
 function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureData[] }) {
   const { scrollY } = useScroll();
   const coverY = useTransform(scrollY, [0, 900], [0, -28]);
-  const leadExperience = experiences[0];
-
   return (
     <section className="relative isolate min-h-[calc(100svh-72px)] overflow-hidden bg-[radial-gradient(ellipse_at_76%_8%,rgba(var(--color-text-rgb),0.12),transparent_34%),linear-gradient(180deg,var(--color-elevated)_0%,var(--color-panel)_100%)] text-[var(--color-text)] lg:min-h-screen">
       <motion.div
@@ -129,11 +127,6 @@ function ExperienceCoverHero({ experiences }: { experiences: ExperienceFeatureDa
           <h1 className="font-display text-[52px] font-semibold uppercase leading-[0.9] text-[var(--color-text)] sm:text-[78px] lg:text-[104px] xl:text-[120px]">
             Experiences
           </h1>
-          <div className="mt-4 flex flex-wrap items-center gap-2 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/48 sm:text-[10px]">
-            <span>{leadExperience?.companyName ?? "No Roles Loaded"}</span>
-            <span className="h-px w-5 bg-[var(--color-text)]/24" />
-            <span>{leadExperience?.positionName ?? "Awaiting Role Frames"}</span>
-          </div>
           <div className="mt-5 grid max-w-md grid-cols-3 gap-3 border-y border-[var(--color-text)]/12 py-3 text-[8px] font-bold uppercase leading-none text-[var(--color-text)]/44 sm:text-[9px]">
             <span>
               Lens <span className="text-[#8f2b35]">35mm</span>
