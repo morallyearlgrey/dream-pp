@@ -45,31 +45,27 @@ export function getSupabaseMediaUrl(
     return null;
   }
 
-  if (/^(?:https?:|data:|blob:)/i.test(source)) {
-    return source;
-  }
-
-  const supabaseUrl = getSupabaseUrl();
-
-  if (!supabaseUrl) {
-    return mediaPlaceholderImageUrl;
-  }
-
   const bucketName = getMediaBucketName();
+  const absoluteUrl = resolveAbsoluteMediaUrl(source, bucketName);
+
+  if (absoluteUrl) {
+    return absoluteUrl;
+  }
+
   const publicObjectPrefix = `public/${bucketName}/`;
   const normalizedSource = source.replace(/^\/+/, "");
 
   if (normalizedSource.startsWith(publicObjectPrefix)) {
     const publicObjectPath = normalizedSource.slice(publicObjectPrefix.length);
 
-    return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${encodeObjectPath(publicObjectPath)}`;
+    return getLocalMediaPath(bucketName, publicObjectPath);
   }
 
   const folderName = getFolderName(bucket);
   const objectKey = normalizeObjectKey(bucket, bucketName, folderName, source);
   const fullObjectPath = folderName ? `${folderName}/${objectKey}` : objectKey;
 
-  return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${encodeObjectPath(fullObjectPath)}`;
+  return getLocalMediaPath(bucketName, fullObjectPath);
 }
 
 export function getSupabaseMediaUrls(
@@ -125,16 +121,6 @@ export function withMediaPlaceholder(value: string | null | undefined) {
   return value ?? mediaPlaceholderImageUrl;
 }
 
-function getSupabaseUrl() {
-  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-
-  if (!rawUrl) {
-    return "";
-  }
-
-  return rawUrl.replace(/\/+$/, "");
-}
-
 function getMediaBucketName() {
   return (
     configuredMediaBucketName?.trim().replace(/^\/+|\/+$/g, "") ||
@@ -149,17 +135,13 @@ function getSupabaseMediaUrlWithoutFolder(value: string | null | undefined) {
     return null;
   }
 
-  if (/^(?:https?:|data:|blob:)/i.test(source)) {
-    return source;
-  }
-
-  const supabaseUrl = getSupabaseUrl();
-
-  if (!supabaseUrl) {
-    return source.startsWith("/") ? source : null;
-  }
-
   const bucketName = getMediaBucketName();
+  const absoluteUrl = resolveAbsoluteMediaUrl(source, bucketName);
+
+  if (absoluteUrl) {
+    return absoluteUrl;
+  }
+
   let objectKey = source.replace(/^\/+/, "");
   const storagePrefix = "storage/v1/object/public/";
   const storagePrefixIndex = objectKey.indexOf(storagePrefix);
@@ -168,11 +150,51 @@ function getSupabaseMediaUrlWithoutFolder(value: string | null | undefined) {
     objectKey = objectKey.slice(storagePrefixIndex + storagePrefix.length);
   }
 
+  if (objectKey.startsWith(`public/${bucketName}/`)) {
+    objectKey = objectKey.slice(`public/${bucketName}/`.length);
+  }
+
   if (objectKey.startsWith(`${bucketName}/`)) {
     objectKey = objectKey.slice(bucketName.length + 1);
   }
 
-  return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${encodeObjectPath(objectKey)}`;
+  return getLocalMediaPath(bucketName, objectKey);
+}
+
+function resolveAbsoluteMediaUrl(source: string, bucketName: string) {
+  if (/^(?:data:|blob:)/i.test(source)) {
+    return source;
+  }
+
+  if (!/^https?:/i.test(source)) {
+    return null;
+  }
+
+  try {
+    const url = new URL(source);
+    const storagePrefix = `/storage/v1/object/public/${bucketName}/`;
+    const configuredSupabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
+      ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).host
+      : "";
+
+    if (
+      url.pathname.startsWith(storagePrefix) &&
+      (url.hostname.endsWith(".supabase.co") || url.host === configuredSupabaseHost)
+    ) {
+      return getLocalMediaPath(
+        bucketName,
+        url.pathname.slice(storagePrefix.length),
+      );
+    }
+  } catch {
+    return source;
+  }
+
+  return source;
+}
+
+function getLocalMediaPath(bucketName: string, objectKey: string) {
+  return `/${bucketName}/${encodeObjectPath(objectKey)}`;
 }
 
 function getFolderName(bucket: SupabaseMediaBucket) {

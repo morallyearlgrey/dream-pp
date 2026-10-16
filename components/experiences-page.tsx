@@ -17,6 +17,7 @@ import type {
   FeaturedEndorsementRecord,
 } from "@/lib/portfolio-records";
 import {
+  getExperienceVideoUrl,
   getPhotoUrl,
   isVideoMediaUrl,
   mediaPlaceholderImageUrl,
@@ -33,41 +34,39 @@ type FilmFrame = {
 export type ExperienceFeatureData = ExperienceRecord;
 export type FeaturedEndorsementData = FeaturedEndorsementRecord;
 
-const experienceVideoBaseUrl =
-  "https://qcxeyxinrhwjmmwhguqg.supabase.co/storage/v1/object/public/portfoliomedia/experience-videos";
 const filmFrames: FilmFrame[] = [
   {
-    src: `${experienceVideoBaseUrl}/frame1.mp4`,
+    src: getExperienceVideoUrl("frame1.mp4"),
     label: "Campus Frame",
     meta: "Field 01",
     frameClassName: "",
   },
   {
-    src: `${experienceVideoBaseUrl}/frame2.mp4`,
+    src: getExperienceVideoUrl("frame2.mp4"),
     label: "Team Frame",
     meta: "Field 02",
     frameClassName: "",
   },
   {
-    src: `${experienceVideoBaseUrl}/frame3.mp4`,
+    src: getExperienceVideoUrl("frame3.mp4"),
     label: "Briefing Frame",
     meta: "Field 03",
     frameClassName: "",
   },
   {
-    src: `${experienceVideoBaseUrl}/frame4.mp4`,
+    src: getExperienceVideoUrl("frame4.mp4"),
     label: "Public Crowd",
     meta: "Frame 04",
     frameClassName: "",
   },
   {
-    src: `${experienceVideoBaseUrl}/frame5.mp4`,
+    src: getExperienceVideoUrl("frame5.mp4"),
     label: "Motion Field One",
     meta: "Frame 05",
     frameClassName: "",
   },
   {
-    src: `${experienceVideoBaseUrl}/frame6.mp4`,
+    src: getExperienceVideoUrl("frame6.mp4"),
     label: "Motion Field Two",
     meta: "Frame 06",
     frameClassName: "",

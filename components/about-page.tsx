@@ -21,7 +21,7 @@ import {
   whoAmIPhoto,
 } from "@/lib/about-data";
 import { handleImageFallback, PlaceholderMediaImage } from "@/components/media-placeholder";
-import { isVideoMediaUrl } from "@/lib/supabase-media";
+import { getPhotoUrl, isVideoMediaUrl } from "@/lib/supabase-media";
 
 const titles = [
   "Software Engineer",
@@ -1116,7 +1116,7 @@ function WonderCaptcha() {
               className="max-h-[68vh] w-full rounded-[20px] object-cover"
               decoding="async"
               onError={handleImageFallback}
-              src="https://qcxeyxinrhwjmmwhguqg.supabase.co/storage/v1/object/public/portfoliomedia/photos/koda.JPG"
+              src={getPhotoUrl("koda.JPG") ?? undefined}
             />
             <figcaption className="px-3 py-4 text-center font-body text-lg font-medium leading-snug sm:text-xl">
               {"My cute dog Koda <3"}

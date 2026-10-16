@@ -36,21 +36,22 @@ This project is set up with pnpm. Avoid mixing npm and pnpm in the same
 
 ## Database
 
-The database stores object keys and metadata for uploaded media. Store the
-actual image and video files in the Supabase Storage `portfoliomedia` bucket.
+The database stores object keys and metadata for media. The image and video
+files are served from `public/portfoliomedia` with the site, so viewing them
+does not use Supabase Storage egress.
 
 Media folder mapping:
 
 ```txt
-portfoliomedia/photos             about hero, about cards, captcha, blog/experience stills
-portfoliomedia/projects           project pictures
-portfoliomedia/project-videos     project videos
-portfoliomedia/experience-videos  experience videos
-portfoliomedia/skills             skill thumbnail/preview images
+public/portfoliomedia/photos             about hero, about cards, captcha, blog/experience stills
+public/portfoliomedia/projects           project pictures
+public/portfoliomedia/project-videos     project videos
+public/portfoliomedia/experience-videos  experience videos
+public/portfoliomedia/skills             skill thumbnail/preview images
 ```
 
-For database rows, store either a full URL or a bucket object key. Prefer object
-keys so the app can build the Supabase CDN URL automatically:
+For database rows, store a media object key. The app maps existing Supabase
+Storage URLs and `public/portfoliomedia/...` references to local paths too:
 
 ```txt
 projects.photos        ["anr.png"]
@@ -86,7 +87,6 @@ Set these environment variables in Vercel:
 ```txt
 DATABASE_URL
 NEXT_PUBLIC_SITE_URL
-NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_MEDIA_BUCKET
 NEXT_PUBLIC_SUPABASE_PHOTOS_PREFIX
 NEXT_PUBLIC_SUPABASE_PROJECTS_PREFIX
@@ -109,6 +109,6 @@ When the Supabase Vercel integration provides `POSTGRES_URL` instead of
 `DATABASE_URL`, the application uses it automatically. `POSTGRES_PRISMA_URL`
 and `POSTGRES_URL_NON_POOLING` are also supported as fallbacks.
 
-Make the `portfoliomedia` bucket public if you want the site to render direct
-public media URLs from the browser. For a private bucket, add a signed URL API
-route instead of using public object URLs.
+Set `NEXT_PUBLIC_SUPABASE_URL` only if database records contain Storage URLs
+on a custom Supabase domain. It is not needed to serve local media. New media
+must be added under `public/portfoliomedia` and deployed with the site.

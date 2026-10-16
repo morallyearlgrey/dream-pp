@@ -5,8 +5,7 @@ import {
 
 export const heroPhoto = withMediaPlaceholder(getPhotoUrl("hero.jpeg"));
 export const whoAmIPhoto = withMediaPlaceholder(getPhotoUrl("traveling.jpeg"));
-export const visualArchiveVideo =
-  "https://qcxeyxinrhwjmmwhguqg.supabase.co/storage/v1/object/public/portfoliomedia/about/meinthreelenses.mp4";
+export const visualArchiveVideo = "/portfoliomedia/about/meinthreelenses.mp4";
 
 export const whoIAmText =
   "My name is Kai and I am majoring in Computer Science at the University of Central Florida's Burnett Honors College. I love making things, but I am just as drawn to the questions behind them: why something works, who it serves, and how it could be better. Curiosity is the thread that connects the teams I lead, the projects I build, and the person I am still becoming.";
