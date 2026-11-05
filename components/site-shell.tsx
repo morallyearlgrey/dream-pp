@@ -10,7 +10,6 @@ import {
 } from "@/components/audio-player";
 import { OpeningProofLoader } from "@/components/opening-proof-loader";
 import {
-  BadgeCheck,
   BookOpen,
   BriefcaseBusiness,
   FolderKanban,
@@ -36,8 +35,8 @@ const footerLinks = [
 ];
 
 const footerSocialLinks = [
-  { href: "#", label: "GitHub" },
-  { href: "#", label: "LinkedIn" },
+  { href: "https://github.com/morallyearlgrey", label: "GitHub" },
+  { href: "https://www.linkedin.com/in/kaisprunger/", label: "LinkedIn" },
   { href: "/Kai_Sprunger_Resume_2027.pdf", label: "Resume" },
 ] as const;
 
@@ -177,10 +176,6 @@ export function SiteShell({
                     {item.label}
                   </a>
                 ))}
-              </div>
-              <div className="mt-5 inline-flex items-center gap-2 border-t border-[var(--color-text)]/16 pt-3 text-[9px] font-bold uppercase leading-none text-[var(--color-text)]/50">
-                <BadgeCheck aria-hidden="true" size={13} strokeWidth={1.8} />
-                Selected Collaborations
               </div>
             </div>
           </div>
